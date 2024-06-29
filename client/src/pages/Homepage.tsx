@@ -14,6 +14,9 @@ import { GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
 import { IoIosHeartEmpty } from 'react-icons/io'
 import Category from './Category'
+import Sales from './Sales'
+import ProductSalesHome from './product/ProductSalesHome'
+import UserShare from './UserShare'
 
 // init Swiper:
 
@@ -171,6 +174,9 @@ const Homepage = () => {
             </Link>
           </div>
         </div>
+        <Sales />
+        <ProductSalesHome />
+        <UserShare/>
       </div>
     </section>
   )
