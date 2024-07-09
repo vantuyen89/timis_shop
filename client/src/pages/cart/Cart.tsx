@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { TiDeleteOutline } from 'react-icons/ti'
-import bn1 from '~/images/bn1.png'
+import bn1 from '@/images/bn1.png'
 import { FiMinus, FiPlus } from 'react-icons/fi'
 
 const Cart = () => {

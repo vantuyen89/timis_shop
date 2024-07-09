@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
-import bn1 from '~/images/salesone.png'
+import bn1 from '@/images/salesone.png'
 import bn2 from '../images/bn2.png'
 import { Swiper, SwiperSlide } from 'swiper/react'
 

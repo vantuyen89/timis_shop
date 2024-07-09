@@ -1,7 +1,7 @@
 import React from 'react'
 import sales1  from '../images/salesone.png'
 import sales2 from '../images/salestwo.png'
-import { Button } from '~/components/ui/button'
+import { Button } from '@/components/ui/button'
 const Sales = () => {
   return (
     <div className='flex gap-5 py-4'>

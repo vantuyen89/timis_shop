@@ -1,8 +1,8 @@
 import React from 'react'
 import { IoIosHeartEmpty } from 'react-icons/io'
 import { Link } from 'react-router-dom'
-import bn1 from '~/images/bn1.png'
-import bn2 from '~/images/bn2.png'
+import bn1 from '@/images/bn1.png'
+import bn2 from '@/images/bn2.png'
 
 const ProductSalesHome = () => {
   const products = [

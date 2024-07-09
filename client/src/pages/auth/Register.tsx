@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form'
 import { FaArrowLeft, FaRegEye, FaRegEyeSlash } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import { z } from 'zod'
-import { Button } from '~/components/ui/button'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form'
-import { Input } from '~/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
   username: z.string().min(2, {

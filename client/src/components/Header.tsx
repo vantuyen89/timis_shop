@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import logo from '../images/timis1.png'
-import Banner from '~/pages/Banner'
+import Banner from '@/pages/Banner'
 import { CiSearch } from 'react-icons/ci'
 import { FaRegCircleUser } from 'react-icons/fa6'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
@@ -15,11 +15,19 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger
-} from '~/components/ui/sheet'
+} from '@/components/ui/sheet'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 const Header = () => {
   return (
-    <header className='lg:sticky sticky lg:top-0 lg:left-0 lg:right-0 top-0 left-0 right-0 bg-white z-10'>
+    <header className='lg:sticky sticky lg:top-0 lg:left-0 lg:right-0 top-0 left-0 right-0 bg-white z-[100]'>
       <div className='bg-black'>
         <div className='container text-center py-2'>
           <p className='text-[12px] lg:text-sm text-white'>
@@ -74,7 +82,30 @@ const Header = () => {
               </button>
             </form>
             <div className='order-2 lg:order-3 flex items-center gap-2 lg:gap-6 lg:-mr-9'>
-              <FaRegCircleUser className='text-[23px] text-[#353535]' />|
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <FaRegCircleUser className='text-[23px] text-[#353535]' />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className='z-[200]'>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className='flex cursor-pointer'>
+                    <div className='flex items-center gap-3'>
+                      <img src={logo} alt='' className='w-6 h-6 rounded-full border' />
+                      <div className='flex flex-col'>
+                        <h5 className='text-[12px]'>Nguyễn Văn Tuyên</h5>
+                        <span className='text-[10px] w-[70px] overflow-hidden overflow-ellipsis whitespace-nowrap '>
+                          Email:tuyennvph39165@gmail.com
+                        </span>
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className='cursor-pointer'>Đơn hàng của bạn</DropdownMenuItem>
+                  <DropdownMenuItem className='cursor-pointer'>Sản phẩm yêu thích</DropdownMenuItem>
+                  <DropdownMenuItem className='text-red-400 cursor-pointer'>Đăng xuất</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <button className='relative'>
                 <AiOutlineShoppingCart className='text-[25px] text-[#353535]' />
                 <span className='text-[12px] absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white'>
@@ -97,13 +128,13 @@ const Header = () => {
                       })}
                       className={`relative block pt-4 group`}
                     >
-                      Shop All
+                      Trang chủ
                       <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink
-                      to={'/kkkkk'}
+                      to={'/shop'}
                       style={({ isActive }) => ({
                         fontWeight: isActive ? 'medium' : 'normal',
                         borderBottomColor: isActive ? 'black' : 'none',
@@ -111,7 +142,7 @@ const Header = () => {
                       })}
                       className={`relative block pt-4 group`}
                     >
-                      Contacts
+                      Shop All
                       <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
                     </NavLink>
                   </li>

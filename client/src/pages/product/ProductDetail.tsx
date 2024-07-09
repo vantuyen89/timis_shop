@@ -1,25 +1,30 @@
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import bn1 from '~/images/bn1.png'
+import bn1 from '@/images/bn1.png'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import bn2 from '~/images/bn2.png'
-import bn3 from '~/images/bn3.png'
-import bn4 from '~/images/bn4.png'
-import bn5 from '~/images/bn5.png'
+import bn2 from '@/images/bn2.png'
+import bn3 from '@/images/bn3.png'
+import bn4 from '@/images/bn4.png'
+import bn5 from '@/images/bn5.png'
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 import { GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog'
-import { Button } from '~/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import RelatedProduct from './RelatedProduct'
+import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
 
 const images = [bn1, bn2, bn3, bn4]
 const ProductDetail = () => {
+  const [open, setOpen] = useState(false)
+  const [open1, setOpen1] = useState(false)
+  const [open2, setOpen2] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const [selectedSize, setSelectedSize] = useState(null)
   const [selectedColor, setSelectedColor] = useState(null)
@@ -33,19 +38,32 @@ const ProductDetail = () => {
     { color: 'Đen', src: 'path/to/black.jpg' }
   ]
 
-  const handleSizeChange = (size:any) => {
+  const handleSizeChange = (size: any) => {
     setSelectedSize(size)
+    if (!sizeColorAvailability[size].includes(selectedColor)) {
+      setSelectedColor(null)
+    }
+    
   }
 
-  const handleColorChange = (color:any) => {
-    setSelectedColor(color)
+  const handleColorChange = (color: any) => {
+    if (!selectedSize || sizeColorAvailability[selectedSize]?.includes(color)) {
+      setSelectedColor(color)
+    }
   }
 
-  const handleQuantityChange = (amount:any) => {
+  const handleQuantityChange = (amount: any) => {
     setQuantity((prevQuantity) => {
       const newQuantity = prevQuantity + amount
       return newQuantity > 0 ? newQuantity : 1
     })
+  }
+  const sizeColorAvailability = {
+    '29': ['Trắng', 'Xám'],
+    '30': ['Trắng', 'Xám', 'Nâu'],
+    '31': ['Trắng', 'Xám', 'Đen'],
+    '32': ['Trắng', 'Xám', 'Nâu', 'Đen'],
+    '34': ['Trắng', 'Đen']
   }
 
   const handleAddToCart = () => {
@@ -131,7 +149,8 @@ const ProductDetail = () => {
                     <button
                       key={index}
                       onClick={() => handleColorChange(colorObj.color)}
-                      className={`p-1 border rounded ${selectedColor === colorObj.color ? 'border-black' : 'border-gray-300'}`}
+                      disabled={!sizeColorAvailability[selectedSize]?.includes(colorObj.color)}
+                      className={`p-1 border rounded ${selectedColor === colorObj.color ? 'border-black' : 'border-gray-300'} ${!sizeColorAvailability[selectedSize]?.includes(colorObj.color) ? 'opacity-50 cursor-not-allowed line-through' : ''}`}
                     >
                       {colorObj.color}
                     </button>
@@ -163,9 +182,7 @@ const ProductDetail = () => {
                   <DialogHeader>
                     <DialogTitle>Hướng dẫn chọn size</DialogTitle>
                   </DialogHeader>
-                  <div className='py-4'>
-
-                  </div>
+                  <div className='py-4'></div>
                 </DialogContent>
               </Dialog>
 
@@ -194,15 +211,78 @@ const ProductDetail = () => {
                 <button className='flex-1 bg-red-600 text-white py-2 rounded'>MUA NGAY</button>
               </div>
 
-              <div className='mt-4'>
+              <div className='mt-4 flex flex-col gap-3 bg-[#efdbdb] bg-opacity-30 py-5 px-2 rounded-md'>
                 <p className='text-sm'>Phí vận chuyển (Tìm hiểu thêm)</p>
                 <p className='text-sm'>Thanh toán ngay hoặc COD (Tìm hiểu thêm)</p>
                 <p className='text-sm'>Chính sách đổi sản phẩm (Tìm hiểu thêm)</p>
+              </div>
+              <div className='flex gap-0 flex-col'>
+                <div className='flex flex-col border-y-2 py-4'>
+                  <div className='flex justify-between'>
+                    <h5 className='font-semibold'>Mô tả sản phẩm</h5>
+                    {open === false ? (
+                      <button>
+                        <CiCirclePlus size={27} onClick={() => setOpen(true)} />
+                      </button>
+                    ) : (
+                      <button>
+                        <CiCircleMinus size={27} onClick={() => setOpen(false)} />
+                      </button>
+                    )}
+                  </div>
+                  {open === false ? (
+                    <div></div>
+                  ) : (
+                    <div className='font-light'>
+                      Áo phông unisex người lớn dáng boxy in chữ, chất liệu cotton thoáng mát
+                    </div>
+                  )}
+                </div>
+                <div className='flex flex-col border-y-2 py-4'>
+                  <div className='flex justify-between'>
+                    <h5 className='font-semibold'>Chất liệu</h5>
+                    {open1 === false ? (
+                      <button>
+                        <CiCirclePlus size={27} onClick={() => setOpen1(true)} />
+                      </button>
+                    ) : (
+                      <button>
+                        <CiCircleMinus size={27} onClick={() => setOpen1(false)} />
+                      </button>
+                    )}
+                  </div>
+                  {open1 === false ? <div></div> : <div className='font-light'>100% cotton</div>}
+                </div>
+                <div className='flex flex-col border-y-2 py-4'>
+                  <div className='flex justify-between'>
+                    <h5 className='font-semibold'>Hướng dẫn sử dụng</h5>
+                    {open2 === false ? (
+                      <button>
+                        <CiCirclePlus size={27} onClick={() => setOpen2(true)} />
+                      </button>
+                    ) : (
+                      <button>
+                        <CiCircleMinus size={27} onClick={() => setOpen2(false)} />
+                      </button>
+                    )}
+                  </div>
+                  {open2 === false ? (
+                    <div></div>
+                  ) : (
+                    <div className='font-light'>
+                      Giặt máy ở chế độ nhẹ, nhiệt độ thường. Không sử dụng hóa chất tẩy có chứa Clo. Phơi trong bóng
+                      mát. Sấy khô ở nhiệt độ thấp. Là ở nhiệt độ thấp 110 độ C. Giặt với sản phẩm cùng màu. Không là
+                      lên chi tiết trang trí.
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <RelatedProduct />
     </div>
   )
 }
