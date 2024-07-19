@@ -32,9 +32,35 @@ export const getAllproducts = async (req, res) => {
     }
 }
 
+export const getProductById = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id).populate("variants").populate([{
+            path: "variants",
+            model: "Variant",
+            populate: {
+                path: "size",
+                model: "Size"
+            }
+        }]).populate([{
+            path: "variants",
+            model: "Variant",
+            populate: {
+                path: "color",
+                model: "Color"
+            }
+        }]).populate("category");
+        if (!product) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Product not found" })
+        }
+        res.status(StatusCodes.OK).json(product)
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error })
+    }
+ }
+
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, price, category, thumbnail, images, discount, countInstock, featured, slug, variants } = req.body
+        const { name, description, price, category, thumbnail, images, discount, countInstock,quantity, featured, slug, variants } = req.body
         const { error } = productValidate.validate(req.body, {
             abortEarly: false
         });
@@ -90,13 +116,42 @@ export const createProduct = async (req, res) => {
     }
 }
 
+// export const getProductfeatured = (req, res) => {
+//     try {
+//         const product = await Product.find({ featured: true }).populate("variants").populate([{
+//             path: "variants",
+//             model: "Variant",
+//             populate: {
+//                 path: "size",
+//                 model: "Size"
+//             }
+//         }]).populate([{
+//             path: "variants",
+//             model: "Variant",
+//             populate: {
+//                 path: "color",
+//                 model: "Color"
+//             }
+//         }]).populate("category");
+//         if (product.length === 0) {
+//             return res.status(StatusCodes.NOT_FOUND).json({ message: "Product not found" })
+//         }
+//         res.status(StatusCodes.OK).json(product)
+//     } catch (error) {
+//         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error })
+//     }
+// }
+
 
 
 export const pagingProduct = async (req, res) => {
     try {
-        const { pageIndex = 1, pageSize } = req.body;
+        const { pageIndex = 1, pageSize,color,size,price } = req.body;
         let limit = pageSize || 9;
         let skip = (pageIndex - 1) * limit || 0;
+        if (color) {
+            
+        }
         const product = await Product.find()
             .skip(skip)
             .limit(limit)
@@ -127,12 +182,50 @@ export const pagingProduct = async (req, res) => {
 
 export const getProductfeatured = async (req, res) => {
     try {
-        const product = await Product.find({ featured: true }).limit(8);
+        const { pageSize } = req.body
+        let limit = pageSize || 0;
+        const product = await Product.find({ featured: false }).limit(limit).sort({
+            featured:'asc'
+        });
         if (product.length === 0) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: "Product not found" })
         }
         res.status(StatusCodes.OK).json({ message: "Product found successfully", data: product })
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message })
+    }
+}
+
+export const getProductPrice = async (req, res) => {
+    try {
+        const { pageSize } = req.body
+        let limit = pageSize || 0;
+        const product = await Product.find().where('price').gte(200).lte(700).limit(limit).sort({
+           price:1
+        });
+        if (product.length === 0) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Product not found" })
+        }
+        res.status(StatusCodes.OK).json({ message: "Product found successfully", data: product })
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message })
+    }
+}
+
+export const getProductRelated = async (req, res) => {
+    try {
+        const { pageSize,categoryId } = req.body
+        let limit = pageSize || 0;
+        const category = await Category.findById(categoryId);
+        if (!category) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Category not found" })
+        }
+        const product = await Product.find({category:categoryId}).limit(limit)
+        if (product.length === 0) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Product not found" })
+        }
+        res.status(StatusCodes.OK).json({ message: "Product found successfully", data: product })
+    } catch (error) {
+        
     }
 }

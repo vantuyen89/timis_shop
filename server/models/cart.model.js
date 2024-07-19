@@ -17,6 +17,16 @@ const CartSchema = new mongoose.Schema({
             quantity:{
                 type: Number,
                 required: true
+            },
+            color: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Color",
+                required: true
+            },
+            size: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Size",
+                required: true
             }
         }
     ],

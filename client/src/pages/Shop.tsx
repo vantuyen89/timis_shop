@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { IoIosHeartEmpty } from 'react-icons/io'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import bn1 from '@/images/bn1.png'
 import bn2 from '@/images/bn2.png'
 import { Button } from '@/components/ui/button'
@@ -18,13 +18,50 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import PriceRangeSlider from './Test'
 import PriceFilter from './Test'
 import Paginations from '@/components/Pagination'
+import queryString from 'query-string'
+
 const Shop = () => {
+  const location = useLocation()
+  const router = useNavigate()
   const [minPrice, setMinPrice] = useState(1)
   const [maxPrice, setMaxPrice] = useState(500)
   const [pageIndex, setPageIndex] = useState(1)
+  const [searchParams, setSearchParams] = useState(() => {
+    const query = queryString.parse(location.search)
+    return query
+  })
+  // console.log(searchParams);
+  
   const handleMinPriceChange = (e: any) => {
     const value = Math.min(Number(e.target.value), maxPrice - 1)
     setMinPrice(value)
+  }
+
+  const handleParamsSearch = ( value: any) => {
+    console.log(value);
+    
+    let type = 1
+    const data = {
+      [value.k]: value.search
+    }
+    let url = `${location.pathname}${location.search}`
+    console.log(url);
+    if (type === 0) {
+      url = queryString.exclude(url, [value.k])
+    } else {
+      url = queryString.stringifyUrl({
+        url: window.location.pathname,
+        query: {
+          ...searchParams,
+          ...data
+        }
+      })
+
+    }
+      
+    // const newQuery = {...query, minPrice, maxPrice }
+     
+    router(url)
   }
 
   const handleMaxPriceChange = (e: any) => {
@@ -81,13 +118,14 @@ const Shop = () => {
       sale: 18
     }
   ]
-  const sizes = ['29', '30', '31', '32', '34','35', '36']
+  const sizes = ['29', '30', '31', '32', '34', '35', '36']
+  const color = ['29', '30', '31', '32', '34', '35', '36']
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
-  console.log(selectedSize);
-  
+  console.log(selectedSize)
+
   const handleSizeChange = (size: string) => {
     setSelectedSize(size)
-    console.log(size);
+    console.log(size)
   }
 
   const handleSizeChangeCheck = (size: string) => {
@@ -118,6 +156,7 @@ const Shop = () => {
         </p>
       </div>
       <div className='grid grid-cols-12'>
+        {/* <Button onClick={() => handleParamsSearch()}>CLick</Button> */}
         <div className='col-span-3 pr-5 '>
           <div className='pt-9'>
             <Accordion type='single' collapsible className='w-full'>
@@ -125,10 +164,14 @@ const Shop = () => {
                 <AccordionTrigger>Size</AccordionTrigger>
                 <AccordionContent>
                   <div className='grid grid-cols-4 gap-2'>
-                    {sizes.map((size, index) => (
+                    {sizes.map((size: any, index) => (
                       <button
                         key={index}
-                        onClick={() => handleSizeChange(size)}
+                        onClick={() => {
+                          const k: any = 'size'
+                          const search: any = color
+                          handleParamsSearch({ k, search })
+                        }}
                         className={`px-4 py-2 border rounded ${selectedSize === size ? 'border-black bg-gray-200' : 'border-gray-300'}`}
                       >
                         {size}
@@ -142,13 +185,17 @@ const Shop = () => {
                 <AccordionContent>
                   <AccordionContent>
                     <div className='grid grid-cols-4 gap-2'>
-                      {sizes.map((size, index) => (
+                      {color.map((color, index) => (
                         <button
                           key={index}
-                          onClick={() => handleSizeChangeCheck(size)}
-                          className={`px-4 py-2 border rounded ${selectedSize === size ? 'border-black bg-gray-200' : 'border-gray-300'}`}
+                          onClick={() => {
+                            const k: any = 'color'
+                            const search : any = color
+                            handleParamsSearch({ k, search })
+                          }}
+                          className={`px-4 py-2 border rounded ${selectedSize === color ? 'border-black bg-gray-200' : 'border-gray-300'}`}
                         >
-                          {size}
+                          {color}
                         </button>
                       ))}
                     </div>

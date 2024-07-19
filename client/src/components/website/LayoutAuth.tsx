@@ -4,8 +4,7 @@ import { Button } from '../ui/button'
 
 const LayoutAuth = () => {
   return (
-    <div className='w-full h-full bg-gradient-to-r from-fuchsia-600 to-purple-600 py-[114px]'>
-     
+    <div className='w-full h-full py-[114px]'>
       <Outlet />
     </div>
   )

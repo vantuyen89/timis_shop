@@ -30,5 +30,6 @@ export const productValidate = Joi.object({
     variants: Joi.array().items(Joi.object().required().messages()).required().messages(),
     discount: Joi.number().required().messages(),
     countInstock: Joi.number().required().messages(),
+    quantity: Joi.number().required().messages(),
     
 })

@@ -1,84 +1,114 @@
-import React, { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import bn1 from '@/images/bn1.png'
+import { Link, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
-
 import { Swiper, SwiperSlide } from 'swiper/react'
-
-import bn2 from '@/images/bn2.png'
-import bn3 from '@/images/bn3.png'
-import bn4 from '@/images/bn4.png'
-import bn5 from '@/images/bn5.png'
-// Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 import { GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import RelatedProduct from './RelatedProduct'
 import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
+import ListColor from './ListColor'
+import ListSize from './ListSize'
+import DialogSelect from './DialogSelect'
+import instance from '@/config/instance'
+import { toast } from 'sonner'
+import { useQuery } from '@tanstack/react-query'
+import SwiperProduct from '@/components/SwiperProduct'
+import ClipLoader from 'react-spinners/ClipLoader'
+import { useDispatch } from 'react-redux'
+import { addItem, fetApiCArt } from '@/store/slice/cartSlice'
+import { addtoCartById, getCartByUserId } from '@/services/cart'
 
-const images = [bn1, bn2, bn3, bn4]
+// import { addtoCart } from '@/store/slice/cartSlice'
+
 const ProductDetail = () => {
   const [open, setOpen] = useState(false)
   const [open1, setOpen1] = useState(false)
   const [open2, setOpen2] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
-  const [selectedSize, setSelectedSize] = useState(null)
-  const [selectedColor, setSelectedColor] = useState(null)
   const [quantity, setQuantity] = useState(1)
+  const [sizeCart, setSizeCart] = useState<any>(null)
+  const [colorCart, setColorCart] = useState<any>(null)
+  const [category, setCategory] = useState<any>(null)
+  const dispatch = useDispatch<any>()
+  // console.log(product)
+  const { id } = useParams()
+   // console.log(dispatch);
 
-  const sizes = ['29', '30', '31', '32', '34']
-  const colors = [
-    { color: 'Trắng', src: 'path/to/white.jpg' },
-    { color: 'Xám', src: 'path/to/grey.jpg' },
-    { color: 'Nâu', src: 'path/to/brown.jpg' },
-    { color: 'Đen', src: 'path/to/black.jpg' }
-  ]
-
-  const handleSizeChange = (size: any) => {
-    setSelectedSize(size)
-    if (!sizeColorAvailability[size].includes(selectedColor)) {
-      setSelectedColor(null)
-    }
-    
-  }
-
-  const handleColorChange = (color: any) => {
-    if (!selectedSize || sizeColorAvailability[selectedSize]?.includes(color)) {
-      setSelectedColor(color)
-    }
-  }
-
+  const {
+    data: product,
+    isLoading: isLoading1,
+    isError: isError1
+  } = useQuery({
+    queryKey: ['product', id],
+    queryFn: async () => {
+      try {
+        const response = await instance.get(`/product/getProductById/${id}`)
+        setCategory(response.data.category._id)
+        return response.data
+      } catch (error) {
+        console.error('Error fetching product:', error)
+        throw error
+      }
+    },
+    refetchInterval: 1000 * 60 * 15 // refetch every 15 minutes
+  })
+  const {
+    data: productRelated,
+    isLoading: isLoading2,
+    isError: isError2
+  } = useQuery({
+    queryKey: ['productRelated', category],
+    queryFn: async () => {
+      try {
+        const response = await instance.post(`/product/productRelated`, {
+          categoryId: category,
+          pageSize: 6
+        })
+        return response.data
+      } catch (error) {
+        console.error('Error fetching product:', error)
+        throw error
+      }
+    },
+    refetchInterval: 1000 * 60 * 15 // refetch every 15 minutes
+  })
+  if (isLoading1 || isLoading2)
+    return (
+      <div className='flex justify-center items-center mt-[200px]'>
+        <ClipLoader
+          color={'#000000'}
+          loading={isLoading1 || isLoading2}
+          size={150}
+          aria-label='Loading Spinner'
+          data-testid='loader'
+        />
+      </div>
+    )
+  if (isError1 || isError2) return <>Error</>
   const handleQuantityChange = (amount: any) => {
     setQuantity((prevQuantity) => {
       const newQuantity = prevQuantity + amount
       return newQuantity > 0 ? newQuantity : 1
     })
   }
-  const sizeColorAvailability = {
-    '29': ['Trắng', 'Xám'],
-    '30': ['Trắng', 'Xám', 'Nâu'],
-    '31': ['Trắng', 'Xám', 'Đen'],
-    '32': ['Trắng', 'Xám', 'Nâu', 'Đen'],
-    '34': ['Trắng', 'Đen']
+  const handleAddCart = async () => {
+    if (sizeCart === null) {
+      toast.error('Bạn chưa chọn size')
+      return
+    }
+    if (colorCart === null) {
+      toast.error('Bạn chưa chọn màu')
+      return
+    }
+    await addtoCartById({ productId: id, color: colorCart, size: sizeCart, quantity: quantity })
+    // dispatch(addItem({ productId: id, color: colorCart, size: sizeCart, quantity: quantity }))
+   const data =await getCartByUserId()
+    dispatch(fetApiCArt(data))
+    toast.success('Bạn đã thêm sản phẩm vào giỏ hàng')
   }
 
-  const handleAddToCart = () => {
-    if (selectedSize && selectedColor) {
-      const product = {
-        size: selectedSize,
-        color: selectedColor,
-        quantity
-      }
-      console.log('Product added to cart:', product)
-      // Logic to add the product to the cart
-    } else {
-      alert('Please select a size and color.')
-    }
-  }
   return (
     <div className='container flex flex-col'>
       <div className='flex py-4 gap-2'>
@@ -95,16 +125,14 @@ const ProductDetail = () => {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
               }}
-              // pagination={{ clickable: true }}
-              // scrollbar={{ draggable: true }}
               onSwiper={(swiper) => {
-                console.log(swiper)
+                // console.log(swiper)
               }}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
             >
-              {images.map((img, index) => (
+              {product.images.map((img: string, index: number) => (
                 <SwiperSlide key={index} className='w-full'>
-                  <img src={img} alt={`Slide ${index + 1}`} className='w-full' />
+                  <img src={img} alt={`Slide ${index + 1}`} className='w-full object-cover' />
                 </SwiperSlide>
               ))}
               <button className='swiper-button-next after:hidden text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300 '>
@@ -116,7 +144,7 @@ const ProductDetail = () => {
             </Swiper>
 
             <div className='flex justify-center mt-4 space-x-2 w-full'>
-              {images.map((img, index) => (
+              {product?.images?.map((img: string, index: number) => (
                 <img
                   key={index}
                   src={img}
@@ -129,62 +157,29 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-        <div className='col-span-1'></div>
+        <div className='col-span-1 md:col-span-0 '></div>
         <div className='col-span-5'>
           <div className='w-full'>
             <div className='p-6 w-full space-y-4'>
-              <h1 className='text-xl font-bold'>Quần âu nam QACTK320-1</h1>
+              <h1 className='text-xl font-bold'>{product.name}</h1>
               <div className='flex items-center space-x-2'>
                 <p>Mã sản phẩm : 12345</p>
               </div>
               <div className='flex items-center space-x-2'>
-                <p className='text-2xl font-bold'>249.000 ₫</p>
+                <p className='text-2xl font-bold'>{product.price * 1000} ₫</p>
                 <span className='line-through text-gray-500'>389.000 ₫</span>
               </div>
 
               <div className='flex flex-col gap-2'>
                 <p className='font-semibold'>Màu Sắc</p>
-                <div className='flex space-x-2'>
-                  {colors.map((colorObj, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleColorChange(colorObj.color)}
-                      disabled={!sizeColorAvailability[selectedSize]?.includes(colorObj.color)}
-                      className={`p-1 border rounded ${selectedColor === colorObj.color ? 'border-black' : 'border-gray-300'} ${!sizeColorAvailability[selectedSize]?.includes(colorObj.color) ? 'opacity-50 cursor-not-allowed line-through' : ''}`}
-                    >
-                      {colorObj.color}
-                    </button>
-                  ))}
-                </div>
+                <ListColor variants={product.variants} setColorCart={setColorCart} sizeCart={sizeCart} />
               </div>
 
               <div className='flex flex-col gap-2'>
                 <p className='font-semibold'>Size</p>
-                <div className='flex space-x-2'>
-                  {sizes.map((size, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleSizeChange(size)}
-                      className={`px-4 py-2 border rounded ${selectedSize === size ? 'border-black bg-gray-200' : 'border-gray-300'}`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
+                <ListSize variants={product.variants} setSizeCart={setSizeCart} colorCart={colorCart} />
               </div>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant='outline' className='text-red-500'>
-                    Hướng dẫn chọn size
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className='sm:max-w-[425px]'>
-                  <DialogHeader>
-                    <DialogTitle>Hướng dẫn chọn size</DialogTitle>
-                  </DialogHeader>
-                  <div className='py-4'></div>
-                </DialogContent>
-              </Dialog>
+              <DialogSelect />
 
               <div>
                 <p className='font-semibold'>Số lượng</p>
@@ -205,7 +200,7 @@ const ProductDetail = () => {
               </div>
 
               <div className='flex space-x-4'>
-                <button onClick={handleAddToCart} className='flex-1 bg-red-600 text-white py-2 rounded'>
+                <button className='flex-1 bg-red-600 text-white py-2 rounded' onClick={() => handleAddCart()}>
                   THÊM VÀO GIỎ HÀNG
                 </button>
                 <button className='flex-1 bg-red-600 text-white py-2 rounded'>MUA NGAY</button>
@@ -282,7 +277,12 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <RelatedProduct />
+      <SwiperProduct products={productRelated.data} title={`Sản phẩm liên quan`} />
+      {productRelated.data.length === 0 && (
+        <div className='flex justify-center items-center w-full h-full bg-[#f9f9f9] text-center'>
+          <p className='text-xl'>Không có sản phẩm nào liên quan</p>
+        </div>
+      )}
     </div>
   )
 }

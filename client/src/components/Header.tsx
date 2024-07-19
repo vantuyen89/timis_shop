@@ -1,10 +1,9 @@
-import React from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import logo from '../images/timis1.png'
 import Banner from '@/pages/Banner'
 import { CiSearch } from 'react-icons/ci'
-import { FaRegCircleUser } from 'react-icons/fa6'
-import { AiOutlineShoppingCart } from 'react-icons/ai'
+
 import { HiBars3 } from 'react-icons/hi2'
 import {
   Sheet,
@@ -16,16 +15,17 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 
+
+import CartHeader from './CartHeader'
 const Header = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate()
+  const handSearch = (e: any) => {
+    e.preventDefault();
+    navigate(`/shop?search=${searchTerm}`)
+  }
+
   return (
     <header className='lg:sticky sticky lg:top-0 lg:left-0 lg:right-0 top-0 left-0 right-0 bg-white z-[100]'>
       <div className='bg-black'>
@@ -68,11 +68,15 @@ const Header = () => {
                 <img srcSet={logo + ' ' + `2x`} className='w-[100px] lg:w-full' />
               </Link>
             </div>
-            <form className='w-full order-3 lg:order-2 flex gap-2 border-t mt-4 lg:mt-0 border-neutral-400 pt-4 lg:w-auto lg:pt-0 lg:border-0'>
+            <form
+              onSubmit={handSearch}
+              className='w-full order-3 lg:order-2 flex gap-2 border-t mt-4 lg:mt-0 border-neutral-400 pt-4 lg:w-auto lg:pt-0 lg:border-0'
+            >
               <input
                 type='text'
                 className='py-1 pl-6 pr-1 rounded-full bg-white border border-[#F4F4F4] w-full lg:w-[400px]'
                 placeholder='Search'
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button
                 type='submit'
@@ -81,38 +85,7 @@ const Header = () => {
                 <CiSearch className='text-[30px] text-white' />
               </button>
             </form>
-            <div className='order-2 lg:order-3 flex items-center gap-2 lg:gap-6 lg:-mr-9'>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <FaRegCircleUser className='text-[23px] text-[#353535]' />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className='z-[200]'>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className='flex cursor-pointer'>
-                    <div className='flex items-center gap-3'>
-                      <img src={logo} alt='' className='w-6 h-6 rounded-full border' />
-                      <div className='flex flex-col'>
-                        <h5 className='text-[12px]'>Nguyễn Văn Tuyên</h5>
-                        <span className='text-[10px] w-[70px] overflow-hidden overflow-ellipsis whitespace-nowrap '>
-                          Email:tuyennvph39165@gmail.com
-                        </span>
-                      </div>
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className='cursor-pointer'>Đơn hàng của bạn</DropdownMenuItem>
-                  <DropdownMenuItem className='cursor-pointer'>Sản phẩm yêu thích</DropdownMenuItem>
-                  <DropdownMenuItem className='text-red-400 cursor-pointer'>Đăng xuất</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <button className='relative'>
-                <AiOutlineShoppingCart className='text-[25px] text-[#353535]' />
-                <span className='text-[12px] absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white'>
-                  1
-                </span>
-              </button>
-            </div>
+            <CartHeader/>
           </div>
           <div className='hidden lg:block'>
             <div className='container'>

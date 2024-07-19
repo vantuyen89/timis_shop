@@ -14,21 +14,20 @@ export function cn(...inputs: ClassValue[]) {
 
 const uploadFileCloudinary = async (file: File) => {
   try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", CLOUDINARY_PRESET); 
-      formData.append('folder', CLOUDINARY_FOLDER)
-      const response = await axios.post(
-          `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,
-          formData,
-      );
-      if (response.status === 200) {
-        return response.data.url
-      }else{
-        console.log("Error");       
-        return
-      }
-      
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', CLOUDINARY_PRESET)
+    formData.append('folder', CLOUDINARY_FOLDER)
+    formData.append('quality', 'auto:best') // Đảm bảo chất lượng tốt nhất
+    formData.append('width', 'auto') // Để Cloudinary tự động điều chỉnh
+    formData.append('height', 'auto') // Để Cloudinary tự động điều chỉnh
+    const response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload/`, formData)
+    if (response.status === 200) {
+      return response.data.url
+    } else {
+      console.log('Error')
+      return
+    }
   } catch (error) {
       // handle error here
       console.error(error);

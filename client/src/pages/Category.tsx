@@ -34,7 +34,7 @@ const Category = () => {
    })()
   },[])
   return (
-    <div className='bg-[#242424]'>
+    <div className='bg-[#ffffff] border-b-2 container'>
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         loop
@@ -53,7 +53,7 @@ const Category = () => {
           return (
             <SwiperSlide key={category.id} className='py-5 flex justify-center flex-col items-center'>
               <img src={category.imageUrl} className='lg:w-[150px] lg:h-[150px] w-[80px] h-[80px] rounded-full ' />
-              <h5 className='text-white'>{category.name}</h5>
+              <h5 className='text-black'>{category.name}</h5>
             </SwiperSlide>
           )
         })}

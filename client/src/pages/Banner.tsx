@@ -16,8 +16,6 @@ const Banner = () => {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const handleSlideChange = (swiper: any) => {
-    console.log(swiper)
-
     setCurrentSlide(swiper.realIndex) // Cập nhật slide hiện tại khi chuyển slide
   }
   return (
@@ -28,6 +26,7 @@ const Banner = () => {
         delay: 3000,
         disableOnInteraction: false
       }}
+      
       loop={true}
       spaceBetween={50}
       slidesPerView={1}
@@ -36,7 +35,7 @@ const Banner = () => {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev'
       }}
-      onSwiper={(swiper) => console.log(swiper)}
+      // onSwiper={(swiper) => console.log(swiper)}
       onSlideChange={(swiper) => handleSlideChange(swiper)}
     >
       <SwiperSlide className=''>

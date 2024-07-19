@@ -10,7 +10,7 @@ import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 
 const formSchema = z.object({
-  name: z.string().min(2, {
+  name: z.string().min(1, {
     message: 'Nhập tên là chuỗi lớn hơn 2'
   })
 })

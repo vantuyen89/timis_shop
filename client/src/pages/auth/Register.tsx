@@ -2,24 +2,69 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaArrowLeft, FaRegEye, FaRegEyeSlash } from 'react-icons/fa6'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
+import { registerAuth } from '@/services/auth'
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: 'Email'
-  })
+  name: z.string().min(1, {
+    message: 'Bắt buộc phải nhập tên'
+  }),
+  email: z
+    .string()
+    .min(1, {
+      message: 'Bắt buộc phải nhập email'
+    })
+    .email({
+      message: 'Email không đúng đinh dạng'
+    }),
+  password: z.string().min(6, {
+    message: 'Mật khẩu phải có ít nhất 6 ký tự'
+  }),
+  confirmPassword: z
+    .string({
+      required_error: 'Required'
+    })
+    .min(6, { message: 'Mật khẩu phải có ít nhất 6 ký tự' })
 })
 
 export function Register() {
   const [checkPass, setCheckPass] = useState(false)
-  const form = useForm()
-
-  const onSubmit = (data: any) => {
+  const [checkPassConfim, setCheckPassConfim] = useState(false)
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    }
+  })
+  const navigate = useNavigate()
+  const onSubmit = async (data: any) => {
+    if (data.password !== data.confirmPassword) {
+      toast.error('xác nhận mật khẩu không khớp')
+      return
+    }
     console.log(data)
+    const dataRegister = {
+      username: data.name,
+      email: data.email,
+      password: data.password,
+      confirmPassword: data.confirmPassword
+    }
+
+    try {
+      const user = await registerAuth(dataRegister)
+      toast.success('Đăng ký thành công!')
+      navigate('/auth/signin')
+    } catch (error) {
+      toast.error('Bạn đăng ký thất bại')
+    }
   }
   return (
     <div className='relative'>
@@ -33,7 +78,7 @@ export function Register() {
           <form onSubmit={form.handleSubmit(onSubmit)} className='w-full px-5'>
             <FormField
               control={form.control}
-              name='username'
+              name='name'
               render={({ field }: any) => (
                 <FormItem>
                   <FormLabel>Tên người dùng</FormLabel>
@@ -62,10 +107,10 @@ export function Register() {
               name='password'
               render={({ field }: any) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Mật khẩu</FormLabel>
                   <div className='relative'>
                     <FormControl>
-                      <Input placeholder='Password' {...field} type={checkPass ? 'text' : 'password'} />
+                      <Input placeholder='Mật khẩu' {...field} type={checkPass ? 'text' : 'password'} />
                     </FormControl>
                     {checkPass ? (
                       <FaRegEyeSlash
@@ -88,23 +133,23 @@ export function Register() {
             />
             <FormField
               control={form.control}
-              name='confirmpassword'
+              name='confirmPassword'
               render={({ field }: any) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Xác nhận mật khẩu</FormLabel>
                   <div className='relative'>
                     <FormControl>
-                      <Input placeholder='Xác nhận Password' {...field} type={checkPass ? 'text' : 'password'} />
+                      <Input placeholder='Xác nhận mật khẩu' {...field} type={checkPassConfim ? 'text' : 'password'} />
                     </FormControl>
-                    {checkPass ? (
+                    {checkPassConfim ? (
                       <FaRegEyeSlash
-                        onClick={() => setCheckPass((prev) => !prev)}
+                        onClick={() => setCheckPassConfim((prev) => !prev)}
                         size={18}
                         className='absolute top-1/2 right-5 -translate-y-1/2 cursor-pointer'
                       />
                     ) : (
                       <FaRegEye
-                        onClick={() => setCheckPass((prev) => !prev)}
+                        onClick={() => setCheckPassConfim((prev) => !prev)}
                         size={18}
                         className='absolute top-1/2 right-5 -translate-y-1/2 cursor-pointer'
                       />
@@ -119,8 +164,8 @@ export function Register() {
               Submit
             </Button>
           </form>
-          <FormDescription className='text-white text-base'>
-            Bạn đã có tài khoản?{' '}
+          <FormDescription className='text-neutral-900 text-base'>
+            <span>Bạn đã có tài khoản?</span>
             <Link to={'/auth/signin'} className='text-neutral-900 text-base font-semibold'>
               Đăng nhập
             </Link>

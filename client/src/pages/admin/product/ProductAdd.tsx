@@ -29,6 +29,7 @@ const formSchema = z.object({
     message: 'Bạn phải nhập tên sản phẩm'
   }),
   price: z.number().min(1, 'Phải lớn hơn 0'),
+  quantity: z.number().min(1, 'Phải lớn hơn 0'),
   description: z.string().min(1, {
     message: 'Bạn phải nhập mô tả cho sản phẩm'
   }),
@@ -42,7 +43,7 @@ const formSchema = z.object({
       priceVar: z.number().min(1, 'Phải lớn hơn 0')
     })
   ),
-  featured:z.boolean()
+  featured: z.boolean()
 })
 
 const ProductAdd = () => {
@@ -93,7 +94,8 @@ const ProductAdd = () => {
       discount: 0,
       featured: false,
       countInstock: 0,
-      description: ''
+      description: '',
+      quantity: 0,
     }
   })
   const control = form.control
@@ -104,11 +106,7 @@ const ProductAdd = () => {
   const [img, setImg] = useState<any>()
   const [thumbnail, setThumbnail] = useState<any>('')
   const [imagePreview, setImagePreview] = useState(null)
-  console.log(imagePreview)
-  
   const [imagePreviewArray, setImagePreviewArray] = useState([])
-  console.log(imagePreviewArray)
-  
   const handleFileChange = (event:any) => {
     const file = event.target.files[0]
     setThumbnail(file)
@@ -162,7 +160,8 @@ const ProductAdd = () => {
       thumbnail: dataThumbnail,
       category: data.category,
       variants: data.variants,
-      description: data.description
+      description: data.description,
+      quantity: data.quantity,
     }
     console.log(dataProduct)
     
@@ -216,6 +215,25 @@ const ProductAdd = () => {
               />
               <FormField
                 control={form.control}
+                name='quantity'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Số lượng</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Số lượng'
+                        type='number'
+                        {...field}
+                        className=''
+                        onChange={(event) => field.onChange(+event.target.value)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name='discount'
                 render={({ field }) => (
                   <FormItem>
@@ -254,7 +272,7 @@ const ProductAdd = () => {
                 name='countInstock'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Số lượng sản phẩm</FormLabel>
+                    <FormLabel>Số lượng sản phẩm còn</FormLabel>
                     <FormControl>
                       <Input
                         placeholder='Số lượng sản phẩm'
@@ -309,13 +327,10 @@ const ProductAdd = () => {
                     <img key={image} src={image} alt='Image Preview' style={{ width: '80px', height: '80px' }} />
                   ))}
                 </div>
-                
               )}
               <FormLabel>Ảnh sản phẩm</FormLabel>
               <Input placeholder='Ảnh' type='file' className='' multiple={true} onChange={(e) => handleFileChange(e)} />
-              {imagePreview && (
-                <img src={imagePreview} alt='Image Preview' style={{ width: '80px', height: '80px' }} />
-              )}
+              {imagePreview && <img src={imagePreview} alt='Image Preview' style={{ width: '80px', height: '80px' }} />}
             </div>
           </div>
           <FormField

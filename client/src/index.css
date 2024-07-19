@@ -7,7 +7,8 @@ body {
 .container {
     @apply max-w-7xl mx-auto px-4;
 }
-
+.list-color .color-item.disabled{pointer-events:none;opacity:.3;background-color:#0000001a}
+.list-size .size-item.disabled{pointer-events:none;opacity:.3;background-color:#0000001a}
 
   @layer base {
     :root {
