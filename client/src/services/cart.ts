@@ -71,3 +71,13 @@ export const decrementItemCart = async ({ productId, color, size }: ICart) => {
     console.log(error)
   }
 }
+
+export const getCartAllUser = async () => {
+  try {
+    const { data } = await instance.get(`/cart/cartUser`)
+    return data
+  } catch (error) {
+    console.log(error)
+  }
+  
+}

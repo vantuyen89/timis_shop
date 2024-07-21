@@ -16,7 +16,6 @@ export const cartSlice = createSlice({
     fetApiCArt: (state, action) => {
       console.log(action);
       state.cart = action.payload
-
     },
     addItem: (state, action) => {
       const item = action.payload
@@ -27,8 +26,10 @@ export const cartSlice = createSlice({
       const itemId = action.payload
       state.cart = state.cart.filter((item:any) => item.id !== itemId)
     },
-    resetCart: (state, action) => { 
-      state.cart = initialState.cart
+    resetCart: (state, action) => {
+      console.log(action.payload);
+    
+      state.cart = action.payload
     }
   }
 })

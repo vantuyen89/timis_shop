@@ -19,6 +19,7 @@ import ClipLoader from 'react-spinners/ClipLoader'
 import { useDispatch } from 'react-redux'
 import { addItem, fetApiCArt } from '@/store/slice/cartSlice'
 import { addtoCartById, getCartByUserId } from '@/services/cart'
+import { useAuth } from '@/common/hooks/useAuth'
 
 // import { addtoCart } from '@/store/slice/cartSlice'
 
@@ -32,6 +33,7 @@ const ProductDetail = () => {
   const [colorCart, setColorCart] = useState<any>(null)
   const [category, setCategory] = useState<any>(null)
   const dispatch = useDispatch<any>()
+  const { isLoggedIn } = useAuth()
   // console.log(product)
   const { id } = useParams()
    // console.log(dispatch);
@@ -94,6 +96,10 @@ const ProductDetail = () => {
     })
   }
   const handleAddCart = async () => {
+    if (!isLoggedIn) {
+      toast.error('Vui lòng đăng nhập để thêm vào giỏ hàng')
+      return
+    }
     if (sizeCart === null) {
       toast.error('Bạn chưa chọn size')
       return

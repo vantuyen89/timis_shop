@@ -1,21 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { TiDeleteOutline } from 'react-icons/ti'
-import bn1 from '@/images/bn1.png'
+
 import { FiMinus, FiPlus } from 'react-icons/fi'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { getCartByUserId, removeItemFromCart } from '@/services/cart'
+import {
+  decrementItemCart,
+  getCartAllUser,
+  getCartByUserId,
+  incrementItemCart,
+  removeItemFromCart
+} from '@/services/cart'
 import ClipLoader from 'react-spinners/ClipLoader'
 import Paginations from '@/components/Pagination'
 import { useDispatch } from 'react-redux'
-import { ICart } from '@/interfaces/ICart'
 import { fetApiCArt } from '@/store/slice/cartSlice'
+import { reduce } from 'lodash'
 
 const Cart = () => {
   const [pageIndex, setPageIndex] = useState(1)
+  const [cartUser, setCartUser] = useState([])
+  console.log(cartUser)
+  let priceSale : any
+  
   const dispatch = useDispatch<any>()
-  console.log(dispatch)
   const query = useQueryClient()
+  
+  const caculatorTotal = () => {
+    if (!cartUser) return 0
+    return reduce(cartUser, (total, product: any) => total + product?.productId?.price * product.quantity, 0)
+  }
   const {
     data: productCart,
     isLoading,
@@ -24,6 +38,19 @@ const Cart = () => {
     queryKey: ['productCart', pageIndex],
     queryFn: async () => getCartByUserId(pageIndex)
   })
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getCartAllUser()
+        setCartUser(data?.items)
+        priceSale
+        return data.items
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [productCart])
+  
   if (isLoading)
     return (
       <div className='flex justify-center items-center mt-[200px]'>
@@ -37,8 +64,28 @@ const Cart = () => {
       </div>
     )
   if (isError) return <div>Error fetching cart data</div>
-  console.log(productCart)
 
+  const handleRemoveCart = async (productIdCart: string, colorCart: string, sizeCart: string) => {
+    await removeItemFromCart({
+      productId: productIdCart,
+      color: colorCart,
+      size: sizeCart
+    })
+    const data = await getCartByUserId()
+    dispatch(fetApiCArt(data))
+    query.invalidateQueries({
+      queryKey: ['productCart', pageIndex]
+    })
+    caculatorTotal()
+  }
+  if (cartUser.length > 0 && cartUser.length < 3) {
+    priceSale = (30000).toLocaleString('vi-VN')
+  } else if (cartUser.length >= 3 && cartUser.length <= 8) {
+    priceSale = (15000).toLocaleString('vi-VN')  
+  } else if (cartUser.length > 8) {
+    priceSale = (0).toLocaleString('vi-VN')
+  }
+  let totalPrice: any = ((Number(priceSale) + caculatorTotal())*1000).toLocaleString('vi-VN')
   return (
     <div className='container'>
       <div className='flex py-4 gap-2'>
@@ -69,19 +116,7 @@ const Cart = () => {
                           <td className='py-6'>
                             <button
                               className='cursor-pointer'
-                              onClick={async () => {
-                                await removeItemFromCart({
-                                  productId: product.productId,
-                                  color: product.color._id,
-                                  size: product.size._id
-                                })
-                                const data = await getCartByUserId()
-                                dispatch(
-                                  fetApiCArt(data)
-                                )
-                                query.invalidateQueries({
-                                queryKey: ['productCart', pageIndex]})
-                              }}
+                              onClick={() => handleRemoveCart(product.productId, product.color._id, product.size._id)}
                             >
                               <TiDeleteOutline size={25} />
                             </button>
@@ -103,29 +138,39 @@ const Cart = () => {
                               className='mx-auto flex items-center px-3 py-1.5 border border-gray-300 text-gray-800 text-xs outline-none bg-transparent rounded-md'
                             >
                               <FiMinus
-                                // onClick={() =>
-                                //   dispatch(
-                                //     decrementItemAsync({
-                                //       productId: product.productId,
-                                //       color: product.color._id,
-                                //       size: product.size._id
-                                //     })
-                                //   )
-                                // }
+                                onClick={async () => {
+                                  await decrementItemCart({
+                                    productId: product.productId,
+                                    color: product.color._id,
+                                    size: product.size._id
+                                  })
+
+                                  const data = await getCartByUserId()
+                                  dispatch(fetApiCArt(data))
+                                  query.invalidateQueries({
+                                    queryKey: ['productCart', pageIndex]
+                                  })
+                                  caculatorTotal()
+                                }}
                                 className='cursor-pointer'
                               />
 
                               <span className='mx-3 font-bold'>{product.quantity}</span>
                               <FiPlus
-                                // onClick={() =>
-                                //   dispatch(
-                                //     incrementItemAsync({
-                                //       productId: product.productId,
-                                //       color: product.color._id,
-                                //       size: product.size._id
-                                //     })
-                                //   )
-                                // }
+                                onClick={async () => {
+                                  await incrementItemCart({
+                                    productId: product.productId,
+                                    color: product.color._id,
+                                    size: product.size._id
+                                  })
+
+                                  const data = await getCartByUserId()
+                                  dispatch(fetApiCArt(data))
+                                  query.invalidateQueries({
+                                    queryKey: ['productCart', pageIndex]
+                                  })
+                                  caculatorTotal()
+                                }}
                                 className='cursor-pointer'
                               />
                             </button>
@@ -156,32 +201,34 @@ const Cart = () => {
             />
           </div>
         </div>
-        <div className='grid col-span-1 h-[600px]'>
+        <div className='grid col-span-1 h-[600px] sticky top-[150px]'>
           <div className='border rounded-3xl flex flex-col p-5 gap-7'>
             <h3 className='text-[20px] font-medium'>Thông tin khách hàng</h3>
             <div className='flex justify-between'>
-              <span className='text-[#9D9EA2] text-[14px]'>Subtotal</span>
-              <span className='text-[14px]'>$497.00</span>
+              <span className='text-[#9D9EA2] text-[14px]'>Tổng tiền</span>
+              <span className='text-[14px]'>{((caculatorTotal() as number) * 1000).toLocaleString('vi-VN')}đ</span>
             </div>
             <div className='flex justify-between'>
-              <span className='text-[#9D9EA2] text-[14px]'>Discount</span>
-              <span className='text-[14px]'>$0.0</span>
+              <span className='text-[#9D9EA2] text-[14px]'>Phí vận chuyển</span>
+              <span className='text-[14px]'>{priceSale}đ</span>
             </div>
             <div className='flex justify-between'>
-              <span className='text-[#9D9EA2] text-[14px]'>Shipping Costs</span>
-              <span className='text-[14px]'>$50.00</span>
+              <span className='text-[#9D9EA2] text-[14px]'>Thanh toán</span>
+              <span className='text-[14px]'>{totalPrice}đ</span>
             </div>
             <div className='flex items-center gap-4'>
-              <input type='text' className='rounded-xl border h-[48px] pl-8' placeholder='Coupon code' />
-              <button className='btn'>Apply Coupon</button>
+              <input type='text' className='rounded-xl border h-[48px] pl-8' placeholder='Voucher code' />
+              <button className='bg-black rounded-full py-2 px-3 text-white text-xs'>Áp dụng</button>
             </div>
             <hr />
 
             <p className='text-[14px]'>
-              Get Free Shipping for orders over <span className='text-red-500'>$100.00</span>
+              Free ship với 10 đơn hàng <span className='text-red-500'>$100.00</span>
             </p>
-            <a className='text-[14px] underline'>Continue Shopping</a>
-            <button className='bg-[#000] h-[60px] text-white'>Checkout</button>
+            <a className='text-[14px] underline'>Tiếp tục mua sắm</a>
+            <button className='bg-[#000] h-[60px] text-white'>
+              <Link to={'/order'}>Thanh toán</Link>
+            </button>
           </div>
         </div>
       </div>

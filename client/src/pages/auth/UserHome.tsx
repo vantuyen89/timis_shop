@@ -16,6 +16,7 @@ import instance from '@/config/instance'
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import { fetApiCArt, resetCart } from '@/store/slice/cartSlice'
+import { getCartByUserId } from '@/services/cart'
 const UserHome = () => {
   const { isLoggedIn, userAuth, setUserAuth, setIsLoggedIn } = useAuth()
   const navigate = useNavigate()
@@ -28,6 +29,9 @@ const UserHome = () => {
       setUserAuth?.(undefined)
       navigate('/')
       dispatch(resetCart([]))
+      console.log(userAuth);
+      
+      dispatch(fetApiCArt([]))
       toast.success("Bạn đăng xuất thành công")
       return data
     } catch (error) {

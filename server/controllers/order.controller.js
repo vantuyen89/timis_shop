@@ -5,9 +5,9 @@ import Order from "../models/order.model.js";
 
 export const createOrder = async (req, res) => {
     try {
-        const { userId, items, totalPrice, customInfor } = req.body;
-        const order = await Order.create({ userId, items, totalPrice, customInfor });
-        const cart = await Cart.updateOne({ userId }, { items: [] })
+        const { items, totalPrice, customInfor } = req.body;
+        const order = await Order.create({user:req.user._id, items, totalPrice, customInfor });
+        const cart = await Cart.updateOne({user: req.user._id }, { items: [] })
         // cart.save()
         res.status(StatusCodes.CREATED).json({ data: order })
     } catch (error) {
@@ -31,8 +31,7 @@ export const getOrderById = async (req, res) => {
 
 export const getOrderByUserId = async (req, res) => {
     try {
-        const { userId } = req.params
-        const order = await Order.find({ userId: userId })
+        const order = await Order.find({ user: req.user._id })
         if (order.length === 0) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: "Order not found" })
         }

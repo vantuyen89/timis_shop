@@ -20,7 +20,8 @@ import CategoryList from './pages/admin/category/CategoryList'
 import CategoryAdd from './pages/admin/category/CategoryAdd'
 import ColorList from './pages/admin/product/color/ColorList'
 import ColorAdd from './pages/admin/product/color/ColorAdd'
-
+import PrivateRoute from './routes/PrivateRouter'
+import Order from './pages/order/Order'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -31,7 +32,22 @@ function App() {
         <Route path='' element={<LayoutWebsite />}>
           <Route index element={<Homepage />} />
           <Route path='/product/:id' element={<ProductDetail />} />
-          <Route path='/cart' element={<Cart />} />
+          <Route
+            path='/cart'
+            element={
+              <PrivateRoute>
+                <Cart />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/order'
+            element={
+              <PrivateRoute>
+                <Order />
+              </PrivateRoute>
+            }
+          />
           <Route path='/shop' element={<Shop />} />
           <Route path='*' element={<NotFound />} />
         </Route>

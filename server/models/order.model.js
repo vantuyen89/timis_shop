@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const orderItem = new mongoose.Schema({
-    name: {
+    productName: {
         type: String,
         required: true
     },
@@ -16,11 +16,21 @@ const orderItem = new mongoose.Schema({
     image: {
         type: String,
         required: true
+    },
+    color: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Color",
+        required: true
+    },
+    size: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Size",
+        required: true
     }
 })
 
 const orderSchema = new mongoose.Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Auth",
         required: true
@@ -29,7 +39,8 @@ const orderSchema = new mongoose.Schema({
     orderNumber: {
         type: String,
         auto: true,
-        unique: true
+        unique: true,
+        default: () => `ORD-${Math.floor(100 + Math.random() * 900) }`
     },
     customInfor: {
         type: {
@@ -38,6 +49,18 @@ const orderSchema = new mongoose.Schema({
                 required: true
             },
             address: {
+                type: String,
+                required: true
+            },
+            city: {
+                type: String,
+                required: true
+            },
+            district: {
+                type: String,
+                required: true
+            },
+            commune: {
                 type: String,
                 required: true
             },

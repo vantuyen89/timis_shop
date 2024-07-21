@@ -131,7 +131,7 @@ export const increaseQuantity = async (req, res) => {
         if (!cart) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Cart not found' });
         }
-        const product = cart.items.find((item) => !(item.productId.toString() === productId && item.color.toString() === color.toString && item.size.toString() === size.toString));
+        const product = cart.items.find((item) => (item.productId.toString() === productId && item.color.toString() === color && item.size.toString() === size));
         if (!product) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Product not found' });
         }
@@ -165,3 +165,17 @@ export const decreaseQuantity = async (req, res) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
     }
 }
+
+
+export const getAllCartUser = async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ user: req.user._id }).populate("items.productId").populate("items.color").populate("items.size")
+        if (!cart) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: 'Cart not found' });
+        }
+        return res.status(StatusCodes.OK).json(cart)
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message)
+        
+    }
+ }
