@@ -1,153 +1,114 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
 import { IoIosHeartEmpty } from 'react-icons/io'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import bn1 from '@/images/bn1.png'
-import bn2 from '@/images/bn2.png'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import ReactSlider from 'react-slider'
 import { Button } from '@/components/ui/button'
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport
-} from '@/components/ui/navigation-menu'
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import PriceRangeSlider from './Test'
-import PriceFilter from './Test'
 import Paginations from '@/components/Pagination'
 import queryString from 'query-string'
+import instance from '@/config/instance'
+import { IProduct } from '@/interfaces/IProduct'
+import ProductLoading from './product/ProductLoading'
+import CartEmpty from './cart/CartEmpty'
+import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
+import { debounce } from 'lodash'
+import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
 
 const Shop = () => {
-  const location = useLocation()
-  const router = useNavigate()
-  const [minPrice, setMinPrice] = useState(1)
-  const [maxPrice, setMaxPrice] = useState(500)
   const [pageIndex, setPageIndex] = useState(1)
-  const [searchParams, setSearchParams] = useState(() => {
-    const query = queryString.parse(location.search)
-    return query
-  })
-  // console.log(searchParams);
-  
-  const handleMinPriceChange = (e: any) => {
-    const value = Math.min(Number(e.target.value), maxPrice - 1)
-    setMinPrice(value)
+  const [products, setProduct] = useState<any>({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [color, setColor] = useState([])
+  const [size, setSize] = useState([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const paramsObject = Object.fromEntries(searchParams.entries())
+  const location = useLocation()
+  const crumbs = generateBreadcrumbs(location.pathname)
+  const handleReset = () => {
+    setSearchParams(new URLSearchParams({}))
+    handlePaging()
   }
-
-  const handleParamsSearch = ( value: any) => {
-    console.log(value);
-    
-    let type = 1
-    const data = {
-      [value.k]: value.search
+  useEffect(() => {
+    handlePaging()
+  }, [searchParams])
+  const handlePaging = async () => {
+    try {
+      setIsLoading(true)
+      const data = await instance.post(`/product/shop`, paramsObject)
+      setProduct(data)
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+    } finally {
+      setIsLoading(false)
     }
-    let url = `${location.pathname}${location.search}`
-    console.log(url);
-    if (type === 0) {
-      url = queryString.exclude(url, [value.k])
-    } else {
-      url = queryString.stringifyUrl({
-        url: window.location.pathname,
-        query: {
-          ...searchParams,
-          ...data
-        }
-      })
+  }
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const data = await instance.get(`/color/getAllColor`)
+        setColor(data.data)
+      } catch (error) {}
+    })()
+  }, [])
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const data = await instance.get(`/size/getAllSize`)
 
+        setSize(data.data)
+      } catch (error) {}
+    })()
+  }, [])
+  const [maxPrice, setMaxPrice] = useState<number>(0)
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const { data } = await instance.get(`product/productPriceMax`)
+        setMaxPrice(data.data)
+        return data.data
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [])
+  const [values, setValues] = useState([0, maxPrice])
+  const handleOnChangeSelect = (value: string) => {
+    switch (value) {
+      case 'reset':
+        handleReset()
+        setValues([0, maxPrice])
+        break
+      case '1':
+        searchParams.set('sort', '1')
+        setSearchParams(searchParams)
+        break
+      case '-1':
+        searchParams.set('sort', '-1')
+        setSearchParams(searchParams)
+        break
+      default:
+        break
     }
-      
-    // const newQuery = {...query, minPrice, maxPrice }
-     
-    router(url)
   }
 
-  const handleMaxPriceChange = (e: any) => {
-    const value = Math.max(Number(e.target.value), minPrice + 1)
-    setMaxPrice(value)
-  }
-  const products = [
-    {
-      id: 1,
-      name: 'Product 1 quá đẹp , quá đẹp quá đẹp quá đẹp quá',
-      price: 100000,
-      sale: 10
-    },
-    {
-      id: 2,
-      name: 'Product 2 , quá đẹp quá đẹp quá đẹp quá',
-      price: 150000,
-      sale: 20
-    },
-    {
-      id: 3,
-      name: 'Product 3 , quá đẹp quá đẹp quá đẹp quá',
-      price: 80000,
-      sale: 0
-    },
-    {
-      id: 4,
-      name: 'Product 4 , quá đẹp quá đẹp quá đẹp quá',
-      price: 120000,
-      sale: 15
-    },
-    {
-      id: 5,
-      name: 'Product 5',
-      price: 200000,
-      sale: 25
-    },
-    {
-      id: 6,
-      name: 'Product 6',
-      price: 90000,
-      sale: 5
-    },
-    {
-      id: 7,
-      name: 'Product 7',
-      price: 110000,
-      sale: 0
-    },
-    {
-      id: 8,
-      name: 'Product 8',
-      price: 130000,
-      sale: 18
-    }
-  ]
-  const sizes = ['29', '30', '31', '32', '34', '35', '36']
-  const color = ['29', '30', '31', '32', '34', '35', '36']
-  const [selectedSize, setSelectedSize] = useState<string | null>(null)
-  console.log(selectedSize)
-
-  const handleSizeChange = (size: string) => {
-    setSelectedSize(size)
-    console.log(size)
-  }
-
-  const handleSizeChangeCheck = (size: string) => {
-    setSelectedSize(size)
-    console.log(size)
-  }
-  const priceRanges = [
-    { label: '$0 - 99', value: '0-99', count: 14 },
-    { label: '$100 - 199', value: '100-199', count: 46 },
-    { label: '$200 - 299', value: '200-299', count: 9 },
-    { label: '$300 - 399', value: '300-399', count: 5 },
-    { label: '$400+', value: '400+', count: 11 }
-  ]
-
-  const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(null)
-
-  const handlePriceChange = (selectedRange: string | null) => {
-    setSelectedPriceRange(selectedRange)
-    console.log('Selected Price Range:', selectedRange)
+  if (isLoading) {
+    return <ProductLoading />
   }
   return (
     <div className='container flex flex-col'>
+      <Breadcrumb crumbs={ crumbs} />
       <div className='flex flex-col py-5 gap-3 border-b-2'>
         <h3 className='text-[32px] font-bold'>Man collection</h3>
         <p className='font-light w-[600px] leading-8'>
@@ -160,145 +121,236 @@ const Shop = () => {
         <div className='col-span-3 pr-5 '>
           <div className='pt-9'>
             <Accordion type='single' collapsible className='w-full'>
-              <AccordionItem value='item-1' onClick={() => setSelectedSize(null)}>
-                <AccordionTrigger>Size</AccordionTrigger>
+              <AccordionItem value='item-1'>
+                <AccordionTrigger>Màu sắc</AccordionTrigger>
                 <AccordionContent>
-                  <div className='grid grid-cols-4 gap-2'>
-                    {sizes.map((size: any, index) => (
-                      <button
-                        key={index}
-                        onClick={() => {
-                          const k: any = 'size'
-                          const search: any = color
-                          handleParamsSearch({ k, search })
-                        }}
-                        className={`px-4 py-2 border rounded ${selectedSize === size ? 'border-black bg-gray-200' : 'border-gray-300'}`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                  <div className='list-color grid grid-cols-2 gap-3 items-center'>
+                    {color?.map((item: any) => {
+                      console.log(item._id)
+                      return (
+                        <Label
+                          htmlFor={item._id}
+                          key={item._id}
+                          className={cn(
+                            `color-item relative max-w-40 max-h-[50px] overflow-hidden flex items-center border border-solid border-line border-[#e9e9e9] cursor-pointer py-3 px-4 gap-2 rounded  bg-white hover:text-[#ee4d2d]   hover:border-[#ee4d2d] has-[:checked]:text-[#ee4d2d]   has-[:checked]:border-[#ee4d2d]`
+                            // { item._id === searchParams.get('color')? 'has-[:checked]:text-[#ee4d2d]   has-[:checked]:border-[#ee4d2d] ' : ' ' }
+                          )}
+                        >
+                          <input
+                            className='peer'
+                            onChange={(event) => {
+                              const color = event.target.value
+                              searchParams.set('color', color)
+                              setSearchParams(searchParams)
+                            }}
+                            type='radio'
+                            hidden
+                            // defaultChecked={color._id === defaultColor}
+                            name='choose-color'
+                            id={item._id}
+                            value={item._id}
+                          />
+                          <span
+                            style={{
+                              backgroundColor: `#${item.code}`
+                            }}
+                            className={`color shadow-md w-5 h-5 rounded-full bg-orange-300`}
+                          />
+                          <span className='capitalize'>{item.name}</span>
+                        </Label>
+                      )
+                    })}
                   </div>
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value='item-2'>
-                <AccordionTrigger>Màu sắc</AccordionTrigger>
+                <AccordionTrigger>Size</AccordionTrigger>
                 <AccordionContent>
-                  <AccordionContent>
-                    <div className='grid grid-cols-4 gap-2'>
-                      {color.map((color, index) => (
-                        <button
-                          key={index}
-                          onClick={() => {
-                            const k: any = 'color'
-                            const search : any = color
-                            handleParamsSearch({ k, search })
-                          }}
-                          className={`px-4 py-2 border rounded ${selectedSize === color ? 'border-black bg-gray-200' : 'border-gray-300'}`}
+                  <div className='list-color grid grid-cols-3 gap-3 items-center'>
+                    {size?.map((item: any) => {
+                      return (
+                        <Label
+                          htmlFor={item._id}
+                          key={item._id}
+                          className={cn(
+                            `color-item relative max-w-45 max-h-[50px] overflow-hidden flex items-center border border-solid border-line border-[#e9e9e9] cursor-pointer py-3 px-2 gap-2 rounded  bg-white hover:text-[#ee4d2d]   hover:border-[#ee4d2d] ${item._id === searchParams.get('size') ? 'has-[:checked]:text-[#ee4d2d]   has-[:checked]:border-[#ee4d2d] ' : ' '}`
+                          )}
                         >
-                          {color}
-                        </button>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value='item-3' onClick={() => setSelectedPriceRange(null)}>
-                <AccordionTrigger>Mức giá</AccordionTrigger>
-                <AccordionContent>
-                  <PriceFilter priceRanges={priceRanges} onChange={handlePriceChange} />
-                  <div className='mt-4'>
-                    <h2 className='text-lg font-semibold'>Selected Price Range:</h2>
-                    <p>{selectedPriceRange ? selectedPriceRange : 'None'}</p>
+                          <input
+                            className='peer'
+                            onChange={(event) => {
+                              const size = event.target.value
+                              searchParams.set('size', size)
+                              setSearchParams(searchParams)
+                            }}
+                            type='radio'
+                            hidden
+                            // defaultChecked={color._id === defaultColor}
+                            name='choose-color'
+                            id={item._id}
+                            value={item._id}
+                          />
+                          <span className='capitalize text-xs'>{item.name}</span>
+                        </Label>
+                      )
+                    })}
                   </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+            <div>
+              <div className='w-full py-4 flex flex-col gap-4'>
+                <h2>Giá sản phẩm</h2>
+                <ReactSlider
+                  className='horizontal-slider'
+                  thumbClassName='example-thumb'
+                  trackClassName='example-track'
+                  min={0}
+                  max={maxPrice}
+                  value={values}
+                  onChange={debounce((values: any) => {
+                    const minPriceSearch = values[0]
+                    const maxPriceSearch = values[1]
+                    searchParams.set('priceMin', minPriceSearch)
+                    searchParams.set('priceMax', maxPriceSearch)
+                    setSearchParams(searchParams)
+                    setValues(values)
+                  }, 100)}
+                  pearling
+                  minDistance={0}
+                />
+                <p>
+                  Giá bạn muốn tìm : {(values[0] * 1000).toLocaleString('vi-VN')}đ -{' '}
+                  {(values[1] * 1000).toLocaleString('vi-VN')}đ
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div className='col-span-9 flex flex-col'>
           <div className='flex justify-between pr-4 py-6'>
-            <h4 className='text-[25px]'>KẾT QUẢ TÌM KIẾM THEO 'ĐẦM'</h4>
+            {paramsObject?.search ? (
+              <h4 className='text-[25px]'>KẾT QUẢ TÌM KIẾM THEO {paramsObject?.search}</h4>
+            ) : (
+              <div></div>
+            )}
+
             <div>
-              <NavigationMenu className=''>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className='rounded-2xl border'>Sắp xếp theo</NavigationMenuTrigger>
-                    <NavigationMenuContent className='md:w-[200px] lg:w-[140px] p-2'>
-                      <NavigationMenuLink className='w-full text-[12px] font-light flex flex-col gap-1'>
-                        <Button className='w-full text-[12px] bg-[#f2f2f2] hover:bg-[#dedede] text-black'>
-                          Sản phẩm Mới nhất
-                        </Button>
-                        <Button className='w-full text-[12px] bg-[#f2f2f2] hover:bg-[#dedede] text-black'>
-                          Tăng dần
-                        </Button>
-                        <Button className='w-full text-[12px] bg-[#f2f2f2] hover:bg-[#dedede] text-black'>
-                          Giảm dần
-                        </Button>
-                      </NavigationMenuLink>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
+              <Select onValueChange={handleOnChangeSelect}>
+                <SelectTrigger className='w-[180px]'>
+                  <SelectValue placeholder='Sắp xếp theo' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Lựa chọn</SelectLabel>
+                    <SelectItem
+                      value='reset'
+                      className='cursor-pointer'
+                    
+                    >
+                      Mặc định
+                    </SelectItem>
+                    <SelectItem
+                      value='1'
+                      className='cursor-pointer'
+                    >
+                      Giá : thấp đến cao
+                    </SelectItem>
+                    <SelectItem
+                      value='-1'
+                      className='cursor-pointer'
+                    >
+                      Giá : cao đến thấp
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div>
-            <div className='w-full grid lg:grid-cols-3 grid-cols-2 gap-7'>
-              {products.map((product) => {
-                return (
-                  <div className='group'>
-                    <div>
-                      <div className='relative overflow-hidden border rounded-2xl bg-[#F4F4F4] flex justify-center items-center '>
-                        {/* <img src={bn1} className='py-6 w-full h-full' /> */}
-                        <div className='relative group inline-block'>
-                          <img
-                            className='object-cover w-full h-full transition duration-300 transform group-hover:scale-50'
-                            src={bn1}
-                            alt='Image 1'
-                          />
-                          <img
-                            className='absolute top-0 left-0 w-full h-full object-cover transition duration-300 opacity-0 group-hover:opacity-100'
-                            src={bn2}
-                            alt='Image 2'
-                          />
-                        </div>
-                        <div className='absolute flex justify-center items-center -bottom-10 group-hover:bottom-14 transition-all duration-300 ease-in-out'>
-                          <Link
-                            to={'/'}
-                            className='w-[150px] border text-white bg-[#000000] bg-opacity-30 text-center rounded-full leading-[40px] border-none transition-transform hover:scale-90 ease-in-out'
-                          >
-                            Xem nhanh
-                          </Link>
-                        </div>
-                        <div className='absolute -right-10 top-5 group-hover:right-3 transition-all border-opacity-30 duration-300 ease-in-out border rounded-full p-1 border-[#545454]'>
-                          <IoIosHeartEmpty className='text-[20px] border-opacity-30 text-[#545454]' />
-                        </div>
-                        <div className='absolute left-3 top-5 rounded-t-full rounded-b-full rounded-br-none  p-1 bg-[#f85656]'>
-                          <p className='text-[14px] p-1 text-white'>50%</p>
+            {products?.data?.content.length === 0 ? (
+              <div className='mx-auto'>
+                <CartEmpty title='Không có sản phẩm nào' />
+              </div>
+            ) : (
+              <div className='w-full grid lg:grid-cols-3 grid-cols-2 gap-7'>
+                <>
+                  {products?.data?.content?.map((product: IProduct) => {
+                    return (
+                      <div className='group'>
+                        <div>
+                          <div className='relative overflow-hidden border rounded-2xl bg-[#F4F4F4] flex justify-center items-center '>
+                            {/* <img src={bn1} className='py-6 w-full h-full' /> */}
+                            <div className='relative group inline-block'>
+                              <img
+                                className='object-cover w-full h-full transition duration-300 transform group-hover:scale-50'
+                                src={product.thumbnail}
+                                alt='Image 1'
+                              />
+                              <img
+                                className='absolute top-0 left-0 w-full h-full object-cover transition duration-300 opacity-0 group-hover:opacity-100'
+                                src={product.images[0]}
+                                alt='Image 2'
+                              />
+                            </div>
+                            <div className='absolute flex justify-center items-center -bottom-10 group-hover:bottom-14 transition-all duration-300 ease-in-out'>
+                              <Link
+                                to={`/shop/${product._id}`}
+                                className='w-[150px] border text-white bg-[#000000] bg-opacity-30 text-center rounded-full leading-[40px] border-none transition-transform hover:scale-90 ease-in-out'
+                              >
+                                Xem nhanh
+                              </Link>
+                            </div>
+                            <div className='absolute -right-10 top-5 group-hover:right-3 transition-all border-opacity-30 duration-300 ease-in-out border rounded-full p-1 border-[#545454]'>
+                              <IoIosHeartEmpty className='text-[20px] border-opacity-30 text-[#545454]' />
+                            </div>
+                            <div className='absolute left-3 top-5 rounded-t-full rounded-b-full rounded-br-none  p-1 bg-[#f85656]'>
+                              <p className='text-[14px] p-1 text-white'>{product.discount}%</p>
+                            </div>
+                          </div>
+                          <div className='my-4'>
+                            <h3 className=' lg:text-base text-[14px] text-[#1A1E26] my-4 font-light w-70 overflow-hidden overflow-ellipsis whitespace-nowrap'>
+                              <Link to={`shop/${product._id}`}>{product.name}</Link>
+                            </h3>
+                            <div className='flex h-[20px] gap-4'>
+                              {product.variants?.map((color: any, index: number) => {
+                                return (
+                                  <div
+                                    className={`rounded-full h-full w-[20px]`}
+                                    style={{
+                                      backgroundColor: `#${color?.color?.code}`
+                                    }}
+                                    key={index}
+                                  ></div>
+                                )
+                              })}
+                            </div>
+                            <div className='flex gap-2 justify-start pl-2 my-4 items-center '>
+                              <h5 className='text-[18px] text-[#000]'>
+                                {(product.price * 1000).toLocaleString('vi-VN')}đ
+                              </h5>
+                              {/* <span className='text-[15px] text-[#767676]'>
+                        <del>${(product.price*((100-(product.discount)/100)/100)).toLocaleString('vi-VN')}đ</del>
+                      </span> */}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className='my-4'>
-                        <h3 className=' lg:text-base text-[14px] text-[#1A1E26] my-4 font-light w-70 overflow-hidden overflow-ellipsis whitespace-nowrap'>
-                          {product.name}
-                        </h3>
-                        <div className='flex gap-2 justify-start pl-2 my-4 items-center '>
-                          <h5 className='text-[18px] text-[#000]'>{product.price.toLocaleString('vi-VN')}đ</h5>
-                          <span className='text-[15px] text-[#767676]'>
-                            <del>${(80000).toLocaleString('vi-VN')}đ</del>
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+                    )
+                  })}
+                </>
+              </div>
+            )}
           </div>
           <div className='flex justify-center py-4'>
             <Paginations
-              pageCount={8}
+              pageCount={products?.data?.totalPage}
               handlePageClick={(event: any) => {
-                console.log(event.selected)
+                console.log(event);
+                
                 setPageIndex(event.selected + 1)
+                searchParams.set('pageIndex', event.selected + 1)
+                setSearchParams(searchParams)
               }}
             />
           </div>

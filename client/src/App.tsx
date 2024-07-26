@@ -22,6 +22,15 @@ import ColorList from './pages/admin/product/color/ColorList'
 import ColorAdd from './pages/admin/product/color/ColorAdd'
 import PrivateRoute from './routes/PrivateRouter'
 import Order from './pages/order/Order'
+import MyOrder from './pages/order/MyOrder'
+import OrderSuccess from './pages/order/OrderSuccess'
+import MyInfor from './components/MyInfor'
+import Information from './pages/auth/Information'
+import OrderPending from './pages/admin/order/OrderPending'
+import ProductUpdate from './pages/admin/product/ProductUpdate'
+import SizeUpdate from './pages/admin/product/size/SizeUpdate'
+import ColorUpdate from './pages/admin/product/color/ColorUpdate'
+import CategoryUpdate from './pages/admin/category/CategoryUpdate'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -31,7 +40,7 @@ function App() {
       <Routes>
         <Route path='' element={<LayoutWebsite />}>
           <Route index element={<Homepage />} />
-          <Route path='/product/:id' element={<ProductDetail />} />
+          <Route path='/shop/:id' element={<ProductDetail />} />
           <Route
             path='/cart'
             element={
@@ -50,6 +59,25 @@ function App() {
           />
           <Route path='/shop' element={<Shop />} />
           <Route path='*' element={<NotFound />} />
+          <Route
+            path='/myinfor'
+            element={
+              <PrivateRoute>
+                <MyInfor />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<Information />} />
+            <Route path='myorder' element={<MyOrder />} />
+          </Route>
+          <Route
+            path='/order/success'
+            element={
+              <PrivateRoute>
+                <OrderSuccess />
+              </PrivateRoute>
+            }
+          />
         </Route>
         <Route path='auth' element={<LayoutAuth />}>
           <Route path='register' element={<Register />} />
@@ -58,13 +86,18 @@ function App() {
         <Route path='admin' element={<LayoutAdmin />}>
           <Route index element={<MainContent />} />
           <Route path='product' element={<ProductList />} />
+          <Route path='productUpdate/:id' element={<ProductUpdate />} />
           <Route path='productAdd' element={<ProductAdd />} />
           <Route path='size' element={<SizeList />} />
           <Route path='sizeAdd' element={<SizeAdd />} />
+          <Route path='sizeUpdate/:id' element={<SizeUpdate />} />
           <Route path='category' element={<CategoryList />} />
           <Route path='categoryAdd' element={<CategoryAdd />} />
+          <Route path='categoryUpdate/:id' element={<CategoryUpdate />} />
           <Route path='color' element={<ColorList />} />
           <Route path='colorAdd' element={<ColorAdd />} />
+          <Route path='colorUpdate/:id' element={<ColorUpdate />} />
+          <Route path='order' element={<OrderPending />} />
         </Route>
       </Routes>
     </>

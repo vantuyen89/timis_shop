@@ -40,7 +40,7 @@ const orderSchema = new mongoose.Schema({
         type: String,
         auto: true,
         unique: true,
-        default: () => `ORD-${Math.floor(100 + Math.random() * 900) }`
+        default: () => `ORD-${Math.floor(100 + Math.random() * 900)}`
     },
     customInfor: {
         type: {

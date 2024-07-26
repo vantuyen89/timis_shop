@@ -2,7 +2,7 @@ import React from 'react'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
 import bn1 from '../images/bn1.png'
 import bn2 from '../images/bn2.png'
-import {Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -12,7 +12,10 @@ import 'swiper/css/scrollbar'
 import { GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
 import { IoIosHeartEmpty } from 'react-icons/io'
-const SwiperProduct = ({ products,title }: any) => {
+import { IProduct } from '@/interfaces/IProduct'
+const SwiperProduct = ({ products, title }: any) => {
+  console.log(products)
+
   return (
     <>
       <div className='py-[40px] flex justify-center items-center gap-2 '>
@@ -40,7 +43,7 @@ const SwiperProduct = ({ products,title }: any) => {
           // onSwiper={(swiper: any) => console.log(swiper)}
           // onSlideChange={() => console.log('slide change')}
         >
-          {products.map((product: any) => {
+          {products.map((product: IProduct) => {
             return (
               <SwiperSlide className='lg:w-[310px] w-[300px] group'>
                 <div key={product._id}>
@@ -60,7 +63,7 @@ const SwiperProduct = ({ products,title }: any) => {
                     </div>
                     <div className='absolute flex justify-center items-center -bottom-10 group-hover:bottom-14 transition-all duration-300 ease-in-out'>
                       <Link
-                        to={`/product/${product._id}`}
+                        to={`/shop/${product._id}`}
                         className='w-[150px] border text-white bg-[#000000] bg-opacity-30 text-center rounded-full leading-[40px] border-none transition-transform hover:scale-90 ease-in-out'
                       >
                         Xem nhanh
@@ -75,8 +78,22 @@ const SwiperProduct = ({ products,title }: any) => {
                   </div>
                   <div className='my-4'>
                     <h3 className=' lg:text-base text-[14px] text-[#1A1E26] my-4 font-light w-70 overflow-hidden overflow-ellipsis whitespace-nowrap'>
-                      <Link to={`product/${product._id}`}>{product.name}</Link>
+                      <Link to={`shop/${product._id}`}>{product.name}</Link>
                     </h3>
+                    <div className='flex h-[20px] gap-4'>
+                      {product.variants?.map((color: any, index: number) => {
+                        
+                        return (
+                          <div
+                            className={`rounded-full h-full w-[20px]`}
+                            style={{
+                              backgroundColor: `#${color?.color?.code}`
+                            }}
+                            key={index}
+                          ></div>
+                        )
+                      })}
+                    </div>
                     <div className='flex gap-2 justify-start pl-2 my-4 items-center '>
                       <h5 className='text-[18px] text-[#000]'>{(product.price * 1000).toLocaleString('vi-VN')}đ</h5>
                       {/* <span className='text-[15px] text-[#767676]'>

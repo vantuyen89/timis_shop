@@ -29,17 +29,13 @@ const Homepage = () => {
   useEffect(() => {
     (async () => {
       const { data } = await instance.post(`product/productFeatured`, { pageSize })
-      console.log(data)
       setProducts(data.data)
-      console.log(data)
     })()
   }, [])
   useEffect(() => {
     (async () => {
       const { data } = await instance.post(`product/productPrice`, { pageSize })
-      console.log(data)
       setProductPrice(data.data)
-      console.log(data)
     })()
   }, [])
   return (

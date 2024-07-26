@@ -17,8 +17,8 @@ const Sidebar = () => {
               <AccordionItem value='item-1'>
                 <AccordionTrigger>Sản phẩm</AccordionTrigger>
                 <AccordionContent className='flex flex-col gap-4'>
-                  <Link to={'/admin/product'}>ProductList</Link>
-                  <Link to={'/admin/productAdd'}>ProductAdd</Link>
+                  <Link to={'/admin/product'}>Danh sách sản phẩm</Link>
+                  <Link to={'/admin/productAdd'}>Thêm sản phẩm</Link>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -26,10 +26,10 @@ const Sidebar = () => {
           <li className='p-2 hover:bg-gray-700 cursor-pointer'>
             <Accordion type='single' collapsible className='w-full'>
               <AccordionItem value='item-1'>
-                <AccordionTrigger>Category</AccordionTrigger>
+                <AccordionTrigger>Danh mục</AccordionTrigger>
                 <AccordionContent className='flex flex-col gap-4'>
-                  <Link to={'/admin/category'}>CategoryList</Link>
-                  <Link to={'/admin/categoryAdd'}>CategoryAdd</Link>
+                  <Link to={'/admin/category'}>Danh sách danh mục</Link>
+                  <Link to={'/admin/categoryAdd'}>Thêm danh mục</Link>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -37,10 +37,10 @@ const Sidebar = () => {
           <li className='p-2 hover:bg-gray-700 cursor-pointer'>
             <Accordion type='single' collapsible className='w-full'>
               <AccordionItem value='item-1'>
-                <AccordionTrigger>Size</AccordionTrigger>
+                <AccordionTrigger>Kích thước</AccordionTrigger>
                 <AccordionContent className='flex flex-col gap-4'>
-                  <Link to={'/admin/size'}>SizeList</Link>
-                  <Link to={'/admin/sizeAdd'}>SizeAdd</Link>
+                  <Link to={'/admin/size'}>Danh sách kích thức</Link>
+                  <Link to={'/admin/sizeAdd'}>Thêm kích thước</Link>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -48,10 +48,20 @@ const Sidebar = () => {
           <li className='p-2 hover:bg-gray-700 cursor-pointer'>
             <Accordion type='single' collapsible className='w-full'>
               <AccordionItem value='item-1'>
-                <AccordionTrigger>Color</AccordionTrigger>
+                <AccordionTrigger>Màu sắc</AccordionTrigger>
                 <AccordionContent className='flex flex-col gap-4'>
-                  <Link to={'/admin/color'}>ColorList</Link>
-                  <Link to={'/admin/colorAdd'}>ColorAdd</Link>
+                  <Link to={'/admin/color'}>Danh sách màu sắc</Link>
+                  <Link to={'/admin/colorAdd'}>Thêm màu sắc</Link>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </li>
+          <li className='p-2 hover:bg-gray-700 cursor-pointer'>
+            <Accordion type='single' collapsible className='w-full'>
+              <AccordionItem value='item-1'>
+                <AccordionTrigger>Đơn hàng</AccordionTrigger>
+                <AccordionContent className='flex flex-col gap-4'>
+                  <Link to={'/admin/order'}>Đơn hàng</Link>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

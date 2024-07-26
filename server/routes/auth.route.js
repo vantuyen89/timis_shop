@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { curentUser, logout, refreshToken, signin, signup } from "../controllers/auth.controller.js";
+import { curentUser, logout, refreshToken, signin, signup, updateUser } from "../controllers/auth.controller.js";
 import authentication from "../middlewares/authentication.js";
 
 
@@ -8,5 +8,6 @@ routerAuth.post("/signup", signup)
 routerAuth.post("/signin", signin)
 routerAuth.post("/logout",logout)
 routerAuth.get("/curent-user", authentication, curentUser)
-routerAuth.post("/refreshToken",refreshToken)
+routerAuth.post("/refreshToken", refreshToken)
+routerAuth.post("/updateUser",authentication,updateUser)
 export default routerAuth

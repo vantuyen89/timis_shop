@@ -48,13 +48,17 @@ const CategoryList = () => {
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{data.name}</TableCell>
-                <TableCell><img src={data.imageUrl} alt={data.name} className='w-[90px] h-[90px] ' /></TableCell>
+                <TableCell>
+                  <img src={data.imageUrl} alt={data.name} className='w-[90px] h-[90px] ' />
+                </TableCell>
                 <TableCell>{data.description}</TableCell>
                 <TableCell>{data.slug}</TableCell>
                 <TableCell>{formattedDate}</TableCell>
 
                 <TableCell>
-                  <button className='text-white bg-blue-500 px-4 py-2 rounded-md'>Sửa</button>
+                  <button className='text-white bg-blue-500 px-4 py-2 rounded-md'>
+                    <Link to={`/admin/categoryUpdate/${data._id}`}>Cập nhật</Link>
+                  </button>
                   <button className='text-white bg-red-500 px-4 py-2 rounded-md ml-4'>Ẩn</button>
                 </TableCell>
               </TableRow>

@@ -37,4 +37,36 @@ export const getAllSize = async (req, res) => {
     }
 }
 
+export const updateSize = async (req, res) => { 
+    try {
+        const { error } = sizeValidate.validate(req.body, {
+            abortEarly: false
+        });
+        if (error) {
+            const errors = error.details.map(item => item.message)
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: errors })
+        }
+        const size = await Size.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!size) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Size not found" })
+        }
+        res.status(StatusCodes.OK).json({ message: "Size updated successfully", data: size })
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message })
+    }
+
+}
+
+export const getSizeId = async (req, res) => {
+    try {
+        const size = await Size.findById(req.params.id);
+        if (!size) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Size not found" })
+        }
+        res.status(StatusCodes.OK).json(size)
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error })
+    }
+ }
+
 

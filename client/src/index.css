@@ -82,3 +82,25 @@ body {
       @apply bg-background text-foreground;
     }
   }
+
+  .horizontal-slider {
+  width: 100%;
+  height: 3px;
+}
+
+.example-thumb {
+  height: 17px;
+  width: 17px;
+  background-color: #f8f8f8;
+  border: #696060 solid;
+  cursor: grab;
+  border-radius: 50%;
+  top: -5px;
+}
+
+.example-track {
+  top: 0;
+  bottom: 0;
+  background: #ddd;
+  border-radius: 999px;
+}

@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes"
 // import Product from "../models/product.schema.js";
 import slugify from "slugify"
 import { categoryValidate } from "../validation/product.validation.js";
+import Product from "../models/product.model.js";
 export const createCategory = async (req, res) => {
     try {
         const { error } = categoryValidate.validate(req.body, {
@@ -43,18 +44,17 @@ export const getAllCategory = async (req, res) => {
 //         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({message:error})
 //     }
 // }
-// export const getCategoryById = async (req, res) => {
-//     try {
-//         const product = await Product.find({ category: req.params.id })
-//         const category = await Category.findById(req.params.id);
-//         if (!category) {
-//             return res.status(StatusCodes.NOT_FOUND).json({ message: "Category not found" })
-//         }
-//         res.status(StatusCodes.OK).json({ category, product })
-//     } catch (error) {
-//         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error })
-//     }
-// }
+export const getCategoryById = async (req, res) => {
+    try {
+        const category = await Category.findById(req.params.id);
+        if (!category) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Category not found" })
+        }
+        res.status(StatusCodes.OK).json(category)
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error })
+    }
+}
 export const deleteCategory = async (req, res) => {
     try {
         const category = await Category.findByIdAndDelete(req.params.id);

@@ -9,30 +9,32 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 import instance from '@/config/instance'
-
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 interface Category {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
+  _id: string
+  name: string
+  description: string
+  imageUrl: string
 }
 
 const Category = () => {
   const [category, setCategory] = useState<Category[]>([])
-  
+  const navigate = useNavigate()
+  const handleSearchCategory = (id:string) => {
+    navigate(`/shop?category=${id}`)
+  }
+
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
         const { data } = await instance.get(`/category/getAll`)
-        console.log(data);
-        
-        setCategory(data);
+        setCategory(data)
       } catch (error) {
-        console.log(error); 
+        console.log(error)
       }
-   })()
-  },[])
+    })()
+  }, [])
   return (
     <div className='bg-[#ffffff] border-b-2 container'>
       <Swiper
@@ -49,11 +51,17 @@ const Category = () => {
         // onSwiper={(swiper) => console.log(swiper)}
         // onSlideChange={() => console.log('slide change')}
       >
-        {category.map((category: Category) => {
+        {category?.map((category: Category) => {
           return (
-            <SwiperSlide key={category.id} className='py-5 flex justify-center flex-col items-center'>
-              <img src={category.imageUrl} className='lg:w-[150px] lg:h-[150px] w-[80px] h-[80px] rounded-full ' />
-              <h5 className='text-black'>{category.name}</h5>
+            <SwiperSlide key={category._id} className='py-5 flex justify-center flex-col items-center'>
+              <img
+                src={category.imageUrl}
+                className='lg:w-[150px] lg:h-[150px] w-[80px] h-[80px] rounded-full cursor-pointer'
+                onClick={() => handleSearchCategory(category._id)}
+              />
+              <h5 className='text-black cursor-pointer' onClick={() => handleSearchCategory(category._id)}>
+                {category.name}
+              </h5>
             </SwiperSlide>
           )
         })}

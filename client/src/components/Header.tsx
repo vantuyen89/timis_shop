@@ -27,7 +27,7 @@ const Header = () => {
   }
 
   return (
-    <header className='lg:sticky sticky lg:top-0 lg:left-0 lg:right-0 top-0 left-0 right-0 bg-white z-[100]'>
+    <header className='lg:sticky sticky lg:top-0 lg:left-0 lg:right-0 top-0 left-0 right-0 bg-white z-[10]'>
       <div className='bg-black'>
         <div className='container text-center py-2'>
           <p className='text-[12px] lg:text-sm text-white'>
@@ -47,20 +47,80 @@ const Header = () => {
                     <HiBars3 className='text-[24px]' />
                   </SheetTrigger>
                   <SheetContent side={'left'}>
-                    <SheetHeader>
-                      <SheetTitle>Edit profile</SheetTitle>
-                      <SheetDescription>
-                        Make changes to your profile here. Click save when you're done.
-                      </SheetDescription>
-                    </SheetHeader>
-                    <div className='grid gap-4 py-4'>
-                      <p>hahah</p>
+                    <div>
+                      <ul className='lg:flex flex-col items-center justify-center space-x-10 text-[#46494F]'>
+                        <li>
+                          <NavLink
+                            to={'/'}
+                            style={({ isActive }) => ({
+                              fontWeight: isActive ? 'bold' : 'normal',
+                              borderBottomColor: isActive ? 'black' : 'none',
+                              borderBottomWidth: isActive ? '4px' : ''
+                            })}
+                            className={`relative block pt-4 group`}
+                          >
+                            Trang chủ
+                            <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to={'/shop'}
+                            style={({ isActive }) => ({
+                              fontWeight: isActive ? 'medium' : 'normal',
+                              borderBottomColor: isActive ? 'black' : 'none',
+                              borderBottomWidth: isActive ? '4px' : ''
+                            })}
+                            className={`relative block pt-4 group`}
+                          >
+                            Shop All
+                            <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to={'/ddd'}
+                            style={({ isActive }) => ({
+                              fontWeight: isActive ? 'bold' : 'normal',
+                              borderBottomColor: isActive ? 'black' : 'none',
+                              borderBottomWidth: isActive ? '4px' : ''
+                            })}
+                            className={`relative block pt-4 group`}
+                          >
+                            FLower
+                            <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to={'/ccc'}
+                            style={({ isActive }) => ({
+                              fontWeight: isActive ? 'bold' : 'normal',
+                              borderBottomColor: isActive ? 'black' : 'none',
+                              borderBottomWidth: isActive ? '4px' : ''
+                            })}
+                            className={`relative block pt-4 group`}
+                          >
+                            Liên hệ
+                            <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to={'/sss'}
+                            style={({ isActive }) => ({
+                              fontWeight: isActive ? 'bold' : 'normal',
+                              borderBottomColor: isActive ? 'black' : 'none',
+                              borderBottomWidth: isActive ? '4px' : ''
+                            })}
+                            className={`relative block pt-4 group`}
+                          >
+                            Tin tức
+                            <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
+                          </NavLink>
+                        </li>
+                      </ul>
                     </div>
-                    <SheetFooter>
-                      <SheetClose asChild>
-                        <button type='submit'>Save changes</button>
-                      </SheetClose>
-                    </SheetFooter>
                   </SheetContent>
                 </Sheet>
               </button>
@@ -85,7 +145,7 @@ const Header = () => {
                 <CiSearch className='text-[30px] text-white' />
               </button>
             </form>
-            <CartHeader/>
+            <CartHeader />
           </div>
           <div className='hidden lg:block'>
             <div className='container'>

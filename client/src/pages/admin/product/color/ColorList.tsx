@@ -50,7 +50,7 @@ const SizeList = () => {
                 <TableCell>{data.code}</TableCell>
                 <TableCell>{formattedDate}</TableCell>
                 <TableCell>
-                  <button className='text-white bg-blue-500 px-4 py-2 rounded-md'>Sửa</button>
+                  <button className='text-white bg-blue-500 px-4 py-2 rounded-md'><Link to={`/admin/colorUpdate/${data._id}`}>Cập nhật</Link></button>
                   <button className='text-white bg-red-500 px-4 py-2 rounded-md ml-4'>Ẩn</button>
                 </TableCell>
               </TableRow>

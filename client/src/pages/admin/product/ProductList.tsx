@@ -59,8 +59,12 @@ const ProductList = () => {
                 <TableCell>{formattedDate}</TableCell>
                 <TableCell>{data.discount}</TableCell>
                 <TableCell>
-                  <button className='text-white bg-blue-500 px-4 py-2 rounded-md'>Sửa</button>
-                  <button className='text-white bg-red-500 px-4 py-2 rounded-md ml-4'>Xóa</button>
+                  <div className='flex'>
+                    <button className='text-white bg-blue-500 px-4 py-2 rounded-md'>
+                      <Link to={`/admin/productUpdate/${data._id}`}>Cập nhật</Link>
+                    </button>
+                    <button className='text-white bg-red-500 px-4 py-2 rounded-md ml-4'>Xóa</button>
+                  </div>
                 </TableCell>
               </TableRow>
             )

@@ -42,3 +42,36 @@ export const getAllColor = async (req, res) => {
 }
 
 
+export const updateColor = async (req, res) => {
+    try {
+        const { error } = colorValidate.validate(req.body, {
+            abortEarly: false
+        });
+        if (error) {
+            const errors = error.details.map(item => item.message)
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: errors })
+        }
+        const color = await Color.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!color) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Color not found" })
+        }
+        res.status(StatusCodes.OK).json({ message: "Color updated successfully", data: color })
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message })
+    }
+}
+ 
+
+export const getColorId = async (req, res) => { 
+    try {
+        const color = await Color.findById(req.params.id);
+        if (!color) {
+            return res.status(StatusCodes.NOT_FOUND).json({ message: "Color not found" })
+        }
+        res.status(StatusCodes.OK).json(color)
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message })
+    }
+}
+
+

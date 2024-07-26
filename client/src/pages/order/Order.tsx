@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -20,6 +19,7 @@ import { createOrder } from '@/services/order'
 import { useQueryClient } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
 import { fetApiCArt } from '@/store/slice/cartSlice'
+import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
 const Order = () => {
   const formSchema = z.object({
     username: z.string().min(2, {
@@ -44,6 +44,7 @@ const Order = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
   })
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const query = useQueryClient()
   const onSubmit =async (data: any) => {
@@ -57,6 +58,11 @@ const Order = () => {
         size: order?.size?._id
       }
     })
+    if (orderItem.length === 0) {
+      toast.error('Chưa có sản phẩm nào trong giỏ hàng')
+      return
+      
+    }
     const cityName = city?.find((city) => city.idProvince === data.city)
     const districtName = district?.find((district) => district.idDistrict === data.district)
     const communeName = commune?.find((commune) => commune.idCommune === data.commune)
@@ -78,6 +84,7 @@ const Order = () => {
       query.invalidateQueries({
         queryKey: ['productCart', 1]
       })
+      navigate('/order/success')
       return 
     } catch (error) {
       toast.error('Đặt hàng thất bại!')
@@ -87,7 +94,7 @@ const Order = () => {
   const [cartUser, setCartUser] = useState([])
   const [city, setCity] = useState<ICity[] | null>(null)
   const [district, setDistrict] = useState<IDistrict[] | null>(null)
-  const [commune, setCommune] = useState<ICommune[] | null>(null)
+  const [commune, setCommune] = useState<ICommune[] | null >(null)
   const [paymentMethod, setPaymentMethod] = useState('Thanh toán khi nhận hàng')
   let priceSale: any
   useEffect(() => {
@@ -138,10 +145,12 @@ const Order = () => {
       toast.error(error.response!.data!.message)
     }
   }
+  const location = useLocation()
+  const crumbs = generateBreadcrumbs(location.pathname)
   return (
     <div className='container'>
       <div className='flex py-4 gap-2'>
-        <Link to={'/'}>Trang chủ</Link>/<Link to={'/'}>Áo nam</Link>/<Link to={'/'}>Áo cam đỏ đẹp</Link>
+        <Breadcrumb crumbs={crumbs} />
       </div>
       <div className='grid grid-cols-1'>
         <div className='col-span-1 pb-5'>
@@ -191,7 +200,6 @@ const Order = () => {
                         <FormItem className='w-[33%]'>
                           <FormLabel>Thành phố</FormLabel>
                           <Select
-                            
                             onValueChange={(e) => {
                               setDistrict(null)
                               setCommune(null)

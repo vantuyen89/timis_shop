@@ -48,22 +48,26 @@ const UserHome = () => {
             <FaRegCircleUser className='text-[23px] text-[#353535]' />
           </DropdownMenuTrigger>
           <DropdownMenuContent className='z-[200]'>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className='flex cursor-pointer'>
               <div className='flex items-center gap-3'>
                 <img src={userAuth?.avatar} alt={userAuth?.username} className='w-6 h-6 rounded-full border' />
                 <div className='flex flex-col'>
-                  <h5 className='text-[12px]'>{ userAuth?.username}</h5>
+                  <h5 className='text-[12px]'>{userAuth?.username}</h5>
                   <span className='text-[10px] w-[70px] overflow-hidden overflow-ellipsis whitespace-nowrap '>
                     Email:{userAuth?.email}
                   </span>
                 </div>
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem className='cursor-pointer'>Đơn hàng của bạn</DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer'>
+              <Link to={'/myinfor'}>Đơn hàng của bạn</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem className='cursor-pointer'>Sản phẩm yêu thích</DropdownMenuItem>
-            <DropdownMenuItem className='text-red-400 cursor-pointer' onClick={onHandleLogout}>Đăng xuất</DropdownMenuItem>
+            <DropdownMenuItem className='text-red-400 cursor-pointer' onClick={onHandleLogout}>
+              Đăng xuất
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (

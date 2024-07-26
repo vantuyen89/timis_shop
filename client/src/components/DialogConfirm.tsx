@@ -14,22 +14,19 @@ export interface Dialog {
   onClose: () => void
   onSubmit: () => void
   title: string
-  status: 'success' | 'warning' | 'error' | 'info'
+  status: string
 }
 const DialogConfirm = ({ open, onClose, onSubmit, title, status }: Dialog) => {
   return (
     <div>
-      <Dialog open={!!open}>
-        <DialogTrigger asChild>
-          <Button variant='outline'>Xác nhận</Button>
-        </DialogTrigger>
+      <Dialog open={open} onOpenChange={onClose}>
         <DialogContent className='sm:max-w-[425px]'>
           <DialogHeader>
             <DialogTitle>{ title}</DialogTitle>
           </DialogHeader>
           <DialogFooter>
-            <Button type='submit' onClick={()=>onClose}>Hủy</Button>
-            <Button type='submit' onClick={()=>onSubmit}>{status}</Button>
+            <Button type='submit' onClick={onClose}>Thoát</Button>
+            <Button type='submit' onClick={onSubmit}>{status}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

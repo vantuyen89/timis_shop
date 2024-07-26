@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { TiDeleteOutline } from 'react-icons/ti'
 
 import { FiMinus, FiPlus } from 'react-icons/fi'
@@ -16,16 +16,20 @@ import Paginations from '@/components/Pagination'
 import { useDispatch } from 'react-redux'
 import { fetApiCArt } from '@/store/slice/cartSlice'
 import { reduce } from 'lodash'
+import CartEmpty from './CartEmpty'
+import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
+import { Button } from '@/components/ui/button'
 
 const Cart = () => {
+  const location = useLocation()
+  const crumbs = generateBreadcrumbs(location.pathname)
+  
   const [pageIndex, setPageIndex] = useState(1)
   const [cartUser, setCartUser] = useState([])
-  console.log(cartUser)
-  let priceSale : any
-  
+  let priceSale: any
   const dispatch = useDispatch<any>()
   const query = useQueryClient()
-  
+
   const caculatorTotal = () => {
     if (!cartUser) return 0
     return reduce(cartUser, (total, product: any) => total + product?.productId?.price * product.quantity, 0)
@@ -39,7 +43,7 @@ const Cart = () => {
     queryFn: async () => getCartByUserId(pageIndex)
   })
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       try {
         const data = await getCartAllUser()
         setCartUser(data?.items)
@@ -50,7 +54,7 @@ const Cart = () => {
       }
     })()
   }, [productCart])
-  
+
   if (isLoading)
     return (
       <div className='flex justify-center items-center mt-[200px]'>
@@ -81,19 +85,26 @@ const Cart = () => {
   if (cartUser.length > 0 && cartUser.length < 3) {
     priceSale = (30000).toLocaleString('vi-VN')
   } else if (cartUser.length >= 3 && cartUser.length <= 8) {
-    priceSale = (15000).toLocaleString('vi-VN')  
+    priceSale = (15000).toLocaleString('vi-VN')
   } else if (cartUser.length > 8) {
     priceSale = (0).toLocaleString('vi-VN')
   }
-  let totalPrice: any = ((Number(priceSale) + caculatorTotal())*1000).toLocaleString('vi-VN')
+  let totalPrice: any = ((Number(priceSale) + caculatorTotal()) * 1000).toLocaleString('vi-VN')
   return (
     <div className='container'>
       <div className='flex py-4 gap-2'>
-        <Link to={'/'}>Trang chủ</Link>/<Link to={'/'}>Áo nam</Link>/<Link to={'/'}>Áo cam đỏ đẹp</Link>
+        <Breadcrumb crumbs={crumbs} />
       </div>
-      <div className='grid grid-cols-3'>
-        <div className='col-span-2'>
-          {productCart?.content.length !== 0 ? (
+      {productCart?.content.length === 0 ? (
+        <div className='flex flex-col justify-center items-center'>
+          <CartEmpty title={'Bạn chưa có sản phẩm nào trong giỏ hàng'} />
+          <Button className='mb-4'>
+            <Link to={'/'}>Mua hàng</Link>
+          </Button>
+        </div>
+      ) : (
+        <div className='grid grid-cols-3'>
+          <div className='col-span-2'>
             <div className='flex flex-col gap-4'>
               <h3 className='text-xl font-semibold'>Giỏ hàng của bạn</h3>
               <hr />
@@ -188,50 +199,49 @@ const Cart = () => {
                 </table>
               </div>
             </div>
-          ) : (
-            <div>Không có sản phẩm nào , Hãy quay lại mua hàng</div>
-          )}
-          <div className='flex justify-center items-center py-3'>
-            <Paginations
-              pageCount={productCart?.totalPage}
-              handlePageClick={(event: any) => {
-                console.log(event.selected)
-                setPageIndex(event.selected + 1)
-              }}
-            />
-          </div>
-        </div>
-        <div className='grid col-span-1 h-[600px] sticky top-[150px]'>
-          <div className='border rounded-3xl flex flex-col p-5 gap-7'>
-            <h3 className='text-[20px] font-medium'>Thông tin khách hàng</h3>
-            <div className='flex justify-between'>
-              <span className='text-[#9D9EA2] text-[14px]'>Tổng tiền</span>
-              <span className='text-[14px]'>{((caculatorTotal() as number) * 1000).toLocaleString('vi-VN')}đ</span>
-            </div>
-            <div className='flex justify-between'>
-              <span className='text-[#9D9EA2] text-[14px]'>Phí vận chuyển</span>
-              <span className='text-[14px]'>{priceSale}đ</span>
-            </div>
-            <div className='flex justify-between'>
-              <span className='text-[#9D9EA2] text-[14px]'>Thanh toán</span>
-              <span className='text-[14px]'>{totalPrice}đ</span>
-            </div>
-            <div className='flex items-center gap-4'>
-              <input type='text' className='rounded-xl border h-[48px] pl-8' placeholder='Voucher code' />
-              <button className='bg-black rounded-full py-2 px-3 text-white text-xs'>Áp dụng</button>
-            </div>
-            <hr />
 
-            <p className='text-[14px]'>
-              Free ship với 10 đơn hàng <span className='text-red-500'>$100.00</span>
-            </p>
-            <a className='text-[14px] underline'>Tiếp tục mua sắm</a>
-            <button className='bg-[#000] h-[60px] text-white'>
-              <Link to={'/order'}>Thanh toán</Link>
-            </button>
+            <div className='flex justify-center items-center py-3'>
+              <Paginations
+                pageCount={productCart?.totalPage}
+                handlePageClick={(event: any) => {
+                  console.log(event.selected)
+                  setPageIndex(event.selected + 1)
+                }}
+              />
+            </div>
+          </div>
+          <div className='grid col-span-1 h-[600px] sticky top-[150px]'>
+            <div className='border rounded-3xl flex flex-col p-5 gap-7'>
+              <h3 className='text-[20px] font-medium'>Thông tin khách hàng</h3>
+              <div className='flex justify-between'>
+                <span className='text-[#9D9EA2] text-[14px]'>Tổng tiền</span>
+                <span className='text-[14px]'>{((caculatorTotal() as number) * 1000).toLocaleString('vi-VN')}đ</span>
+              </div>
+              <div className='flex justify-between'>
+                <span className='text-[#9D9EA2] text-[14px]'>Phí vận chuyển</span>
+                <span className='text-[14px]'>{priceSale}đ</span>
+              </div>
+              <div className='flex justify-between'>
+                <span className='text-[#9D9EA2] text-[14px]'>Thanh toán</span>
+                <span className='text-[14px]'>{totalPrice}đ</span>
+              </div>
+              <div className='flex items-center gap-4'>
+                <input type='text' className='rounded-xl border h-[48px] pl-8' placeholder='Voucher code' />
+                <button className='bg-black rounded-full py-2 px-3 text-white text-xs'>Áp dụng</button>
+              </div>
+              <hr />
+
+              <p className='text-[14px]'>
+                Free ship với 10 đơn hàng <span className='text-red-500'>$100.00</span>
+              </p>
+              <a className='text-[14px] underline'>Tiếp tục mua sắm</a>
+              <button className='bg-[#000] h-[60px] text-white'>
+                <Link to={'/order'}>Thanh toán</Link>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -208,3 +208,28 @@ export const curentUser = async (req, res) => {
 
     }
 }
+
+
+export const updateUser = async (req, res) => {
+    try {
+        const user = req.user;
+        const {email} = req.body.email;
+        const existEmail = await Auth.find({ email: req.body.email });
+        console.log(existEmail.length);
+        if (existEmail.length > 1) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ message: "Email đã tồn tại" })
+        }
+        // if (existEmail && existEmail._id.toString() !== req.user._id.toString() ) {
+        //     return res.status(StatusCodes.BAD_REQUEST).json({ message: "Email đã tồn tại" })
+        // }
+        const updateUser = await Auth.findByIdAndUpdate({ _id : req.user._id }, req.body, { new: true });
+        if (!updateUser) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Cập nhật thông tin người dùng thất bại" });
+        }
+        res.status(StatusCodes.OK).json({ message: "Cập nhật thông tin người dùng thành công", data: updateUser });
+        
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+        
+    }
+}

@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux'
 import { addItem, fetApiCArt } from '@/store/slice/cartSlice'
 import { addtoCartById, getCartByUserId } from '@/services/cart'
 import { useAuth } from '@/common/hooks/useAuth'
+import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
 
 // import { addtoCart } from '@/store/slice/cartSlice'
 
@@ -33,6 +34,8 @@ const ProductDetail = () => {
   const [colorCart, setColorCart] = useState<any>(null)
   const [category, setCategory] = useState<any>(null)
   const dispatch = useDispatch<any>()
+  const location = useLocation()
+  const crumbs = generateBreadcrumbs(location.pathname)
   const { isLoggedIn } = useAuth()
   // console.log(product)
   const { id } = useParams()
@@ -66,7 +69,8 @@ const ProductDetail = () => {
       try {
         const response = await instance.post(`/product/productRelated`, {
           categoryId: category,
-          pageSize: 6
+          pageSize: 6,
+          idProduct : id
         })
         return response.data
       } catch (error) {
@@ -118,7 +122,7 @@ const ProductDetail = () => {
   return (
     <div className='container flex flex-col'>
       <div className='flex py-4 gap-2'>
-        <Link to={'/'}>Trang chủ</Link>/<Link to={'/'}>Áo nam</Link>/<Link to={'/'}>Áo cam đỏ đẹp</Link>
+        <Breadcrumb crumbs={crumbs } />
       </div>
       <div className='grid lg:grid-cols-12 grid-cols-1'>
         <div className='col-span-6'>

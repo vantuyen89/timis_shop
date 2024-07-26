@@ -43,7 +43,7 @@ function Paginations({ pageCount, handlePageClick, size = 'md' }: Props) {
         )}
         activeLinkClassName={'border-blue-500  text-blue-500 font-medium'}
         containerClassName={'flex gap-1'}
-      />
+      /> 
     </>
   )
 }
