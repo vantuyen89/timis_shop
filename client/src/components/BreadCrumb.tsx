@@ -12,11 +12,16 @@ const labelMap : any = {
 }
 
 export const generateBreadcrumbs = (pathname:any) => {
-  const pathArray = pathname.split('/').filter((i:any) => i)
+  const pathArray = pathname.split('/').filter((i: any) => i)
+
+  
   const crumbs = pathArray.map((path:any, index:any) => {
     const href = `/${pathArray.slice(0, index + 1).join('/')}`
+
     return { label:labelMap[path] ||  path.charAt(0).toUpperCase() + path.slice(1), href }
   })
+
+  
   return crumbs
 }
 

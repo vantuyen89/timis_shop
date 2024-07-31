@@ -81,22 +81,6 @@ const ProductUpdate = () => {
       }
     })()
   }, [])
-  useEffect(() => {
-    ;(async () => {
-      const { data } = await instance.get(`/product/getProductById/${id}`)
-      console.log(data)
-      const formattedData = data.variants.map((variant: any) => ({
-        size: variant.size._id,
-        color: variant.color._id,
-        priceVar: variant.price
-      }))
-      console.log({ ...data, category: data.category._id, variants: formattedData })
-      
-      form.reset({ ...data, category: data.category._id, variants: formattedData })
-      setImagePreviewArray(data.images)
-      setImagePreview(data.thumbnail)
-    })()
-  }, [id])
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -116,6 +100,23 @@ const ProductUpdate = () => {
     control,
     name: 'variants'
   })
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await instance.get(`/product/getProductById/${id}`)
+      console.log(data)
+      const formattedData = data.variants.map((variant: any) => ({
+        size: variant.size._id,
+        color: variant.color._id,
+        priceVar: variant.price
+      }))
+      console.log({ ...data, category: data.category._id, variants: formattedData })
+      
+      form.reset({ ...data, category: data.category._id, variants: formattedData })
+      setImagePreviewArray(data.images)
+      setImagePreview(data.thumbnail)
+    })()
+  }, [id])
+  
   const [img, setImg] = useState<any>()
   const [thumbnail, setThumbnail] = useState<any>('')
   const [imagePreview, setImagePreview] = useState(null)

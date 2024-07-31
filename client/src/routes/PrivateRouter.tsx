@@ -8,8 +8,14 @@ interface Props {
 
 const PrivateRoute: React.FC<Props> = ({ children }) => {
   // Replace with your auth condition
-  const {isLoggedIn} = useAuth()
-  return isLoggedIn ? children : <Navigate to='/' />
+  const { isLoggedIn,userAuth } = useAuth()
+  if (!isLoggedIn) {
+    return <Navigate to='/auth/signin' />
+  }
+  if (!userAuth?.isAdmin) {
+    return <Navigate to='/' />
+  }
+  return isLoggedIn && userAuth?.isAdmin && children 
 }
 
 export default PrivateRoute

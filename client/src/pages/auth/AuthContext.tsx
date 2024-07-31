@@ -27,7 +27,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         const { data } = await instance.get(`/auth/curent-user`)
         setUserAuth(data?.data)
         setIsLoggedIn(true)
-        toast.success('Lấy thông tin thành công')
         setIsLoading(false)
       } catch (error) {
         console.log(error)

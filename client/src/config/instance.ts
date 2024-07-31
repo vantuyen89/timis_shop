@@ -21,6 +21,8 @@ const refreshToken = async () => {
 instance.interceptors.request.use(
   async function (config) {
     config.withCredentials = true
+    console.log(config);
+    
     return config
   },
   function (error) {
@@ -32,6 +34,8 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
+    console.log(response);
+    
     return response
   },
   async (error) => {

@@ -48,6 +48,7 @@ const generateRefereshToken = async (value) => {
 export const signin = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log(req.body);
 
         const { error } = LoginValidate.validate(req.body, {
             abortEarly: false
@@ -96,6 +97,7 @@ export const signin = async (req, res) => {
             path: "/",
         });
         delete user._doc.password
+        delete user._doc.confirmPassword
         // const token = jwt.sign({ id: user._id }, process.env.KEY, { expiresIn: "1h" })
         return res.status(StatusCodes.OK).json({
             message: "Đăng nhập thành công",
@@ -105,14 +107,13 @@ export const signin = async (req, res) => {
             }
         })
     } catch (error) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error)
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message )
     }
 }
 
 export const refreshToken = async (req, res) => {
     try {
         const token = req.cookies.token
-
         if (!token) {
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: "Bạn chưa đăng nhập" });
         }
@@ -170,22 +171,22 @@ export const logout = async (req, res) => {
         }
         jwt.verify(refreshToken, process.env.SECRET_REFRESHTOKEN,
             async (err, data) => {
-            if (err) {
-                res.cookie("token", "", {
-                    maxAge: 0
+                if (err) {
+                    res.cookie("token", "", {
+                        maxAge: 0
+                    })
+                    return res.status(StatusCodes.OK).json({ message: "Đăng xuất thành công" });
+                }
+                await RefreshToken.findOneAndDelete({
+                    user: data._id
                 })
-                return res.status(StatusCodes.OK).json({ message: "Đăng xuất thành công" });
-            }
-            await RefreshToken.findOneAndDelete({
-                user: data._id 
-            })
                 res.cookie("token", "", {
                     maxAge: 0,
                 });
-            return res.status(StatusCodes.OK).json({
-                message: "Đăng xuất thành công"
+                return res.status(StatusCodes.OK).json({
+                    message: "Đăng xuất thành công"
+                })
             })
-        })
 
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error);
@@ -196,7 +197,7 @@ export const logout = async (req, res) => {
 export const curentUser = async (req, res) => {
     try {
         const user = req.user;
-        const inforUser = await Auth.findOne(user._id).select("-password")
+        const inforUser = await Auth.findOne(user._id).select("-password").select("-confirmPassword")
 
         if (!inforUser) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Không xác định" });
@@ -213,7 +214,7 @@ export const curentUser = async (req, res) => {
 export const updateUser = async (req, res) => {
     try {
         const user = req.user;
-        const {email} = req.body.email;
+        const { email } = req.body.email;
         const existEmail = await Auth.find({ email: req.body.email });
         console.log(existEmail.length);
         if (existEmail.length > 1) {
@@ -222,14 +223,90 @@ export const updateUser = async (req, res) => {
         // if (existEmail && existEmail._id.toString() !== req.user._id.toString() ) {
         //     return res.status(StatusCodes.BAD_REQUEST).json({ message: "Email đã tồn tại" })
         // }
-        const updateUser = await Auth.findByIdAndUpdate({ _id : req.user._id }, req.body, { new: true });
+        const updateUser = await Auth.findByIdAndUpdate({ _id: req.user._id }, req.body, { new: true });
         if (!updateUser) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Cập nhật thông tin người dùng thất bại" });
         }
         res.status(StatusCodes.OK).json({ message: "Cập nhật thông tin người dùng thành công", data: updateUser });
-        
+
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+
+    }
+}
+
+
+export const pagingUsers = async (req, res) => {
+    try {
+        const { keyword, tab } = req.body
+        let query = []
+        if (keyword) {
+            query.push({
+                $match:
+                    { username: { $regex: keyword, $options: 'i' } },
+            })
+        }
+        if (tab === 1) {
+            query.push({ $match: { block: false } })
+        }
+        if (tab === -1) {
+            query.push({ $match: { block: true } })
+        }
+        const auth = await Auth.aggregate([query])
+        res.status(StatusCodes.OK).json({ message: "Lấy danh sách người dùng thành công", data: auth });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error })
+    }
+}
+
+export const blockUser = async (req, res) => {
+    try {
+        const { userId } = req.body
+        const user = await Auth.findByIdAndUpdate(userId, { block: true }, { new: true });
+        if (!user) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Không tìm thấy người dùng" });
+        }
+        res.status(StatusCodes.OK).json({ message: "Đã cấm người dùng", data: user });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+}
+
+export const unblockUser = async (req, res) => {
+    try {
+        const { userId } = req.body
+        const user = await Auth.findByIdAndUpdate(userId, { block: false }, { new: true });
+        if (!user) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Không tìm thấy người dùng" });
+        }
+        res.status(StatusCodes.OK).json({ message: "Đã bỏ cấm người dùng", data: user });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+}
+
+
+export const getUserChatShop = async (req, res) => {
+    try {
+        const user = await Auth.findOne({ isAdmin: true })
+        const filterUser = await Auth.find({ _id: { $ne: user._id } }).select("-password")
+        res.status(StatusCodes.OK).json({ message: "Lấy danh sách người dùng để chat", data: filterUser });
+
+
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
+    }
+}
+
+export const getUserAdmin = async (req, res) => {
+    try {
+        const user = await Auth.findOne({ isAdmin: true })
+        if (!user) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Không tìm thấy người quản trị" });
+        }
+        res.status(StatusCodes.OK).json({ message: "Lấy thông tin người quản trị", data: user });
         
+    } catch (error) { 
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 }

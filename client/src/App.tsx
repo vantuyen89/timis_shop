@@ -31,6 +31,10 @@ import ProductUpdate from './pages/admin/product/ProductUpdate'
 import SizeUpdate from './pages/admin/product/size/SizeUpdate'
 import ColorUpdate from './pages/admin/product/color/ColorUpdate'
 import CategoryUpdate from './pages/admin/category/CategoryUpdate'
+import AuthAdmin from './pages/admin/auth/AuthAdmin'
+import ScrollToTop from './components/ScrollTop'
+import ProtectedRouter from './routes/ProtectedRouter'
+import MainMessage from './pages/admin/messageAdmin/MainMessage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -44,17 +48,17 @@ function App() {
           <Route
             path='/cart'
             element={
-              <PrivateRoute>
+              <ProtectedRouter>
                 <Cart />
-              </PrivateRoute>
+              </ProtectedRouter>
             }
           />
           <Route
             path='/order'
             element={
-              <PrivateRoute>
+              <ProtectedRouter>
                 <Order />
-              </PrivateRoute>
+              </ProtectedRouter>
             }
           />
           <Route path='/shop' element={<Shop />} />
@@ -62,9 +66,9 @@ function App() {
           <Route
             path='/myinfor'
             element={
-              <PrivateRoute>
+              <ProtectedRouter>
                 <MyInfor />
-              </PrivateRoute>
+              </ProtectedRouter>
             }
           >
             <Route index element={<Information />} />
@@ -79,11 +83,21 @@ function App() {
             }
           />
         </Route>
+
         <Route path='auth' element={<LayoutAuth />}>
           <Route path='register' element={<Register />} />
+
           <Route path='signin' element={<Signin />} />
         </Route>
-        <Route path='admin' element={<LayoutAdmin />}>
+
+        <Route
+          path='admin'
+          element={
+            <PrivateRoute>
+              <LayoutAdmin />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<MainContent />} />
           <Route path='product' element={<ProductList />} />
           <Route path='productUpdate/:id' element={<ProductUpdate />} />
@@ -98,7 +112,9 @@ function App() {
           <Route path='colorAdd' element={<ColorAdd />} />
           <Route path='colorUpdate/:id' element={<ColorUpdate />} />
           <Route path='order' element={<OrderPending />} />
-        </Route>
+          <Route path='auth' element={<AuthAdmin />} />
+          <Route path='message' element={<MainMessage/>} />
+        </Route> 
       </Routes>
     </>
   )

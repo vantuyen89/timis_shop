@@ -65,7 +65,7 @@ const MyOrder = () => {
   return (
     <>
       <div className='p-5 border rounded-3xl'>
-        <ul className='flex space-x-4 gap-[60px]'>
+        <ul className='flex space-x-4 lg:gap-[60px] gap-9 overflow-x-auto'>
           {menuItems.map((item: { title: string; status: string }, index) => (
             <li
               key={index}
@@ -74,7 +74,7 @@ const MyOrder = () => {
                 searchParams.set('status', `${item.status}`)
                 setSearchParams(searchParams)
               }}
-              className={`cursor-pointer py-2 ${activeIndex === index ? 'border-b-2 border-blue-500' : ''}`}
+              className={`cursor-pointer py-2 ${activeIndex === index ? 'border-b-2 border-blue-500' : ''} lg:text-base text-sm`}
             >
               {item.title}
             </li>
@@ -85,9 +85,9 @@ const MyOrder = () => {
             <CartEmpty title='Không có sản phẩm nào' />
           </div>
         ) : (
-          <>
+          <div className='max-h-[400px] overflow-y-auto '>
             {dataOrderStatus?.map((item: any, index) => (
-              <div className='py-4' key={index}>
+              <div className='py-4 ' key={index}>
                 <h3 onClick={() => setIdOpen(item._id)} className='cursor-pointer'>
                   Mã đơn hàng :{item.orderNumber}
                 </h3>
@@ -96,20 +96,20 @@ const MyOrder = () => {
                     <div>
                       <div className='flex justify-between py-6 items-center'>
                         <div className='flex gap-3'>
-                          <img src={product.image} alt='' className='w-[80px] h-[100px]' />
+                          <img src={product.image} alt='' className='lg:w-[80px] lg:h-[100px] w-[55px] h-[75px]' />
                           <div className='flex flex-col'>
-                            <p className='text-lg w-[230px] truncate font-semibold'>{product.productName}</p>
+                            <p className='lg:text-lg text-sm w-[230px] truncate font-semibold'>{product.productName}</p>
                             <div className='flex text-sm font-light'>
                               <span>Phân loại hàng : </span>
-                              <p>
+                              <p className="lg:text-base text-sm">
                                 {product.color.name},{product.size.name}
                               </p>
                             </div>
-                            <span className='text-sm font-light'>Số lượng : {product.quantity}</span>
+                            <span className='lg:text-sm text-xs font-light'>Số lượng : {product.quantity}</span>
                           </div>
                         </div>
                         <div>
-                          <span>{(product.price * 1000).toLocaleString('vi-VN')}đ</span>
+                          <span className='lg:text-base text-sm'>{(product.price * 1000).toLocaleString('vi-VN')}đ</span>
                         </div>
                       </div>
                       <hr />
@@ -136,7 +136,7 @@ const MyOrder = () => {
                 </div>
               </div>
             ))}
-          </>
+          </div>
         )}
       </div>
       {!!idOpen && <DialogOrderDetail open={idOpen} handleClose={() => setIdOpen(false)} />}
@@ -153,7 +153,7 @@ const MyOrder = () => {
         <DialogConfirm
           open={!!idOpenReceive}
           onClose={() => setIdOpenReceive(false)}
-          onSubmit={() => handleCancel({ id: idOpenReceive, status: 'delivered' })}
+          onSubmit={() => handleReceive({ id: idOpenReceive, status: 'delivered' })}
           title='Bạn đã nhận được đơn hàng này?'
           status='Nhận'
         />

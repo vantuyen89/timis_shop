@@ -28,6 +28,10 @@ const authSchema = new mongoose.Schema({
     avatar: {
         type: String,
         default: "../images/avtDefault.png"
+    },
+    block: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true,

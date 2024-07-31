@@ -17,13 +17,13 @@ const MyInfor = () => {
       <div className='flex py-4 gap-2'>
         <Breadcrumb crumbs={crumbs} />
       </div>
-      <div className='grid grid-cols-12 gap-6'>
-        <div className='col-span-4 pt-7'>
+      <div className='grid lg:grid-cols-12 grid-row-2 gap-6'>
+        <div className='lg:col-span-4 row-span-1 pt-7'>
           <div className='border rounded-3xl flex flex-col p-5 gap-7'>
             <div className='flex flex-col items-center'>
-              <img src={userAuth?.avatar} alt='' className='w-[80px] h-[80px]' />
-              <h3 className='text-[20px] font-medium'>{userAuth?.username}</h3>
-              <span className='text-[14px]'>Email : {userAuth?.email}</span>
+              <img src={userAuth?.avatar} alt='' className='lg:w-[80px] lg:h-[80px] w-[60px] h-[60px] rounded-full' />
+              <h3 className='lg:text-[20px] text-[16px] font-medium'>{userAuth?.username}</h3>
+              <span className='lg:text-[14px] text-[10px]'>Email : {userAuth?.email}</span>
             </div>
             <Accordion type='single' collapsible>
               <AccordionItem value='item-1'>
@@ -50,7 +50,7 @@ const MyInfor = () => {
             </div>
           </div>
         </div>
-        <div className='col-span-8 flex flex-col py-7'>
+        <div className='lg:col-span-8 row-span-1 flex flex-col py-7 overflow-x-auto'>
           <Outlet />
         </div>
       </div>

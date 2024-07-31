@@ -21,6 +21,9 @@ const authentication = async (req, res, next) => {
             if (!dataUser) {
                 return res.status(401).json({ message: "Tài khoản không tồn tại" });
             }
+            if (dataUser?.block === true) {
+                return res.status(401).json({ message: "Tài khoản đã bị khóa" });
+            }
             req.user = dataUser
             next()
         })

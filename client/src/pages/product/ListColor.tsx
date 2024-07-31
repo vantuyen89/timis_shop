@@ -15,6 +15,7 @@ const ListColor = ({ variants, setColorCart, sizeCart }: Props) => {
   const isVariantColors = Array.from(new Set(variants.map((v:any) => v.color._id)))
   const [colorId, setColorId] = useState<string | null>(null)
   const inputRef = useRef(null)
+  
   const { data: color, isLoading, isError } = useQuery({
     queryKey: ['color'],
     queryFn: async () => {
@@ -30,32 +31,33 @@ const ListColor = ({ variants, setColorCart, sizeCart }: Props) => {
     <div className='list-color grid grid-cols-3 gap-3 items-center'>
       {color.map((item: any) => {
 
-        // console.log(item._id);
+        
         return (
           <Label
             htmlFor={item._id}
             key={item._id}
             className={cn(
-              `color-item relative max-w-40 max-h-[50px] overflow-hidden flex items-center border border-solid border-line border-[#e9e9e9] cursor-pointer py-3 px-4 gap-2 rounded  bg-white hover:text-[#ee4d2d]   hover:border-[#ee4d2d] has-[:checked]:text-[#ee4d2d]   has-[:checked]:border-[#ee4d2d]`,
+              `color-item relative max-w-40 max-h-[50px] overflow-hidden flex items-center border border-solid border-line border-[#e9e9e9] cursor-pointer py-3 px-4 gap-2 rounded  bg-white hover:text-[#ee4d2d] ${colorId !== null ? `has-[:checked]:text-[#ee4d2d]   has-[:checked]:border-[#ee4d2d]`: " " }  hover:border-[#ee4d2d] `,
               !!sizeCart
-                ? checkVariant.includes(item._id) || 'disabled'
-                : isVariantColors.includes(item._id) || 'disabled'
+                && !checkVariant.includes(item._id) && 'disabled'
+                
             )}
-            onClick={() => {
-              setColorCart(null)
-            }}
           >
             <input
               ref={inputRef}
               className='peer'
-              onChange={(event) => {
-                console.log(event)
-
-                setColorCart(event.target.value)
+              onClick={(event) => {
+                if ((event.target as any).value === colorId) {
+                  setColorId(null)
+                  setColorCart(null)
+                } else {
+                  setColorId((event.target as any).value)
+                  setColorCart((event.target as any).value)
+                }
               }}
               type='radio'
               hidden
-              // defaultChecked={color._id === defaultColor}
+              
               name='choose-color'
               id={item._id}
               value={item._id}

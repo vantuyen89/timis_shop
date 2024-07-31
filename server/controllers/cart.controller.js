@@ -13,7 +13,6 @@ export const getCartByUser = async (req, res) => {
 
         // console.log(cart);
         const paginatedItems = cart.items.slice(skip, skip + limit);
-        console.log(paginatedItems);
         const cartLength = await Cart.findOne({ user: req.user._id })
         
 
@@ -55,7 +54,6 @@ export const getCartByUser = async (req, res) => {
 
 export const addItemCart = async (req, res) => {
     const { productId, quantity, color, size } = req.body
-    console.log(req.user);
     try {
         // console.log(req.body);
         // console.log(req.user);

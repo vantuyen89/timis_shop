@@ -94,7 +94,7 @@ export const createProduct = async (req, res) => {
                 return true;
             }
         });
-        console.log(uniqueVariants);
+
 
         const product = new Product({
             ...req.body,
@@ -112,9 +112,7 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     try {
-        console.log('params', req.params._id);
         const { name, description, price, category, thumbnail, images, discount, countInstock, quantity, featured, slug, variants } = req.body
-        console.log("reqbody", req.body);
         const { error } = productValidate.validate(req.body, {
             abortEarly: false
         });
@@ -127,8 +125,6 @@ export const updateProduct = async (req, res) => {
             return res.status(StatusCodes.NOT_FOUND).json({ message: "Category not found" })
         }
         const variantArray = await Promise.all(variants.map(async (variant) => {
-            console.log("Variant", variant);
-            console.log('priceVar', variant.priceVar);
             const size = await Size.findOne({ _id: variant.size });
             const color = await Color.findOne({ _id: variant.color });
             if (!size || !color) {
@@ -160,7 +156,6 @@ export const updateProduct = async (req, res) => {
             variants: uniqueVariants,
             slug: slugify(req.body.name)
         });
-        console.log('Id Product', req.params.id);
         const productUpdate = await Product.findByIdAndUpdate(req.params.id, product, { new: true });
         if (!productUpdate) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: "Product not found" })  // Product not found in database
@@ -213,7 +208,6 @@ export const pagingProduct = async (req, res) => {
             .skip(skip)
             .limit(limit)
         const productLength = await Product.countDocuments();
-        console.log(productLength);
 
         const totalPage = productLength === 0 ? 0 : Math.ceil(productLength / limit);
         const totalOptionPage = product.length;

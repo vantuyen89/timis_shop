@@ -122,7 +122,7 @@ const Information = () => {
               </FormItem>
             )}
           />
-          {imagePreview && <img src={imagePreview} alt='Image Preview' style={{ width: '80px', height: '80px' }} />}
+          {imagePreview && <img src={imagePreview} alt='Image Preview' style={{ width: '80px', height: '80px' }} className='rounded-full' />}
 
           <Button type='submit'>Lưu</Button>
         </form>

@@ -14,7 +14,6 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     fetApiCArt: (state, action) => {
-      console.log(action);
       state.cart = action.payload
     },
     addItem: (state, action) => {
@@ -28,7 +27,6 @@ export const cartSlice = createSlice({
     },
     resetCart: (state, action) => {
       console.log(action.payload);
-    
       state.cart = action.payload
     }
   }

@@ -29,6 +29,7 @@ const Cart = () => {
   let priceSale: any
   const dispatch = useDispatch<any>()
   const query = useQueryClient()
+  const [isDeleted, setIsDeleted] = useState<string | boolean>(false)
 
   const caculatorTotal = () => {
     if (!cartUser) return 0
@@ -55,18 +56,18 @@ const Cart = () => {
     })()
   }, [productCart])
 
-  if (isLoading)
-    return (
-      <div className='flex justify-center items-center mt-[200px]'>
-        <ClipLoader
-          color={'#000000'}
-          loading={isLoading}
-          size={150}
-          aria-label='Loading Spinner'
-          data-testid='loader'
-        />
-      </div>
-    )
+  // if (isLoading)
+  //   return (
+  //     <div className='flex justify-center items-center mt-[200px]'>
+  //       <ClipLoader
+  //         color={'#000000'}
+  //         loading={isLoading}
+  //         size={150}
+  //         aria-label='Loading Spinner'
+  //         data-testid='loader'
+  //       />
+  //     </div>
+  //   )
   if (isError) return <div>Error fetching cart data</div>
 
   const handleRemoveCart = async (productIdCart: string, colorCart: string, sizeCart: string) => {
@@ -103,21 +104,29 @@ const Cart = () => {
           </Button>
         </div>
       ) : (
-        <div className='grid grid-cols-3'>
+        <div className='grid lg:grid-cols-3 grid-cols-1'>
           <div className='col-span-2'>
             <div className='flex flex-col gap-4'>
               <h3 className='text-xl font-semibold'>Giỏ hàng của bạn</h3>
               <hr />
-              <div className='flex px-6'>
+              <div className='flex px-6 w-full overflow-x-auto'>
                 <table className='w-full'>
                   <thead>
                     <tr className=''>
                       <th></th>
                       <th></th>
-                      <th>Tên sản phẩm</th>
-                      <th>Số lượng</th>
-                      <th>Giá</th>
-                      <th>Thành tiền</th>
+                      <th>
+                        <p className='lg:text-base text-sm'>Tên sản phẩm</p>
+                      </th>
+                      <th>
+                        <p className='lg:text-base text-sm'>Số lượng</p>
+                      </th>
+                      <th>
+                        <p className='lg:text-base text-sm'>Giá</p>
+                      </th>
+                      <th>
+                        <p className='lg:text-base text-sm'>Thành tiền</p>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -133,12 +142,16 @@ const Cart = () => {
                             </button>
                           </td>
                           <td>
-                            <img src={product.image} alt='' className='w-[120px] h-[150px] mx-auto my-6' />
+                            <img
+                              src={product.image}
+                              alt=''
+                              className='lg:w-[120px] w-[60px]  lg:h-[150px] h-[80px] mx-auto my-6'
+                            />
                           </td>
                           <td>
                             <div className='flex flex-col justify-center items-center'>
-                              <p className='w-64 truncate ...'>{product.name}</p>
-                              <p>
+                              <p className='lg:text-base text-sm lg:w-64 w-32 truncate ...'>{product.name}</p>
+                              <p className='lg:text-base text-sm'>
                                 ({product?.color?.name},{product?.size?.name})
                               </p>
                             </div>
@@ -187,10 +200,12 @@ const Cart = () => {
                             </button>
                           </td>
                           <td>
-                            <p>{(product.price * 1000).toLocaleString('vi-VN')}đ</p>
+                            <p className='lg:text-base text-sm'>{(product.price * 1000).toLocaleString('vi-VN')}đ</p>
                           </td>
                           <td>
-                            <p>{(product.price * 1000 * product.quantity).toLocaleString('vi-VN')}đ</p>
+                            <p className='lg:text-base text-sm'>
+                              {(product.price * 1000 * product.quantity).toLocaleString('vi-VN')}đ
+                            </p>
                           </td>
                         </tr>
                       )

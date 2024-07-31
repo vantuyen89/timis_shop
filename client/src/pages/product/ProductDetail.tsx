@@ -39,7 +39,7 @@ const ProductDetail = () => {
   const { isLoggedIn } = useAuth()
   // console.log(product)
   const { id } = useParams()
-   // console.log(dispatch);
+  // console.log(dispatch);
 
   const {
     data: product,
@@ -70,7 +70,7 @@ const ProductDetail = () => {
         const response = await instance.post(`/product/productRelated`, {
           categoryId: category,
           pageSize: 6,
-          idProduct : id
+          idProduct: id
         })
         return response.data
       } catch (error) {
@@ -80,6 +80,12 @@ const ProductDetail = () => {
     },
     refetchInterval: 1000 * 60 * 15 // refetch every 15 minutes
   })
+  useEffect(() => {
+    if (product) {
+      setSizeCart(null)
+      setColorCart(null)
+    }
+  }, [product])
   if (isLoading1 || isLoading2)
     return (
       <div className='flex justify-center items-center mt-[200px]'>
@@ -114,7 +120,7 @@ const ProductDetail = () => {
     }
     await addtoCartById({ productId: id, color: colorCart, size: sizeCart, quantity: quantity })
     // dispatch(addItem({ productId: id, color: colorCart, size: sizeCart, quantity: quantity }))
-   const data =await getCartByUserId()
+    const data = await getCartByUserId()
     dispatch(fetApiCArt(data))
     toast.success('Bạn đã thêm sản phẩm vào giỏ hàng')
   }
@@ -122,7 +128,7 @@ const ProductDetail = () => {
   return (
     <div className='container flex flex-col'>
       <div className='flex py-4 gap-2'>
-        <Breadcrumb crumbs={crumbs } />
+        <Breadcrumb crumbs={crumbs} />
       </div>
       <div className='grid lg:grid-cols-12 grid-cols-1'>
         <div className='col-span-6'>

@@ -13,7 +13,8 @@ import routerAuth from './routes/auth.route.js';
 import routerCart from './routes/cart.route.js';
 import routerOrder from './routes/order.route.js';
 import cookieParser from 'cookie-parser';
-const app = express();
+import routerMessage from './routes/message.route.js';
+import { app, server } from './socket/socket.js';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -29,6 +30,7 @@ app.use("/api/v1/product", routerProduct)
 app.use("/api/v1/auth", routerAuth)
 app.use("/api/v1/cart", routerCart)
 app.use("/api/v1/order", routerOrder)
-app.listen(process.env.PORT, () => {
+app.use("/api/v1/message", routerMessage)
+server.listen(process.env.PORT, () => {
     console.log("listen on port " + process.env.PORT);
 })

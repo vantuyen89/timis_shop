@@ -1,21 +1,24 @@
-import React from 'react'
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
-import bn1 from '../images/bn1.png'
-import bn2 from '../images/bn2.png'
+import  { useEffect, useState } from 'react'
+import { Navigation } from 'swiper/modules'
+
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import 'swiper/css/scrollbar'
 import { GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
 import { Link } from 'react-router-dom'
 import { IoIosHeartEmpty } from 'react-icons/io'
 import { IProduct } from '@/interfaces/IProduct'
 const SwiperProduct = ({ products, title }: any) => {
-  console.log(products)
-
+  const [isBlock, setIsBlock] = useState(false)
+  useEffect(() => {
+    if (products.length > 4) {
+      setIsBlock(true)
+    } else {
+      setIsBlock(false)
+    }
+  },[products])
   return (
     <>
       <div className='py-[40px] flex justify-center items-center gap-2 '>
@@ -23,25 +26,28 @@ const SwiperProduct = ({ products, title }: any) => {
         <h3 className='lg:text-[30px] text-[16px] text-center'>{title}</h3>
         <div className='border-b-2 w-[100px] border-black'></div>
       </div>
-      <div className='flex flex-col items-center'>
+      <div className='w-full relative'>
         <Swiper
-          className='grid grid-cols-1'
-          modules={[Navigation, Pagination, Scrollbar, A11y]}
+          modules={[Navigation]}
           loop
-          spaceBetween={50}
-          slidesPerView={1.5}
+          spaceBetween={20}
+          slidesPerView={4}
+          pagination={{ clickable: true }}
           navigation={{
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
+            nextEl: '.btn-next',
+            prevEl: '.btn-prev'
           }}
           breakpoints={{
             768: {
               slidesPerView: 4,
               spaceBetween: 20
+            },
+            0:{
+              slidesPerView: 1.5,
+              spaceBetween: 50,
             }
           }}
-          // onSwiper={(swiper: any) => console.log(swiper)}
-          // onSlideChange={() => console.log('slide change')}
+         
         >
           {products.map((product: IProduct) => {
             return (
@@ -49,7 +55,7 @@ const SwiperProduct = ({ products, title }: any) => {
                 <div key={product._id}>
                   <div className='relative overflow-hidden border rounded-2xl bg-[#F4F4F4] flex justify-center items-center '>
                     {/* <img src={bn1} className='py-6 w-full h-full' /> */}
-                    <div className='relative group inline-block'>
+                    <div className='relative group inline-block lg:h-full h-[200px]'>
                       <img
                         className='object-cover w-full h-full transition duration-300 transform group-hover:scale-50'
                         src={product.thumbnail}
@@ -64,7 +70,7 @@ const SwiperProduct = ({ products, title }: any) => {
                     <div className='absolute flex justify-center items-center -bottom-10 group-hover:bottom-14 transition-all duration-300 ease-in-out'>
                       <Link
                         to={`/shop/${product._id}`}
-                        className='w-[150px] border text-white bg-[#000000] bg-opacity-30 text-center rounded-full leading-[40px] border-none transition-transform hover:scale-90 ease-in-out'
+                        className='lg:w-[150px] w-[100px] lg:text-base text-sm border text-white bg-[#000000] lg:py-2 bg-opacity-30 text-center rounded-full leading-[40px] border-none transition-transform hover:scale-90 ease-in-out'
                       >
                         Xem nhanh
                       </Link>
@@ -78,24 +84,23 @@ const SwiperProduct = ({ products, title }: any) => {
                   </div>
                   <div className='my-4'>
                     <h3 className=' lg:text-base text-[14px] text-[#1A1E26] my-4 font-light w-70 overflow-hidden overflow-ellipsis whitespace-nowrap'>
-                      <Link to={`shop/${product._id}`}>{product.name}</Link>
+                      <Link to={`/shop/${product._id}`}>{product.name}</Link>
                     </h3>
-                    <div className='flex h-[20px] gap-4'>
-                      {product.variants?.map((color: any, index: number) => {
-                        
-                        return (
+                    <div className='flex lg:h-[20px] h-[15px] gap-4'>
+                      {Array.from(new Set(product.variants.map((variant: any) => variant.color.code))).map(
+                        (colorCode: string, index: number) => (
                           <div
-                            className={`rounded-full h-full w-[20px]`}
-                            style={{
-                              backgroundColor: `#${color?.color?.code}`
-                            }}
                             key={index}
+                            className='rounded-full h-full lg:w-[20px] w-[15px]'
+                            style={{ backgroundColor: `#${colorCode}` }}
                           ></div>
                         )
-                      })}
+                      )}
                     </div>
                     <div className='flex gap-2 justify-start pl-2 my-4 items-center '>
-                      <h5 className='text-[18px] text-[#000]'>{(product.price * 1000).toLocaleString('vi-VN')}đ</h5>
+                      <h5 className=' text-[#000] lg:text-base text-sm'>
+                        {(product.price * 1000).toLocaleString('vi-VN')}đ
+                      </h5>
                       {/* <span className='text-[15px] text-[#767676]'>
                         <del>${(product.price*((100-(product.discount)/100)/100)).toLocaleString('vi-VN')}đ</del>
                       </span> */}
@@ -105,24 +110,20 @@ const SwiperProduct = ({ products, title }: any) => {
               </SwiperSlide>
             )
           })}
-          {products.length < 4 &&
+          {/* {products.length < 4 &&
             Array.from({ length: 4 - products.length }).map((_, index) => (
               <SwiperSlide key={`empty-${index}`}>
                 <div className='empty-slide'></div>
               </SwiperSlide>
-            ))}
-
-          {products.length > 4 && (
-            <>
-              <button className='swiper-button-next after:hidden text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300'>
-                <GrLinkNext />
-              </button>
-              <button className='swiper-button-prev after:hidden text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300'>
-                <GrLinkPrevious />
-              </button>
-            </>
-          )}
+            ))} */}
         </Swiper>
+
+        <button className={`btn-next ${!isBlock && 'hidden'} absolute z-20 top-[39%] right-4 text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300`}>
+          <GrLinkNext />
+        </button>
+        <button className={`btn-prev ${!isBlock && 'hidden'} absolute z-20 top-[39%] left-4 text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300`}>
+          <GrLinkPrevious />
+        </button>
       </div>
     </>
   )

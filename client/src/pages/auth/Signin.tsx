@@ -38,6 +38,11 @@ const navigate = useNavigate()
   const onSubmit =async (dataForm: any) => {
     try {
       const { data } = await instance.post(`/auth/signin`, dataForm) 
+
+      if (data?.data?.user?.block === true) {
+        toast.error('Tài khoản đã bị khóa. Vui lòng liên hệ admin để mở khóa.')
+        return
+      }
       setIsLoggedIn?.(true)
       setUserAuth?.(data?.data?.user)
       toast.success("Bạn đăng nhập thành công")

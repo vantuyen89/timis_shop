@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 
 const Sidebar = () => {
   return (
-    <div className='bg-gray-800 text-white w-64'>
+    <div className='bg-gray-800 text-white w-64 min-h-screen h-auto overflow-y-auto'>
       <div className='p-4'>
         <h2 className='text-2xl font-bold'>Dashboard</h2>
         <ul className='mt-4'>
@@ -62,6 +62,26 @@ const Sidebar = () => {
                 <AccordionTrigger>Đơn hàng</AccordionTrigger>
                 <AccordionContent className='flex flex-col gap-4'>
                   <Link to={'/admin/order'}>Đơn hàng</Link>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </li>
+          <li className='p-2 hover:bg-gray-700 cursor-pointer'>
+            <Accordion type='single' collapsible className='w-full'>
+              <AccordionItem value='item-1'>
+                <AccordionTrigger>Tài Khoản</AccordionTrigger>
+                <AccordionContent className='flex flex-col gap-4'>
+                  <Link to={'/admin/auth'}>Tài khoản</Link>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </li>
+          <li className='p-2 hover:bg-gray-700 cursor-pointer'>
+            <Accordion type='single' collapsible className='w-full'>
+              <AccordionItem value='item-1'>
+                <AccordionTrigger>Tài Khoản</AccordionTrigger>
+                <AccordionContent className='flex flex-col gap-4'>
+                  <Link to={'/admin/message'}>Tin nhắn của shop</Link>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

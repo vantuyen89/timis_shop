@@ -314,10 +314,10 @@ const Order = () => {
                   <table className='w-full text-center'>
                     <thead className=''>
                       <tr>
-                        <th className='text-left'>Sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>Thành tiền</th>
+                        <th className='text-left lg:text-base text-sm'>Sản phẩm</th>
+                        <th className='lg:text-base text-sm'>Giá</th>
+                        <th className='lg:text-base text-sm'>Số lượng</th>
+                        <th className='lg:text-base text-sm'>Thành tiền</th>
                       </tr>
                     </thead>
 
@@ -325,24 +325,32 @@ const Order = () => {
                       {cartUser.map((item: any, index) => (
                         <tr key={index}>
                           <td className='py-3'>
-                            <div className='flex gap-3 items-center'>
-                              <img src={item.productId.thumbnail} alt='' className='w-[55px] h-[80px]' />
+                            <div className='flex lg:flex-row flex-col gap-3 items-center'>
+                              <img
+                                src={item.productId.thumbnail}
+                                alt=''
+                                className='lg:w-[55px] lg:h-[80px] w-[40px] h-[65px]'
+                              />
                               <div className='flex flex-col'>
-                                <span className='text-sm'>{item.productId?.name}</span>
-                                <span className='text-sm'>
+                                <span className='lg:text-sm text-xs'>{item.productId?.name}</span>
+                                <span className='lg:text-sm text-xs'>
                                   {item.color.name},{item.size.name}
                                 </span>
                               </div>
                             </div>
                           </td>
-                          <td>{(item.productId?.price * 1000).toLocaleString('vi-VN')}đ</td>
-                          <td>{item.quantity}</td>
-                          <td>{(item.productId?.price * item.quantity * 1000).toLocaleString('vi-VN')}đ</td>
+                          <td className='lg:text-sm text-xs'>
+                            {(item.productId?.price * 1000).toLocaleString('vi-VN')}đ
+                          </td>
+                          <td className='lg:text-sm text-xs'>{item.quantity}</td>
+                          <td className='lg:text-sm text-xs'>
+                            {(item.productId?.price * item.quantity * 1000).toLocaleString('vi-VN')}đ
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <div className='pt-5'>
+                  <div className='pt-5 '>
                     <h3 className='text-lg text-[#595959] font-semibold pb-6'>Phương thức thanh toán</h3>
                     <div className='flex gap-2'>
                       <Label
@@ -384,9 +392,9 @@ const Order = () => {
                     </div>
                   </div>
                 </div>
-                <div className='flex justify-between'>
+                <div className='flex lg:flex-row flex-col justify-between'>
                   <h3 className='text-lg text-[#595959] font-semibold pb-6'>Chi tiết thanh toán</h3>
-                  <div className='w-[400px] border rounded-3xl flex flex-col p-5 gap-7 mt-9'>
+                  <div className='lg:w-[400px] w-full border rounded-3xl flex flex-col p-5 gap-7 mt-9'>
                     <h3 className='text-[20px] font-medium'>Thông tin chi tiết</h3>
                     <div className='flex justify-between'>
                       <span className='text-[#9D9EA2] text-[14px]'>Tổng tiền</span>

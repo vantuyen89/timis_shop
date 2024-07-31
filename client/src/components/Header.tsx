@@ -31,8 +31,8 @@ const Header = () => {
       <div className='bg-black'>
         <div className='container text-center py-2'>
           <p className='text-[12px] lg:text-sm text-white'>
-            LIMITED OFFER: 30% OFF. Use RABBIT30 at Checkout.
-            <span className='pl-4'>23:00:00</span>
+            TIMIS luôn đồng hành cùng các bạn - 
+            <span className='pl-4'>Thời trang nâng tầm sắc đẹp</span>
           </p>
         </div>
       </div>
@@ -73,7 +73,7 @@ const Header = () => {
                             })}
                             className={`relative block pt-4 group`}
                           >
-                            Shop All
+                            Sản phẩm
                             <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
                           </NavLink>
                         </li>
@@ -175,7 +175,7 @@ const Header = () => {
                       })}
                       className={`relative block pt-4 group`}
                     >
-                      Shop All
+                      Sản phẩm
                       <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
                     </NavLink>
                   </li>

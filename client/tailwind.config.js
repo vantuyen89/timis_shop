@@ -20,6 +20,9 @@ module.exports = {
       fontFamily: {
         'Playwrite': ['Playwrite AU VIC', 'sans-serif'],
       },
+      backgroundImage: theme => ({
+        'instagram-gradient': 'linear-gradient(45deg, #f58529, #feda77, #dd2a7b, #8134af)',
+      }),
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -20,13 +20,12 @@ const Banner = () => {
   }
   return (
     <Swiper
-      className='w-full h-[560px]'
+      className='w-full lg:h-[560px] h-[360px]'
       modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
       autoplay={{
         delay: 3000,
         disableOnInteraction: false
       }}
-      
       loop={true}
       spaceBetween={50}
       slidesPerView={1}
@@ -42,11 +41,13 @@ const Banner = () => {
         <img src={bn1} className='w-full h-full object-cover' alt='' />
         <div className='absolute top-0 left-0 w-full h-full flex items-center justify-start overflow-hidden'>
           <div
-            className={`flex flex-col gap-5 ml-[200px] transform transition-transform duration-1000 ease-in-out ${
+            className={`flex flex-col gap-5 lg:ml-[200px] ml-[80px] transform transition-transform duration-1000 ease-in-out ${
               currentSlide === 0 ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
-            <h1 className='text-[70px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>BEST PRICE</h1>
+            <h1 className='lg:text-[70px] text-[40px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>
+              BEST PRICE
+            </h1>
             <p className='text-lg text-[#1f1f1f] mt-2'>DISCOUNT UP TO 70%</p>
             <button className='text-white bg-black p-2'>Shop now</button>
           </div>
@@ -56,11 +57,13 @@ const Banner = () => {
         <img src={bn2} className='w-full h-full object-cover' alt='' />
         <div className='absolute top-0 left-0 w-full h-full flex items-center justify-start overflow-hidden'>
           <div
-            className={`flex flex-col gap-5 ml-[200px] transform transition-transform duration-1000 ease-in-out ${
+            className={`flex flex-col gap-5 lg:ml-[200px] ml-[80px] transform transition-transform duration-1000 ease-in-out ${
               currentSlide === 1 ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
-            <h1 className='text-[70px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>BEST PRICE</h1>
+            <h1 className='lg:text-[70px] text-[40px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>
+              BEST PRICE
+            </h1>
             <p className='text-lg text-[#1f1f1f] mt-2'>DISCOUNT UP TO 70%</p>
             <button className='text-white bg-black p-2'>Shop now</button>
           </div>
@@ -70,11 +73,13 @@ const Banner = () => {
         <img src={bn3} className='w-full h-full object-cover' alt='' />
         <div className='absolute top-0 left-0 w-full h-full flex items-center justify-start overflow-hidden'>
           <div
-            className={`flex flex-col gap-5 ml-[200px] transform transition-transform duration-1000 ease-in-out ${
+            className={`flex flex-col gap-5 lg:ml-[200px] ml-[80px] transform transition-transform duration-1000 ease-in-out ${
               currentSlide === 2 ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
-            <h1 className='text-[70px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>BEST PRICE</h1>
+            <h1 className='lg:text-[70px] text-[40px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>
+              BEST PRICE
+            </h1>
             <p className='text-lg text-[#1f1f1f] mt-2'>DISCOUNT UP TO 70%</p>
             <button className='text-white bg-black p-2'>Shop now</button>
           </div>
@@ -84,11 +89,13 @@ const Banner = () => {
         <img src={bn4} className='w-full h-full object-cover' alt='' />
         <div className='absolute top-0 left-0 w-full h-full flex items-center justify-start overflow-hidden'>
           <div
-            className={`flex flex-col gap-5 ml-[200px] transform transition-transform duration-1000 ease-in-out ${
+            className={`flex flex-col gap-5 lg:ml-[200px] ml-[80px] transform transition-transform duration-1000 ease-in-out ${
               currentSlide === 3 ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
-            <h1 className='text-[70px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>BEST PRICE</h1>
+            <h1 className='lg:text-[70px] text-[40px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>
+              BEST PRICE
+            </h1>
             <p className='text-lg text-[#1f1f1f] mt-2'>DISCOUNT UP TO 70%</p>
             <button className='text-white bg-black p-2'>Shop now</button>
           </div>
@@ -98,11 +105,13 @@ const Banner = () => {
         <img src={bn5} className='w-full h-full object-cover' alt='' />
         <div className='absolute top-0 left-0 w-full h-full flex items-center justify-start overflow-hidden'>
           <div
-            className={`flex flex-col gap-5 ml-[200px] transform transition-transform duration-1000 ease-in-out ${
+            className={`flex flex-col gap-5 lg:ml-[200px] ml-[80px] transform transition-transform duration-1000 ease-in-out ${
               currentSlide === 4 ? 'translate-x-0' : '-translate-x-full'
             }`}
           >
-            <h1 className='text-[70px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>BEST PRICE</h1>
+            <h1 className='lg:text-[70px] text-[40px] text-[#1f1f1f] leading-5 tracking-widest font-Playwrite font-semibold'>
+              BEST PRICE
+            </h1>
             <p className='text-lg text-[#1f1f1f] mt-2'>DISCOUNT UP TO 70%</p>
             <button className='text-white bg-black p-2'>Shop now</button>
           </div>

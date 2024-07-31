@@ -65,6 +65,13 @@ const UserHome = () => {
               <Link to={'/myinfor'}>Đơn hàng của bạn</Link>
             </DropdownMenuItem>
             <DropdownMenuItem className='cursor-pointer'>Sản phẩm yêu thích</DropdownMenuItem>
+            {userAuth?.isAdmin ? (
+              <DropdownMenuItem className='cursor-pointer'>
+                <Link to={'/admin'}>Trang quản trị</Link>
+              </DropdownMenuItem>
+            ) : (
+              ''
+            )}
             <DropdownMenuItem className='text-red-400 cursor-pointer' onClick={onHandleLogout}>
               Đăng xuất
             </DropdownMenuItem>
