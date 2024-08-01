@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import instance from '@/config/instance'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
@@ -44,7 +43,7 @@ const CategoryList = () => {
           {data?.map((data: any, index: number) => {
             const parsedDate = parseISO(data.createdAt)
             const formattedDate = format(parsedDate, 'MM/dd/yyyy')
-            
+
             return (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>

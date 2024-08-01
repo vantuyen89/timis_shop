@@ -1,7 +1,6 @@
 import { useAuth } from '@/common/hooks/useAuth'
 import useListenMessage from '@/common/hooks/useListenMessage'
 import useConversation from '@/zustand/useConversation'
-import React from 'react'
 
 const MessageCheck = (message: any) => {
   const { userAuth } = useAuth()

@@ -1,9 +1,9 @@
 import useMessage from '@/common/hooks/useMessage'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { FaPaperPlane } from 'react-icons/fa'
 
 const MessageForm = () => {
-  const { isLoading, sendMessage } = useMessage()
+  const { sendMessage } = useMessage()
   const [message, setMessage] = useState<string>("")
   // console.log(message);
   const formRef = useRef(null)

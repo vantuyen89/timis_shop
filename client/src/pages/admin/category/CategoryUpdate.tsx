@@ -1,11 +1,10 @@
 import { Button } from '@/components/ui/button'
-import React, { useEffect, useState } from 'react'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { useEffect, useState } from 'react'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import instance from '@/config/instance'
 import { toast } from 'sonner'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Textarea } from '@/components/ui/textarea'
@@ -23,7 +22,7 @@ const formSchema = z.object({
 })
 const CategoryUpdate = () => {
   const [img, setImg] = useState<any>('')
-  console.log(img);
+  console.log(img)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,7 +48,7 @@ const CategoryUpdate = () => {
       const { data } = await getCategoryById(id as string)
       form.reset({
         name: data.name,
-        description: data.description,
+        description: data.description
       })
       setImagePreview(data.imageUrl)
     })()
@@ -67,8 +66,8 @@ const CategoryUpdate = () => {
         description: dataForm.description,
         imageUrl: dataImg
       }
-      
-      const { data } = await updateCategory({id,dataCate})
+
+      const { data } = await updateCategory({ id, dataCate })
       toast.success('Bạn cập nhật danh mục thành công')
       navigate('/admin/category')
     } catch (error) {

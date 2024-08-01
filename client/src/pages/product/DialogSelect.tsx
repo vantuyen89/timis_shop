@@ -1,5 +1,4 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import React from 'react'
 import selectSize from '@/images/selectSize.webp'
 import { Button } from '@/components/ui/button'
 

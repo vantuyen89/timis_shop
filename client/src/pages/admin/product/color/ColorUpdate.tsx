@@ -1,13 +1,13 @@
 import { Button } from '@/components/ui/button'
-import React, { useEffect } from 'react'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { useEffect } from 'react'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import instance from '@/config/instance'
 import { toast } from 'sonner'
 import { useNavigate, useParams } from 'react-router-dom'
+import { getColorId, updateCOlor } from '@/services/product'
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -33,7 +33,7 @@ const ColorUpdate = () => {
   const { id } = useParams()
   useEffect(() => {
     (async () => {
-      const { data } = await instance.get(`color/getColorId/${id}`)
+      const { data } = await getColorId(id as string)
       console.log(data);
       form.reset(data)
     })()
@@ -41,7 +41,7 @@ const ColorUpdate = () => {
   const navigate = useNavigate()
   const onSubmit = async (dataForm: any) => {
     try {
-      const { data } = await instance.put(`color/updateColor/${id}`, dataForm)
+      await updateCOlor({id,dataForm})
       toast.success('Bạn cập nhật color thành công')
       navigate('/admin/color')
     } catch (error) {

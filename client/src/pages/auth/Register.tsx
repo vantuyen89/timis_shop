@@ -59,7 +59,7 @@ export function Register() {
     }
 
     try {
-      const user = await registerAuth(dataRegister)
+      await registerAuth(dataRegister)
       toast.success('Đăng ký thành công!')
       navigate('/auth/signin')
     } catch (error) {

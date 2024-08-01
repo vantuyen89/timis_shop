@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
-import bn1 from '../images/bn1.png'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 // Import Swiper styles
@@ -8,7 +7,6 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
-import instance from '@/config/instance'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getAllCategory } from '@/services/category'
 

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import {
   Select,
@@ -12,17 +12,17 @@ import {
 } from '@/components/ui/select'
 
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useEffect, useState } from 'react'
 import instance from '@/config/instance'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
-import axios from 'axios'
 import { uploadFileCloudinary } from '@/lib/utils'
 import { toast } from 'sonner'
 import { Textarea } from '@/components/ui/textarea'
 import { useNavigate } from 'react-router-dom'
+import { postProduct } from '@/services/product'
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -166,7 +166,7 @@ const ProductAdd = () => {
     console.log(dataProduct)
     
     try {
-      const { data } = await instance.post(`product/addProduct`, dataProduct)
+      await postProduct(dataProduct)
       toast.success('Thêm sản phẩm thành công!')
       navigate('/admin/product')
     } catch (error) {

@@ -1,10 +1,8 @@
 import { Label } from '@/components/ui/label';
-import instance from '@/config/instance';
 import { cn } from '@/lib/utils';
 import { getAllColor } from '@/services/product';
 import { useQuery } from '@tanstack/react-query';
-import { Check } from 'lucide-react';
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 interface Props {
   variants: any[]
   setColorCart: (colorId: string | null) => void
@@ -13,7 +11,7 @@ interface Props {
 const ListColor = ({ variants, setColorCart, sizeCart }: Props) => {
   const checkVariant1 = variants.filter(variant => variant.size._id === sizeCart)
   const checkVariant = Array.from(new Set(checkVariant1.map((v: any) => v.color._id)))
-  const isVariantColors = Array.from(new Set(variants.map((v:any) => v.color._id)))
+  // const isVariantColors = Array.from(new Set(variants.map((v:any) => v.color._id)))
   const [colorId, setColorId] = useState<string | null>(null)
   const inputRef = useRef(null)
   

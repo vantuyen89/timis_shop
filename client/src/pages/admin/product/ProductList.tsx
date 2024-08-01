@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import instance from '@/config/instance'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { parseISO, format } from 'date-fns'
+import { getAllProducts } from '@/services/product'
 
 const ProductList = () => {
   const [data, setData] = useState([])
   useEffect(() => {
     ;(async () => {
-      const { data } = await instance.get(`product/getAllProducts`)
+      const { data } = await getAllProducts()
       setData(data)
     })()
   }, [])

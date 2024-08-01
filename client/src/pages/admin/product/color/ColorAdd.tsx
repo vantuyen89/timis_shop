@@ -1,13 +1,12 @@
 import { Button } from '@/components/ui/button'
-import React from 'react'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import instance from '@/config/instance'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
+import { postColor } from '@/services/product'
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -30,7 +29,7 @@ const ColorAdd = () => {
   const navigate = useNavigate()
   const onSubmit = async (dataForm: any) => {
     try {
-      const { data } = await instance.post(`color/addColor`, dataForm)
+      await postColor(dataForm)
       toast.success('Bạn thêm color thành công')
       navigate('/admin/color')
     } catch (error) {

@@ -1,11 +1,7 @@
-import React from 'react'
 import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import instance from '@/config/instance'
-import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
 import { parseISO, format } from 'date-fns'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { debounce } from 'lodash'
 import DialogConfirm from '@/components/DialogConfirm'
@@ -43,7 +39,7 @@ const AuthAdmin = () => {
       console.log(error)
     }
   }
-  const handleBanUser = async (id:string | boolean) => {
+  const handleBanUser = async (id: string | boolean) => {
     try {
       const { data } = await banUser(id as string)
       console.log(data)
@@ -55,13 +51,13 @@ const AuthAdmin = () => {
       toast.error('Cấm người dùng thất bại')
     }
   }
-  const handleUnbanUser = async (id: string | boolean) => { 
+  const handleUnbanUser = async (id: string | boolean) => {
     try {
       const { data } = await unbanUser(id as string)
       console.log(data)
       handlePagingUser()
       setIdUnBan(false)
-      toast.success("Bỏ cấm người dùng thành công")
+      toast.success('Bỏ cấm người dùng thành công')
     } catch (error) {
       console.log(error)
       toast.error('Bỏ cấm người dùng thất bại')
@@ -138,9 +134,13 @@ const AuthAdmin = () => {
                   <div className='flex'>
                     <button className='text-white bg-blue-500 px-4 py-2 rounded-md'>
                       {data.block === true ? (
-                        <div onClick={() => setIdUnBan(data._id)} className='bg-blue-500'>Bỏ Cấm</div>
+                        <div onClick={() => setIdUnBan(data._id)} className='bg-blue-500'>
+                          Bỏ Cấm
+                        </div>
                       ) : (
-                        <div onClick={() => setIdBan(data._id)} className='bg-red-500'>Cấm</div>
+                        <div onClick={() => setIdBan(data._id)} className='bg-red-500'>
+                          Cấm
+                        </div>
                       )}
                     </button>
                   </div>

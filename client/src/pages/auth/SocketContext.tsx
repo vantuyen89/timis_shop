@@ -1,5 +1,4 @@
 import { useAuth } from '@/common/hooks/useAuth'
-import useConversation from '@/zustand/useConversation'
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import io from 'socket.io-client'
 interface AuthProviderProps {
@@ -18,7 +17,6 @@ export const useSocketContext = () => {
 export const SocketContextProvider = ({ children }: AuthProviderProps) => {
   const [socket, setSocket] = useState<any | null>(null)
   const { userAuth } = useAuth()
-  console.log(`${ process.env.HOST_SERVER }`);
 
   useEffect(() => {
     if (userAuth) {

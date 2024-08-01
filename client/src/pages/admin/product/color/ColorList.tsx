@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import instance from '@/config/instance'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
+import { getAllColor } from '@/services/product'
 
 const SizeList = () => {
   const [data, setData] = useState([])
   useEffect(() => {
     (async () => {
-      const { data } = await instance.get(`color/getAllColor`)
+      const { data } = await getAllColor()
       setData(data)
     })()
   }, [])

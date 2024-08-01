@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { NavLink, useLocation, useSearchParams } from 'react-router-dom'
-import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
-import instance from '@/config/instance'
+import  { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+
 import CartEmpty from '../cart/CartEmpty'
 import { Button } from '@/components/ui/button'
 import DialogOrderDetail from '@/components/DialogOrderDetail'
@@ -23,7 +21,7 @@ const MyOrder = () => {
     { title: 'Đã nhận', status: 'delivered' },
     { title: 'Đã hủy', status: 'cancelled' }
   ]
-  const location = useLocation()
+  // const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams({ status: 'pending' })
   const [dataOrderStatus, setDataOrderStatus] = useState([])
   const paramsObject = Object.fromEntries(searchParams.entries())
@@ -43,7 +41,7 @@ const MyOrder = () => {
   }
   const handleCancel = async ({ id, status }: typeOrderUpdate) => {
     try {
-      const { data } = await updateOrder({id, status})
+      await updateOrder({id, status})
       toast.success('Bạn đã hủy đơn hàng thành công')
       handleTabChange()
       setIsOpen(false)
@@ -54,7 +52,7 @@ const MyOrder = () => {
   }
   const handleReceive = async ({ id, status }: typeOrderUpdate) => {
     try {
-      const { data } = await updateOrder({ id, status })
+      await updateOrder({ id, status })
       handleTabChange()
       setIdOpenReceive(false)
     } catch (error) {
@@ -62,7 +60,7 @@ const MyOrder = () => {
       toast.error('Bạn nhận đơn hàng thất bại')
     }
   }
-  const crumbs = generateBreadcrumbs(location.pathname)
+  // const crumbs = generateBreadcrumbs(location.pathname)
   return (
     <>
       <div className='p-5 border rounded-3xl'>

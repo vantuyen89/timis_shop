@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import Auth from "../models/auth.model.js";
+// import Auth from "../models/auth.model.js";
 import Conversation from "../models/conversation.js";
 import Message from "../models/message.model.js";
 import { getReceived, io } from "../socket/socket.js";

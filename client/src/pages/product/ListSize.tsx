@@ -1,10 +1,8 @@
 import { Label } from '@/components/ui/label'
-import instance from '@/config/instance'
 import { cn } from '@/lib/utils'
 import { getALlSize } from '@/services/product'
 import { useQuery } from '@tanstack/react-query'
-import { Check } from 'lucide-react'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 interface Props {
   variants: any[]
   setSizeCart: (sizeId: string | null) => void
@@ -13,7 +11,7 @@ interface Props {
 const ListSize = ({ variants, setSizeCart,colorCart }: Props) => {
    const checkVariant1 = variants.filter((variant) => variant.color._id === colorCart)
    const checkVariant = Array.from(new Set(checkVariant1.map((v: any) => v.size._id)))
-  const isVariantSizes = Array.from(new Set(variants.map((v: any) => v.size._id)))
+  // const isVariantSizes = Array.from(new Set(variants.map((v: any) => v.size._id)))
   const [sizeId, setSizeId] = useState<string | null>(null)
   const inputRef = useRef(null)
   const {

@@ -1,4 +1,4 @@
-import React from 'react'
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +11,10 @@ import { useAuth } from '@/common/hooks/useAuth'
 import { FaRegCircleUser } from 'react-icons/fa6'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import logo from '@/images/timis1.png'
-import instance from '@/config/instance'
+
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import { fetApiCArt, resetCart } from '@/store/slice/cartSlice'
-import { getCartByUserId } from '@/services/cart'
 import { logout } from '@/services/auth'
 const UserHome = () => {
   const { isLoggedIn, userAuth, setUserAuth, setIsLoggedIn } = useAuth()

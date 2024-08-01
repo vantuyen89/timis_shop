@@ -1,13 +1,8 @@
-import React from 'react'
+
 import logo from '../images/logofter.png'
 import { Link } from 'react-router-dom'
 import { FaFacebook, FaInstagram, FaTelegram, FaTiktok, FaTwitter, FaYoutube } from 'react-icons/fa'
-import Iframe from 'react-iframe'
 const Footer = () => {
-  const MapStyle = {
-    width: '100%',
-    height: 500
-  }
   return (
     <div className='bg-[#1d1d1d]'>
       <div className='container'>

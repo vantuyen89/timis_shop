@@ -1,4 +1,4 @@
-import { useState } from 'react'
+
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import LayoutWebsite from './components/website/LayoutWebsite'
@@ -32,7 +32,6 @@ import SizeUpdate from './pages/admin/product/size/SizeUpdate'
 import ColorUpdate from './pages/admin/product/color/ColorUpdate'
 import CategoryUpdate from './pages/admin/category/CategoryUpdate'
 import AuthAdmin from './pages/admin/auth/AuthAdmin'
-import ScrollToTop from './components/ScrollTop'
 import ProtectedRouter from './routes/ProtectedRouter'
 import MainMessage from './pages/admin/messageAdmin/MainMessage'
 
@@ -75,9 +74,9 @@ function App() {
           <Route
             path='/order/success'
             element={
-              <PrivateRoute>
+              <ProtectedRouter>
                 <OrderSuccess />
-              </PrivateRoute>
+              </ProtectedRouter>
             }
           />
         </Route>

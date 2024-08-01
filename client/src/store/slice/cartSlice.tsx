@@ -1,4 +1,4 @@
-import { ICart } from '@/interfaces/ICart'
+
 import {  createSlice } from '@reduxjs/toolkit'
 
 

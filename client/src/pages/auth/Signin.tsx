@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/common/hooks/useAuth'
-import instance from '@/config/instance'
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import { signinAuth } from '@/services/auth'
@@ -27,7 +26,7 @@ const formSchema = z.object({
 export function Signin() {
   const [checkPass, setCheckPass] = useState(false)
   const { setIsLoggedIn, setUserAuth } = useAuth()
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {

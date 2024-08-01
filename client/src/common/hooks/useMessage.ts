@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 const useMessage = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const { messages, setMessages, setSelectedConversation, selectedConversation } = useConversation()
+  const { messages, setMessages, selectedConversation } = useConversation()
   const sendMessage = async (mes: any) => {
     setIsLoading(true)
     try {

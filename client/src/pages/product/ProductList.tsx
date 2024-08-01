@@ -1,11 +1,11 @@
-import React from 'react'
+// import React from 'react'
 
-type Props = {}
+// type Props = {}
 
-const ProductList = (props: Props) => {
-  return (
-    <div>ProductList</div>
-  )
-}
+// const ProductList = (props: Props) => {
+//   return (
+//     <div>ProductList</div>
+//   )
+// }
 
-export default ProductList
+// export default ProductList

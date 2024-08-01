@@ -1,21 +1,20 @@
-
 import useConversation from '@/zustand/useConversation'
 import useMessage from '@/common/hooks/useMessage'
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { FaPaperPlane } from 'react-icons/fa'
 import MessageItem from './MessageItem'
 const GetMessageUser = () => {
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState('')
   const { selectedConversation } = useConversation()
   const { sendMessage } = useMessage()
   const formRef = useRef(null)
-  const handleSubmit =async (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
-    if (message === "") return
-     await sendMessage(message)
-     setMessage('')
+    if (message === '') return
+    await sendMessage(message)
+    setMessage('')
     if (formRef.current) {
-      (formRef.current as string | any).reset() 
+      ;(formRef.current as string | any).reset()
     }
   }
   return (

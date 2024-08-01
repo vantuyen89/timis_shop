@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import {
   Select,
@@ -12,17 +12,17 @@ import {
 } from '@/components/ui/select'
 
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useEffect, useState } from 'react'
-import instance from '@/config/instance'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
-import axios from 'axios'
 import { uploadFileCloudinary } from '@/lib/utils'
 import { toast } from 'sonner'
 import { Textarea } from '@/components/ui/textarea'
 import { useNavigate, useParams } from 'react-router-dom'
+import { getAllCategory } from '@/services/category'
+import { getAllColor, getALlSize, getProductById, updateProduct } from '@/services/product'
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -52,7 +52,7 @@ const ProductUpdate = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await instance.get('category/getAll')
+        const { data } = await getAllCategory()
         setCategory(data)
       } catch (error) {
         console.log(error)
@@ -63,7 +63,7 @@ const ProductUpdate = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await instance.get('size/getAllSize')
+        const { data } = await getALlSize()
         setSize(data)
       } catch (error) {
         console.log(error)
@@ -74,7 +74,7 @@ const ProductUpdate = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await instance.get('color/getAllColor')
+        const { data } = await getAllColor()
         setColor(data)
       } catch (error) {
         console.log(error)
@@ -102,7 +102,7 @@ const ProductUpdate = () => {
   })
   useEffect(() => {
     ;(async () => {
-      const { data } = await instance.get(`/product/getProductById/${id}`)
+      const { data } = await getProductById(id as string)
       console.log(data)
       const formattedData = data.variants.map((variant: any) => ({
         size: variant.size._id,
@@ -178,7 +178,7 @@ const ProductUpdate = () => {
     console.log(dataProduct)
 
     try {
-      const { data } = await instance.put(`product/productUpdated/${id}`, dataProduct)
+      await updateProduct({ id, dataProduct })
       toast.success('Cập nhật sản phẩm thành công!')
       navigate('/admin/product')
     } catch (error) {

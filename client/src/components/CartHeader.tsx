@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserHome from '@/pages/auth/UserHome'
 import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
@@ -23,8 +23,6 @@ const CartHeader = () => {
     })()
   }, [])
   const { cart } = useSelector((state: any) => state.cart)
-
-  console.log(cart)
   const dispatch = useDispatch()
 
   useEffect(() => {

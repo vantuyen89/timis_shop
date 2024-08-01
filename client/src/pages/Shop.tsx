@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState, useTransition } from 'react'
-import { IoIosHeartEmpty } from 'react-icons/io'
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import  {  useEffect, useState } from 'react'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import ReactSlider from 'react-slider'
 import {
   Select,
@@ -13,8 +12,6 @@ import {
 } from '@/components/ui/select'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import Paginations from '@/components/Pagination'
-import queryString from 'query-string'
-import instance from '@/config/instance'
 import CartEmpty from './cart/CartEmpty'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
@@ -26,6 +23,8 @@ import { getAllColor, getALlSize, getProductShop, productMax } from '@/services/
 
 const Shop = () => {
   const [pageIndex, setPageIndex] = useState(1)
+  console.log(pageIndex);
+  
   const [products, setProduct] = useState<any>({})
   const [isLoading, setIsLoading] = useState(false)
   const [color, setColor] = useState([])

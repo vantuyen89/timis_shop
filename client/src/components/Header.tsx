@@ -1,18 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import logo from '../images/timis1.png'
-import Banner from '@/pages/Banner'
 import { CiSearch } from 'react-icons/ci'
 
 import { HiBars3 } from 'react-icons/hi2'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet'
 

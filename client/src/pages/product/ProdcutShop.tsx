@@ -1,5 +1,4 @@
 import { IProduct } from '@/interfaces/IProduct'
-import React from 'react'
 import { IoIosHeartEmpty } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 

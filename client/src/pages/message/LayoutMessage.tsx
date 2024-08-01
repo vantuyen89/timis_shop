@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IoChatbubbleOutline } from 'react-icons/io5'
-import { FaPhone, FaVideo, FaTimes, FaPaperclip, FaImage, FaPaperPlane } from 'react-icons/fa'
+import {FaTimes} from 'react-icons/fa'
 import useConversation from '@/zustand/useConversation'
-import instance from '@/config/instance'
 import MessageForm from '@/pages/message/MessageForm'
 import useGetMessage from '@/common/hooks/useGetMessage'
 import { useAuth } from '@/common/hooks/useAuth'
 import MessageCheck from '@/pages/message/MessageCheck'
-import useListenMessage from '@/common/hooks/useListenMessage'
 import { getUserAdmin } from '@/services/auth'
 
 const LayoutMessage = () => {

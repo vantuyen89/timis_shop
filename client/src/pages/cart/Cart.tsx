@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { TiDeleteOutline } from 'react-icons/ti'
 
@@ -11,7 +11,6 @@ import {
   incrementItemCart,
   removeItemFromCart
 } from '@/services/cart'
-import ClipLoader from 'react-spinners/ClipLoader'
 import Paginations from '@/components/Pagination'
 import { useDispatch } from 'react-redux'
 import { fetApiCArt } from '@/store/slice/cartSlice'
@@ -29,7 +28,7 @@ const Cart = () => {
   let priceSale: any
   const dispatch = useDispatch<any>()
   const query = useQueryClient()
-  const [isDeleted, setIsDeleted] = useState<string | boolean>(false)
+  // const [isDeleted, setIsDeleted] = useState<string | boolean>(false)
 
   const caculatorTotal = () => {
     if (!cartUser) return 0
@@ -37,7 +36,7 @@ const Cart = () => {
   }
   const {
     data: productCart,
-    isLoading,
+    // isLoading,
     isError
   } = useQuery({
     queryKey: ['productCart', pageIndex],

@@ -1,13 +1,11 @@
-import React, { useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
 import { useAuth } from '@/common/hooks/useAuth'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { FaRegUserCircle } from 'react-icons/fa'
 import { MdEventNote, MdFavoriteBorder } from 'react-icons/md'
 const MyInfor = () => {
-  const locaction = useLocation()
   const location = useLocation()
   const { userAuth } = useAuth()
 

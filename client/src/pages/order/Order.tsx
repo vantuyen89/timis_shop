@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import  { useEffect, useState } from 'react'
+import {  useLocation, useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
@@ -203,8 +203,8 @@ const Order = () => {
                             onValueChange={(e) => {
                               setDistrict(null)
                               setCommune(null)
-                              form.setValue('district', null)
-                              form.setValue('commune', null)
+                              form.setValue('district', null as any)
+                              form.setValue('commune',( null as any))
                               handleOnChangeCity(e)
 
                               field.onChange(e)

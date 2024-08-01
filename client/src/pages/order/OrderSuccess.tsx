@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 

@@ -1,5 +1,5 @@
-import { Link, useLocation, useParams } from 'react-router-dom'
-import React, { useEffect, useState } from 'react'
+import { useLocation, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'

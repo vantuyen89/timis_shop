@@ -1,10 +1,10 @@
 import instance from "@/config/instance"
-interface Order {
-  items: [],
-  totalPrice: number,
-  customInfor : {}
+// interface Order {
+//   items: [],
+//   totalPrice: number,
+//   customInfor : {}
 
-}
+// }
 
 export const createOrder = async (order:any) => {
   try {
@@ -15,7 +15,6 @@ export const createOrder = async (order:any) => {
   }
  
 }
-
 
 export const updateOrder = ({id,status}:any) => {
   const data = instance.put(`/order/updateStatusOrder`, { orderId: id, status: status })
