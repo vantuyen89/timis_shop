@@ -175,7 +175,11 @@ export const logout = async (req, res) => {
             async (err, data) => {
                 if (err) {
                     res.cookie("token", "", {
-                        maxAge: 0
+                        maxAge: 0,
+                        httpOnly: true,
+                        path: "/",
+                        sameSite: "none",
+                        secure: true,
                     })
                     return res.status(StatusCodes.OK).json({ message: "Đăng xuất thành công" });
                 }
@@ -184,6 +188,10 @@ export const logout = async (req, res) => {
                 })
                 res.cookie("token", "", {
                     maxAge: 0,
+                    httpOnly: true,
+                    path: "/",
+                    sameSite: "none",
+                    secure: true,
                 });
                 return res.status(StatusCodes.OK).json({
                     message: "Đăng xuất thành công"
