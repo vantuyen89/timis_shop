@@ -6,10 +6,9 @@ const instance = axios.create({
   headers: { 'X-Custom-Header': 'foobar' }
 })
 
-
 const refreshToken = async () => {
   const response = await axios.post(
-    `http://localhost:8000/api/v1/auth/refreshToken`,
+    `${process.env.SERVER_URL}/api/v1/auth/refreshToken`,
     {},
     {
       withCredentials: true
@@ -21,8 +20,8 @@ const refreshToken = async () => {
 instance.interceptors.request.use(
   async function (config) {
     config.withCredentials = true
-    console.log(config);
-    
+    console.log(config)
+
     return config
   },
   function (error) {
@@ -34,8 +33,8 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    console.log(response);
-    
+    console.log(response)
+
     return response
   },
   async (error) => {
