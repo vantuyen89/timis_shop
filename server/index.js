@@ -19,7 +19,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(morgan("tiny"))
 console.log(process.env.HOST_CLIENT);
-app.use(cors({ origin: process.env.HOST_CLIENT , credentials: true, }));
+const corsOptions = {
+    origin: process.env.HOST_CLIENT,
+    credentials: true,
+    methods: "GET, POST, OPTIONS, PUT, PATCH, DELETE",
+    allowedHeaders: ["X-Requested-With", "Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+// Middleware CORS để thêm tiêu đề vào mọi phản hồi
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", process.env.HOST_CLIENT);
+    res.setHeader("Access-Control-Allow-Methods", corsOptions.methods);
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        corsOptions.allowedHeaders.join(", ")
+    );
+    res.setHeader("Access-Control-Allow-Credentials", true);
+    next();
+});
 app.use(cookieParser());
 connectDB(process.env.HOST);
 
