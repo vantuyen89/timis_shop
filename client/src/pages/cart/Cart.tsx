@@ -68,7 +68,14 @@ const Cart = () => {
   //       />
   //     </div>
   //   )
-  if (isError) return <div>Error fetching cart data</div>
+  if (isError) return (
+    <div className='flex flex-col justify-center items-center'>
+      <CartEmpty title={'Bạn chưa có sản phẩm nào trong giỏ hàng'} />
+      <Button className='mb-4'>
+        <Link to={'/'}>Mua hàng</Link>
+      </Button>
+    </div>
+  )
 
   const handleRemoveCart = async (productIdCart: string, colorCart: string, sizeCart: string) => {
     await removeItemFromCart({

@@ -3,6 +3,7 @@ import { IUser } from '@/interfaces/IUser'
 import React, { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import ClipLoader from 'react-spinners/ClipLoader'
+import { authCurrent } from '@/services/auth'
 interface AuthProviderProps {
   children: ReactNode
 }
@@ -24,7 +25,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await instance.get(`/auth/curent-user`)
+        const { data } = await authCurrent()
         setUserAuth(data?.data)
         setIsLoggedIn(true)
         setIsLoading(false)

@@ -4,14 +4,13 @@ import { IoIosHeartEmpty } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 
 const ProdcutShop = (products: any) => {
-  console.log(products);
   return (
     <>
       <div className='w-full grid lg:grid-cols-3 grid-cols-2 gap-7'>
         <>
           {products?.products?.data?.content?.map((product: IProduct) => {
             return (
-              <div className='group'>
+              <div className='group' key={product._id}>
                 <div>
                   <div className='relative overflow-hidden border rounded-2xl bg-[#F4F4F4] flex justify-center items-center '>
                     {/* <img src={bn1} className='py-6 w-full h-full' /> */}

@@ -12,6 +12,7 @@ import { useAuth } from '@/common/hooks/useAuth'
 import instance from '@/config/instance'
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
+import { signinAuth } from '@/services/auth'
 const formSchema = z.object({
   email: z.string().min(1, {
     message: 'Bắt buộc phải nhập email'
@@ -37,7 +38,7 @@ export function Signin() {
 const navigate = useNavigate()
   const onSubmit =async (dataForm: any) => {
     try {
-      const { data } = await instance.post(`/auth/signin`, dataForm) 
+      const { data } = await signinAuth(dataForm)
 
       if (data?.data?.user?.block === true) {
         toast.error('Tài khoản đã bị khóa. Vui lòng liên hệ admin để mở khóa.')

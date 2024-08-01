@@ -9,7 +9,6 @@ const useListenMessage = () => {
 
   useEffect(() => {
     socket?.on("newMessage", (newMessage: string) => {
-      console.log(newMessage);
       const audio = new Audio(notification)
       audio.play()
       setMessages([...messages, newMessage])
@@ -20,6 +19,7 @@ const useListenMessage = () => {
   },[socket, messages, setMessages])
   
 }
+
 
 export default useListenMessage;
 

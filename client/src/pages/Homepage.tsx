@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules'
-import bn1 from '../images/bn1.png'
-import bn2 from '../images/bn2.png'
-import { Swiper, SwiperSlide } from 'swiper/react'
+
 
 // Import Swiper styles
 import 'swiper/css'
@@ -10,15 +7,13 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 import Banner from './Banner'
-import { GrLinkNext, GrLinkPrevious } from 'react-icons/gr'
-import { Link } from 'react-router-dom'
-import { IoIosHeartEmpty } from 'react-icons/io'
+
 import Category from './Category'
 import Sales from './Sales'
-import ProductSalesHome from './product/ProductSalesHome'
+
 import UserShare from './UserShare'
 import SwiperProduct from '@/components/SwiperProduct'
-import instance from '@/config/instance'
+import { getProductPrice, productFeature } from '@/services/product'
 
 // init Swiper:
 
@@ -28,13 +23,13 @@ const Homepage = () => {
   const pageSize = 6
   useEffect(() => {
     (async () => {
-      const { data } = await instance.post(`product/productFeatured`, { pageSize })
+      const { data } = await productFeature(pageSize)
       setProducts(data.data)
     })()
   }, [])
   useEffect(() => {
     (async () => {
-      const { data } = await instance.post(`product/productPrice`, { pageSize })
+      const { data } = await getProductPrice(pageSize)
       setProductPrice(data.data)
     })()
   }, [])

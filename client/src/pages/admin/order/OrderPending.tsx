@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { postOrderAdmin, updateOrder } from '@/services/order'
 
 interface typeMutate {
   id: string
@@ -35,14 +36,14 @@ const OrderPending = () => {
   } = useQuery({
     queryKey: ['orderPending', paramsObject],
     queryFn: async () => {
-      const { data } = await instance.post(`order/orderStatus`, paramsObject)
+      const { data } = await postOrderAdmin(paramsObject)
       return data.data
     }
   })
   const { mutate } = useMutation({
     mutationFn: async ({ id, status }: typeMutate) => {
       try {
-        await instance.put(`/order/updateStatusOrder`, { orderId: id, status: status })
+        await updateOrder({ id, status })
       } catch (error) {
         console.log(error)
       }

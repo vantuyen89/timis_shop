@@ -17,13 +17,14 @@ import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import { fetApiCArt, resetCart } from '@/store/slice/cartSlice'
 import { getCartByUserId } from '@/services/cart'
+import { logout } from '@/services/auth'
 const UserHome = () => {
   const { isLoggedIn, userAuth, setUserAuth, setIsLoggedIn } = useAuth()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const onHandleLogout = async () => {
     try {
-      const data = await instance.post(`/auth/logout`)
+      const data = await logout()
       console.log(data);
       setIsLoggedIn?.(false)
       setUserAuth?.(undefined)

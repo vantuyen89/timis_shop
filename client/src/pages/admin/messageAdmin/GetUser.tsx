@@ -1,5 +1,6 @@
 import instance from '@/config/instance'
 import { IUser } from '@/interfaces/IUser'
+import { userChat } from '@/services/auth'
 import useConversation from '@/zustand/useConversation'
 import React, { useEffect, useState } from 'react'
 
@@ -8,7 +9,7 @@ const GetUser = () => {
   const {selectedConversation,setSelectedConversation} = useConversation()
   useEffect(() => {
     (async () => {
-      const { data } = await instance.get(`/auth/userChat`)
+      const { data } = await userChat()
       setData(data.data);
     })()
   },[])

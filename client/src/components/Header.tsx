@@ -31,8 +31,8 @@ const Header = () => {
       <div className='bg-black'>
         <div className='container text-center py-2'>
           <p className='text-[12px] lg:text-sm text-white'>
-            TIMIS luôn đồng hành cùng các bạn - 
-            <span className='pl-4'>Thời trang nâng tầm sắc đẹp</span>
+            TIMIS luôn đồng hành cùng các bạn -
+            <span className=''> Thời trang nâng tầm sắc đẹp</span>
           </p>
         </div>
       </div>

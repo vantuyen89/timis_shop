@@ -37,8 +37,6 @@ import ProtectedRouter from './routes/ProtectedRouter'
 import MainMessage from './pages/admin/messageAdmin/MainMessage'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <Routes>
@@ -113,8 +111,8 @@ function App() {
           <Route path='colorUpdate/:id' element={<ColorUpdate />} />
           <Route path='order' element={<OrderPending />} />
           <Route path='auth' element={<AuthAdmin />} />
-          <Route path='message' element={<MainMessage/>} />
-        </Route> 
+          <Route path='message' element={<MainMessage />} />
+        </Route>
       </Routes>
     </>
   )

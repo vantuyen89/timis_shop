@@ -1,6 +1,5 @@
-import React from 'react'
+
 import { Outlet } from 'react-router-dom'
-import { Button } from '../ui/button'
 
 const LayoutAuth = () => {
   return (

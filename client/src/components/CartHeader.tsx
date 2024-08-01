@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import UserHome from '@/pages/auth/UserHome'
 import { useDispatch, useSelector } from 'react-redux'
-import ClipLoader from 'react-spinners/ClipLoader'
-import { FaRegCircleUser } from 'react-icons/fa6'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
 import { useAuth } from '@/common/hooks/useAuth'
 import { Link } from 'react-router-dom'

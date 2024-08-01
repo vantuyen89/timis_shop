@@ -10,8 +10,9 @@ import { Input } from '@/components/ui/input'
 import { debounce } from 'lodash'
 import DialogConfirm from '@/components/DialogConfirm'
 import { toast } from 'sonner'
+import { authPaging, banUser, unbanUser } from '@/services/auth'
 
-interface typeSearch {
+export interface typeSearch {
   keyword: string
   tab: number
 }
@@ -35,7 +36,7 @@ const AuthAdmin = () => {
   }, [searchObject])
   const handlePagingUser = async () => {
     try {
-      const { data } = await instance.post(`auth/paging`, searchObject)
+      const { data } = await authPaging(searchObject)
       console.log(data)
       setDataUser(data?.data)
     } catch (error) {
@@ -44,7 +45,7 @@ const AuthAdmin = () => {
   }
   const handleBanUser = async (id:string | boolean) => {
     try {
-      const { data } = await instance.post(`/auth/banUser`, { userId: id })
+      const { data } = await banUser(id as string)
       console.log(data)
       handlePagingUser()
       setIdBan(false)
@@ -56,7 +57,7 @@ const AuthAdmin = () => {
   }
   const handleUnbanUser = async (id: string | boolean) => { 
     try {
-      const { data } = await instance.post(`/auth/unBanUser`, { userId: id })
+      const { data } = await unbanUser(id as string)
       console.log(data)
       handlePagingUser()
       setIdUnBan(false)

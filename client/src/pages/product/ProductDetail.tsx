@@ -21,6 +21,7 @@ import { addItem, fetApiCArt } from '@/store/slice/cartSlice'
 import { addtoCartById, getCartByUserId } from '@/services/cart'
 import { useAuth } from '@/common/hooks/useAuth'
 import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
+import { getProductById } from '@/services/product'
 
 // import { addtoCart } from '@/store/slice/cartSlice'
 
@@ -49,7 +50,7 @@ const ProductDetail = () => {
     queryKey: ['product', id],
     queryFn: async () => {
       try {
-        const response = await instance.get(`/product/getProductById/${id}`)
+        const response = await getProductById(id as string)
         setCategory(response.data.category._id)
         return response.data
       } catch (error) {

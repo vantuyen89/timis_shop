@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
 import { Textarea } from '@/components/ui/textarea'
 import { uploadFileCloudinary } from '@/lib/utils'
+import { postCategory } from '@/services/category'
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -54,7 +55,7 @@ const CategoryAdd = () => {
         description: dataForm.description,
         imageUrl: dataImg
       }
-      const { data } = await instance.post(`category/addCate`, dataCate)
+      const { data } = await postCategory(dataCate)
       toast.success('Bạn thêm danh mục thành công')
       navigate('/admin/category')
     } catch (error) {

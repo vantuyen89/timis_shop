@@ -1,5 +1,5 @@
 import instance from '@/config/instance'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const useConversation = () => {
   const [isLoading, setIsLoading] = useState(false)

@@ -10,6 +10,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 import instance from '@/config/instance'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { getAllCategory } from '@/services/category'
 
 interface Category {
   _id: string
@@ -28,7 +29,7 @@ const Category = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await instance.get(`/category/getAll`)
+        const { data } = await getAllCategory()
         setCategory(data)
       } catch (error) {
         console.log(error)

@@ -8,6 +8,7 @@ import useGetMessage from '@/common/hooks/useGetMessage'
 import { useAuth } from '@/common/hooks/useAuth'
 import MessageCheck from '@/pages/message/MessageCheck'
 import useListenMessage from '@/common/hooks/useListenMessage'
+import { getUserAdmin } from '@/services/auth'
 
 const LayoutMessage = () => {
   const [check, setCheck] = useState(false)
@@ -18,7 +19,7 @@ const LayoutMessage = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await instance.get(`/auth/getAdmin`)
+        const { data } = await getUserAdmin()
         setSelectedConversation(data.data)
       } catch (error) {
         console.log(error)

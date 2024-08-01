@@ -1,6 +1,7 @@
 import { Label } from '@/components/ui/label'
 import instance from '@/config/instance'
 import { cn } from '@/lib/utils'
+import { getALlSize } from '@/services/product'
 import { useQuery } from '@tanstack/react-query'
 import { Check } from 'lucide-react'
 import React, { useRef, useState } from 'react'
@@ -22,23 +23,12 @@ const ListSize = ({ variants, setSizeCart,colorCart }: Props) => {
   } = useQuery({
     queryKey: ['size'],
     queryFn: async () => {
-      const response = await instance(`/size/getAllSize`)
+      const response = await getALlSize()
       return response.data
     }
   })
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error </div>
-
-  // const handleLabelClick = () => {
-  //   // console.log(inputRef.current?.checked);
-  //   if (inputRef.current?.checked) {
-  //     setColorId(inputRef.current?.value)
-  //     setSizeCart(inputRef.current?.value)
-  //   } else {
-  //     setColorId(null)
-  //   }
-  //   // console.log(colorId);
-  // }
   return (
     <div className='list-size grid grid-cols-3 gap-3'>
       {size.map((item: any) => {

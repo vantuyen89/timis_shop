@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Textarea } from '@/components/ui/textarea'
 import { uploadFileCloudinary } from '@/lib/utils'
+import { getCategoryById, updateCategory } from '@/services/category'
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -45,7 +46,7 @@ const CategoryUpdate = () => {
   const { id } = useParams()
   useEffect(() => {
     ;(async () => {
-      const { data } = await instance.get(`category/getCateById/${id}`)
+      const { data } = await getCategoryById(id as string)
       form.reset({
         name: data.name,
         description: data.description,
@@ -67,7 +68,7 @@ const CategoryUpdate = () => {
         imageUrl: dataImg
       }
       
-      const { data } = await instance.put(`category/updateCateById/${id}`, dataCate)
+      const { data } = await updateCategory({id,dataCate})
       toast.success('Bạn cập nhật danh mục thành công')
       navigate('/admin/category')
     } catch (error) {

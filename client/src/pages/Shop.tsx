@@ -22,6 +22,7 @@ import { debounce } from 'lodash'
 import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
 import ProdcutShop from './product/ProdcutShop'
 import ProductLoading from './product/ProductLoading'
+import { getAllColor, getALlSize, getProductShop, productMax } from '@/services/product'
 
 const Shop = () => {
   const [pageIndex, setPageIndex] = useState(1)
@@ -33,31 +34,29 @@ const Shop = () => {
   const paramsObject = Object.fromEntries(searchParams.entries())
   const location = useLocation()
   const crumbs = generateBreadcrumbs(location.pathname)
-  const [isPending, startTransition] = useTransition()
   const handleReset = () => {
     setSearchParams(new URLSearchParams({}))
     handlePaging()
   }
   const handlePaging = async () => {
     try {
-      const data = await instance.post(`/product/shop`, paramsObject)
+      const data = await getProductShop(paramsObject)
       setProduct(data)
     } catch (error) {
       console.log(error)
     }
   }
-
-  // useEffect để gọi handlePaging khi searchParams thay đổi
   useEffect(() => {
-    // Bắt đầu chuyển tiếp để quản lý cập nhật trạng thái
-    startTransition(() => {
+    setIsLoading(true)
+    setTimeout(() => {
       handlePaging()
-    })
+    }, 500);
+    setIsLoading(false)
   }, [searchParams])
   useEffect(() => {
     ;(async () => {
       try {
-        const data = await instance.get(`/color/getAllColor`)
+        const data = await getAllColor()
         setColor(data.data)
       } catch (error) {
         console.log(error)
@@ -67,7 +66,7 @@ const Shop = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const data = await instance.get(`/size/getAllSize`)
+        const data = await getALlSize()
 
         setSize(data.data)
       } catch (error) {
@@ -79,7 +78,7 @@ const Shop = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await instance.get(`product/productPriceMax`)
+        const { data } = await productMax()
         setMaxPrice(data.data)
         return data.data
       } catch (error) {
@@ -106,34 +105,10 @@ const Shop = () => {
         break
     }
   }
-  // debounce((values: any) => {
-  //   const minPriceSearch = values[0]
-  //   const maxPriceSearch = values[1]
-  //   searchParams.set('priceMin', minPriceSearch)
-  //   searchParams.set('priceMax', maxPriceSearch)
-  //   setSearchParams(searchParams)
-  //   setValues(values)
-  // }, 100)
-  const debounceRef = useRef(
-    debounce((newValues) => {
-      const [minPriceSearch, maxPriceSearch] = newValues
-      searchParams.set('priceMin', minPriceSearch)
-      searchParams.set('priceMax', maxPriceSearch)
-      setSearchParams(new URLSearchParams(searchParams))
-      setValues(newValues)
-    }, 100) // Thay đổi thời gian debounce nếu cần
-  )
-
-  const handleChange = useCallback(
-    (newValues: any) => {
-      debounceRef.current(newValues)
-    },
-    [] // Không cần phụ thuộc vào các giá trị khác
-  )
 
   return (
     <div className='container flex flex-col'>
-      {isPending && <ProductLoading />}
+      {isLoading && <ProductLoading />}
       <Breadcrumb crumbs={crumbs} />
       <div className='flex flex-col py-5 gap-3 border-b-2'>
         <h3 className='lg:text-[32px] text-[25px]  font-bold'>Man collection</h3>

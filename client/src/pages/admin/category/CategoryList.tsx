@@ -4,12 +4,13 @@ import instance from '@/config/instance'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
+import { getAllCategory } from '@/services/category'
 
 const CategoryList = () => {
   const [data, setData] = useState([])
   useEffect(() => {
     ;(async () => {
-      const { data } = await instance.get(`category/getAll`)
+      const { data } = await getAllCategory()
       setData(data)
     })()
   }, [])

@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import instance from '@/config/instance'
 import { uploadFileCloudinary } from '@/lib/utils'
+import { updateInformation } from '@/services/auth'
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -64,7 +65,7 @@ const Information = () => {
         email: dataForm.email,
         avatar: dataImg
       }
-      const { data } = await instance.post(`auth/updateUser`, dataCate)
+      const { data } = await updateInformation(dataCate)
       setUserAuth?.(data.data)
       toast.success('Bạn sửa thông tin thành công')
     } catch (error) {

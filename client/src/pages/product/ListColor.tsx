@@ -1,6 +1,7 @@
 import { Label } from '@/components/ui/label';
 import instance from '@/config/instance';
 import { cn } from '@/lib/utils';
+import { getAllColor } from '@/services/product';
 import { useQuery } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
 import React, { useRef, useState } from 'react'
@@ -19,7 +20,7 @@ const ListColor = ({ variants, setColorCart, sizeCart }: Props) => {
   const { data: color, isLoading, isError } = useQuery({
     queryKey: ['color'],
     queryFn: async () => {
-      const response = await instance(`/color/getAllColor`)
+      const response = await getAllColor()
       return response.data
     },
   })

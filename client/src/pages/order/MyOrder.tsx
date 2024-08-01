@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import DialogOrderDetail from '@/components/DialogOrderDetail'
 import { toast } from 'sonner'
 import DialogConfirm from '@/components/DialogConfirm'
+import { searchOrder, updateOrder } from '@/services/order'
 
 interface typeOrderUpdate {
   id: string | boolean
@@ -34,7 +35,7 @@ const MyOrder = () => {
   }, [searchParams])
   const handleTabChange = async () => {
     try {
-      const { data } = await instance.post(`http://localhost:8000/api/v1/order/status`, paramsObject)
+      const { data } = await searchOrder(paramsObject)
       setDataOrderStatus(data.data)
     } catch (error: any) {
       console.log(error)
@@ -42,7 +43,7 @@ const MyOrder = () => {
   }
   const handleCancel = async ({ id, status }: typeOrderUpdate) => {
     try {
-      const { data } = await instance.put(`/order/updateStatusOrder`, { orderId: id, status: status })
+      const { data } = await updateOrder({id, status})
       toast.success('Bạn đã hủy đơn hàng thành công')
       handleTabChange()
       setIsOpen(false)
@@ -53,7 +54,7 @@ const MyOrder = () => {
   }
   const handleReceive = async ({ id, status }: typeOrderUpdate) => {
     try {
-      const { data } = await instance.put(`/order/updateStatusOrder`, { orderId: id, status: status })
+      const { data } = await updateOrder({ id, status })
       handleTabChange()
       setIdOpenReceive(false)
     } catch (error) {
