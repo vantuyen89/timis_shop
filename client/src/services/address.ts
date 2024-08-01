@@ -1,6 +1,5 @@
-import instance from '@/config/instance'
+
 import axios from 'axios'
-import { IoMdDisc } from 'react-icons/io'
 
 export const callDistrict = async (idProvince: string) => {
   const data = await axios.get(

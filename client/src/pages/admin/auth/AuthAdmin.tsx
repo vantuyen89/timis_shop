@@ -68,17 +68,12 @@ const AuthAdmin = () => {
       <div className='flex justify-between p-6'>
         <h4>Danh sách Người dùng</h4>
       </div>
-      <Input
-        placeholder='Tìm kiếm người dùng'
-        className='w-[40%] md:text-base text-xs'
-        onChange={(event) => (
+      
           <Input
             placeholder='Tìm kiếm người dùng'
             className='w-[40%] md:text-base text-xs'
             onChange={(event) => debounced(event.target.value)}
           />
-        )}
-      />
       <Tabs value={`${searchObject.tab}`} className='w-full'>
         <TabsList className='grid w-full grid-cols-2'>
           <TabsTrigger

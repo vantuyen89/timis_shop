@@ -22,7 +22,7 @@ const formSchema = z.object({
 })
 const CategoryAdd = () => {
   const [img, setImg] = useState<any>('')
-  const [imgUrl, setImgUrl] = useState('')
+  // const [imgUrl, setImgUrl] = useState('')
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +54,7 @@ const CategoryAdd = () => {
         description: dataForm.description,
         imageUrl: dataImg
       }
-      const { data } = await postCategory(dataCate)
+      await postCategory(dataCate)
       toast.success('Bạn thêm danh mục thành công')
       navigate('/admin/category')
     } catch (error) {

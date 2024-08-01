@@ -92,7 +92,7 @@ const MyOrder = () => {
                 </h3>
                 {item.items.map((product: any, index: number) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <div className='flex justify-between py-6 items-center'>
                         <div className='flex gap-3'>
                           <img src={product.image} alt='' className='lg:w-[80px] lg:h-[100px] w-[55px] h-[75px]' />

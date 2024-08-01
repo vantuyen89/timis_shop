@@ -67,7 +67,7 @@ const CategoryUpdate = () => {
         imageUrl: dataImg
       }
 
-      const { data } = await updateCategory({ id, dataCate })
+      await updateCategory({ id, dataCate })
       toast.success('Bạn cập nhật danh mục thành công')
       navigate('/admin/category')
     } catch (error) {

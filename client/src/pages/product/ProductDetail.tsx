@@ -17,7 +17,7 @@ import { useQuery } from '@tanstack/react-query'
 import SwiperProduct from '@/components/SwiperProduct'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { useDispatch } from 'react-redux'
-import { addItem, fetApiCArt } from '@/store/slice/cartSlice'
+import {fetApiCArt } from '@/store/slice/cartSlice'
 import { addtoCartById, getCartByUserId } from '@/services/cart'
 import { useAuth } from '@/common/hooks/useAuth'
 import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
@@ -142,9 +142,9 @@ const ProductDetail = () => {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev'
               }}
-              onSwiper={(swiper) => {
-                // console.log(swiper)
-              }}
+              // onSwiper={(swiper) => {
+              //   // console.log(swiper)
+              // }}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
             >
               {product.images.map((img: string, index: number) => (

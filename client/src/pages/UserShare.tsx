@@ -101,6 +101,8 @@ const UserShare = () => {
         // onSlideChange={() => console.log('slide change')}
       >
         {products.map((product: any) => {
+          console.log(product);
+          
           return (
             <SwiperSlide className=''>
               <div>

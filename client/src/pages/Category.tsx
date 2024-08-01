@@ -7,7 +7,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import { getAllCategory } from '@/services/category'
 
 interface Category {
