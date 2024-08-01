@@ -3,8 +3,7 @@ import axios from 'axios'
 const instance = axios.create({
   withCredentials: true,
   baseURL: process.env.SERVER_URL,
-  timeout: 1000,
-  headers: { 'X-Custom-Header': 'foobar' }
+  timeout: 1000
 })
 
 const refreshToken = async () => {
