@@ -27,7 +27,7 @@ const authSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: "../images/avtDefault.png"
+        default: "https://res.cloudinary.com/dzurnefms/image/upload/v1720926823/project_cn/zyys4rs4omlfcs1u7nww.png"
     },
     block: {
         type: Boolean,
