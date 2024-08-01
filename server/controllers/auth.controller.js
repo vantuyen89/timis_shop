@@ -93,8 +93,10 @@ export const signin = async (req, res) => {
         // }
         res.cookie("token", refreshToken, {
             maxAge: 1000 * 60 * 24 * 60,
-            httpOnly: true,
             path: "/",
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
         });
         delete user._doc.password
         delete user._doc.confirmPassword
