@@ -1,10 +1,8 @@
 import express from 'express';
-import "dotenv/config"
+
 import cors from "cors"
 import bodyParser from 'body-parser';
-import morgan from "morgan"
 import { connectDB } from './configs/db.js';
-
 import routerCate from './routes/category.route.js';
 import routerSize from './routes/size.route.js';
 import routerColor from './routes/color.route.js';
@@ -15,11 +13,13 @@ import routerOrder from './routes/order.route.js';
 import cookieParser from 'cookie-parser';
 import routerMessage from './routes/message.route.js';
 import { app, server } from './socket/socket.js';
-
+import dotenv from 'dotenv'
+dotenv.config()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(morgan("tiny"))
-app.use(cors({ origin: "http://localhost:3000", credentials: true, }));
+console.log(process.env.HOST_CLIENT);
+app.use(cors({ origin: process.env.HOST_CLIENT , credentials: true, }));
 app.use(cookieParser());
 connectDB(process.env.HOST);
 

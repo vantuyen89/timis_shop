@@ -18,10 +18,11 @@ export const useSocketContext = () => {
 export const SocketContextProvider = ({ children }: AuthProviderProps) => {
   const [socket, setSocket] = useState<any | null>(null)
   const { userAuth } = useAuth()
-  
+  console.log(`${ process.env.HOST_SERVER }`);
+
   useEffect(() => {
     if (userAuth) {
-      const socketNew = io('http://localhost:8000', {
+      const socketNew = io(`${process.env.HOST_SERVER}`, {
         query: { userId: userAuth?._id }
       })
       setSocket(socketNew)
@@ -33,5 +34,5 @@ export const SocketContextProvider = ({ children }: AuthProviderProps) => {
       }
     }
   }, [userAuth])
-  return <SocketContext.Provider value={{socket}}>{children}</SocketContext.Provider>
+  return <SocketContext.Provider value={{ socket }}>{children}</SocketContext.Provider>
 }
