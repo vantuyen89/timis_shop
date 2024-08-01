@@ -8,7 +8,7 @@ const instance = axios.create({
 
 const refreshToken = async () => {
   const response = await axios.post(
-    `${process.env.SERVER_URL}/api/v1/auth/refreshToken`,
+    `${process.env.SERVER_URL}/auth/refreshToken`,
     {},
     {
       withCredentials: true
