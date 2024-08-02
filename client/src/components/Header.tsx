@@ -81,7 +81,7 @@ const Header = () => {
                             })}
                             className={`relative block pt-4 group`}
                           >
-                            FLower
+                            Phụ kiện
                             <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
                           </NavLink>
                         </li>
@@ -183,7 +183,7 @@ const Header = () => {
                       })}
                       className={`relative block pt-4 group`}
                     >
-                      FLower
+                      Phụ kiện
                       <div className='absolute left-0 bottom-0 h-1 w-full bg-black mt-3 transition-transform duration-300 transform scale-x-0 group-hover:scale-x-100'></div>
                     </NavLink>
                   </li>

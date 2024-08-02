@@ -13,6 +13,7 @@ const LayoutMessage = () => {
   const { userAuth } = useAuth()
   const { selectedConversation, setSelectedConversation } = useConversation()
   const { messages, isLoading } = useGetMessage()
+  const {isLoggedIn} = useAuth()
 
   useEffect(() => {
     ;(async () => {
@@ -72,7 +73,7 @@ const LayoutMessage = () => {
               <FaTimes onClick={() => setCheck(false)} />
             </button>
           </div>
-          <div id='chatbox' className='p-4 h-80 mt-4 space-y-4 overflow-y-auto'>
+          {isLoggedIn ? (<><div id='chatbox' className='p-4 h-80 mt-4 space-y-4 overflow-y-auto'>
             {/* Chat messages will be displayed here */}
             {!isLoading &&
               messages.length > 0 &&
@@ -80,7 +81,8 @@ const LayoutMessage = () => {
                 return <MessageCheck message={message} />
               })}
           </div>
-          <MessageForm />
+          <MessageForm /></>): (<div className='h-80 text-center pt-7'>Mời bạn đăng nhập để nhắn tin với shop </div>)}
+          
         </div>
       ) : (
         <div className='p-3 bg-[#eeeeee] rounded-full'>

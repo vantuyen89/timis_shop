@@ -49,7 +49,8 @@ const Shop = () => {
     setIsLoading(true)
     setTimeout(() => {
       handlePaging()
-    }, 500);
+    }, 100);
+    window.scrollTo(0, 0)
     setIsLoading(false)
   }, [searchParams])
   useEffect(() => {
@@ -108,12 +109,15 @@ const Shop = () => {
   return (
     <div className='container flex flex-col'>
       {isLoading && <ProductLoading />}
-      <Breadcrumb crumbs={crumbs} />
+      <div className='py-4'>
+        <Breadcrumb crumbs={crumbs} />
+      </div>
       <div className='flex flex-col py-5 gap-3 border-b-2'>
-        <h3 className='lg:text-[32px] text-[25px]  font-bold'>Man collection</h3>
+        <h3 className='lg:text-[32px] text-[25px]  font-bold'>TIMIS FASHION STYLE</h3>
         <p className='font-light lg:text-base text-sm  lg:w-[600px] w-full leading-8'>
-          We not only help you design exceptional products, but also make it easy for you to share your designs with
-          more like-minded people.
+          Mỗi chiếc áo tại cửa hàng chúng tôi không chỉ đơn thuần là một món đồ, mà là một tác phẩm nghệ thuật tinh tế,
+          được thiết kế để tôn vinh vẻ đẹp và phong cách riêng của bạn. Hãy để trang phục của bạn nói lên câu chuyện của
+          chính mình!
         </p>
       </div>
       <div className='grid lg:grid-cols-12  '>
