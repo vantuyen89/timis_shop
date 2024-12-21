@@ -83,6 +83,10 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ["pending", "confirm", "shipped", "delivered", "canceled"],
         default: "pending"
+    },
+    paymentMethod: {
+        type: Number,
+        required: true
     }
 },
     {

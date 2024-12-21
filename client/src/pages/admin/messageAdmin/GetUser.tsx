@@ -14,7 +14,8 @@ const GetUser = () => {
   }, [])
   return (
     <div className='lg:col-span-2 row-span-1'>
-      <div className='flex flex-col'>
+      <h2>Tin nhắn chờ của khách hàng</h2>
+      <div className='flex flex-col h-[82vh] overflow-y-auto'>
         {data?.map((user: IUser) => {
           return (
             <div key={user._id} className='py-2 border-r-2'>

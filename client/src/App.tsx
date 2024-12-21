@@ -1,4 +1,3 @@
-
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import LayoutWebsite from './components/website/LayoutWebsite'
@@ -9,7 +8,7 @@ import { Register } from './pages/auth/Register'
 import { Signin } from './pages/auth/Signin'
 import ProductDetail from './pages/product/ProductDetail'
 import Cart from './pages/cart/Cart'
-import Shop from './pages/Shop'
+import Shop from './pages/Shop/Shop'
 import LayoutAdmin from './components/website/LayoutAdmin'
 import MainContent from './pages/admin/MainContent'
 import ProductList from './pages/admin/product/ProductList'
@@ -34,6 +33,7 @@ import CategoryUpdate from './pages/admin/category/CategoryUpdate'
 import AuthAdmin from './pages/admin/auth/AuthAdmin'
 import ProtectedRouter from './routes/ProtectedRouter'
 import MainMessage from './pages/admin/messageAdmin/MainMessage'
+import OrderProcessing from './pages/order/OrderProcessing'
 
 function App() {
   return (
@@ -79,6 +79,7 @@ function App() {
               </ProtectedRouter>
             }
           />
+          <Route path='/order/processing' element={<OrderProcessing />} />
         </Route>
 
         <Route path='auth' element={<LayoutAuth />}>

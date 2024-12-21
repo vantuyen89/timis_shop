@@ -12,8 +12,10 @@ import routerCart from './routes/cart.route.js';
 import routerOrder from './routes/order.route.js';
 import cookieParser from 'cookie-parser';
 import routerMessage from './routes/message.route.js';
+import routerStatistic from './routes/statistic.route.js';
 import { app, server } from './socket/socket.js';
 import dotenv from 'dotenv'
+import routerComment from './routes/comment.route.js';
 dotenv.config()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -49,6 +51,8 @@ app.use("/api/v1/auth", routerAuth)
 app.use("/api/v1/cart", routerCart)
 app.use("/api/v1/order", routerOrder)
 app.use("/api/v1/message", routerMessage)
+app.use("/api/v1/comment", routerComment)
+app.use("/api/v1/statistic", routerStatistic)
 server.listen(process.env.PORT, () => {
     console.log("listen on port " + process.env.PORT);
 })

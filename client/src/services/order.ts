@@ -29,3 +29,13 @@ export const postOrderAdmin = (paramsObject: Object) => {
   const data = instance.post(`order/orderStatus`, paramsObject)
   return data
 }
+
+export const createOrderPaymentVNPAY = (paramsObject: Object) => {
+  const data = instance.post(`order/createOrderPaymentVNPAY`, paramsObject)
+  return data
+}
+
+export const returnUrlVnPay = (dataUrl: any) => {
+  const data = instance.get(`/order/returnVnPay?${dataUrl}`)
+  return data
+}

@@ -17,7 +17,7 @@ import { useQuery } from '@tanstack/react-query'
 import SwiperProduct from '@/components/SwiperProduct'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { useDispatch } from 'react-redux'
-import {fetApiCArt } from '@/store/slice/cartSlice'
+import { fetApiCArt } from '@/store/slice/cartSlice'
 import { addtoCartById, getCartByUserId } from '@/services/cart'
 import { useAuth } from '@/common/hooks/useAuth'
 import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
@@ -38,10 +38,7 @@ const ProductDetail = () => {
   const location = useLocation()
   const crumbs = generateBreadcrumbs(location.pathname)
   const { isLoggedIn } = useAuth()
-  // console.log(product)
   const { id } = useParams()
-  // console.log(dispatch);
-
   const {
     data: product,
     isLoading: isLoading1,
@@ -120,7 +117,6 @@ const ProductDetail = () => {
       return
     }
     await addtoCartById({ productId: id, color: colorCart, size: sizeCart, quantity: quantity })
-    // dispatch(addItem({ productId: id, color: colorCart, size: sizeCart, quantity: quantity }))
     const data = await getCartByUserId()
     dispatch(fetApiCArt(data))
     toast.success('Bạn đã thêm sản phẩm vào giỏ hàng')
@@ -174,7 +170,7 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-        <div className='col-span-1 md:col-span-0 '></div>
+        <div className='col-span-1 hidden lg:grid '></div>
         <div className='col-span-5'>
           <div className='w-full'>
             <div className='p-6 w-full space-y-4'>
@@ -293,6 +289,7 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+      <div></div>
 
       <SwiperProduct products={productRelated.data} title={`Sản phẩm liên quan`} />
       {productRelated.data.length === 0 && (

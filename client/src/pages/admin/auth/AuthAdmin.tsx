@@ -7,6 +7,7 @@ import { debounce } from 'lodash'
 import DialogConfirm from '@/components/DialogConfirm'
 import { toast } from 'sonner'
 import { authPaging, banUser, unbanUser } from '@/services/auth'
+import { cn } from '@/lib/utils'
 
 export interface typeSearch {
   keyword: string
@@ -112,6 +113,8 @@ const AuthAdmin = () => {
         </TableHeader>
         <TableBody>
           {dataUser?.map((data: any, index: number) => {
+            console.log(data);
+            
             const parsedDate = parseISO(data.createdAt)
             const formattedDate = format(parsedDate, 'MM/dd/yyyy')
 
@@ -127,13 +130,13 @@ const AuthAdmin = () => {
                 <TableCell>{formattedDate}</TableCell>
                 <TableCell>
                   <div className='flex'>
-                    <button className='text-white bg-blue-500 px-4 py-2 rounded-md'>
+                    <button className={cn('text-white bg-blue-500 px-4 py-2 rounded-md',!data.block && 'bg-red-500' )}>
                       {data.block === true ? (
-                        <div onClick={() => setIdUnBan(data._id)} className='bg-blue-500'>
+                        <div onClick={() => setIdUnBan(data._id)}>
                           Bỏ Cấm
                         </div>
                       ) : (
-                        <div onClick={() => setIdBan(data._id)} className='bg-red-500'>
+                        <div onClick={() => setIdBan(data._id)}>
                           Cấm
                         </div>
                       )}

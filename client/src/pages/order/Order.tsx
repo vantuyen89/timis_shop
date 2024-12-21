@@ -1,5 +1,5 @@
-import  { useEffect, useState } from 'react'
-import {  useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -15,7 +15,7 @@ import { callCity, callCommune, callDistrict } from '@/services/address'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
-import { createOrder } from '@/services/order'
+import { createOrder, createOrderPaymentVNPAY } from '@/services/order'
 import { useQueryClient } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
 import { fetApiCArt } from '@/store/slice/cartSlice'
@@ -47,7 +47,7 @@ const Order = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const query = useQueryClient()
-  const onSubmit =async (data: any) => {
+  const onSubmit = async (data: any) => {
     const orderItem = cartUser.map((order: any) => {
       return {
         productName: order?.productId?.name,
@@ -61,31 +61,45 @@ const Order = () => {
     if (orderItem.length === 0) {
       toast.error('Chưa có sản phẩm nào trong giỏ hàng')
       return
-      
     }
     const cityName = city?.find((city) => city.idProvince === data.city)
     const districtName = district?.find((district) => district.idDistrict === data.district)
     const communeName = commune?.find((commune) => commune.idCommune === data.commune)
     const customInfor = {
       name: data.username,
-      phone:data.phone,
+      phone: data.phone,
       address: data.address,
       city: cityName?.name,
       district: districtName?.name,
-      commune: communeName?.name,
-      payment: paymentMethod
+      commune: communeName?.name
     }
-    const dataOrder = { items: orderItem, customInfor: customInfor, totalPrice: (Number(priceSale) + caculatorTotal()) }
+    const dataOrder = {
+      items: orderItem,
+      customInfor: customInfor,
+      totalPrice: Number(priceSale) + caculatorTotal(),
+      paymentMethod: paymentMethod
+    }
     try {
-      await createOrder(dataOrder)
-      toast.success('Đặt hàng thành công!')
-      const data = await getCartByUserId()
-      dispatch(fetApiCArt(data))
-      query.invalidateQueries({
-        queryKey: ['productCart', 1]
-      })
-      navigate('/order/success')
-      return 
+      if (paymentMethod === 1) {
+        await createOrder(dataOrder)
+        toast.success('Đặt hàng thành công!')
+        const data = await getCartByUserId()
+        dispatch(fetApiCArt(data))
+        query.invalidateQueries({
+          queryKey: ['productCart', 1]
+        })
+        navigate('/order/success')
+        return
+      } else {
+        const { data } = await createOrderPaymentVNPAY({
+          ...dataOrder,
+          returnUrl: `${window.location.origin}/order/processing`
+        })
+        console.log(data);
+        
+        window.location.href = data.paymentUrl
+        return data
+      }
     } catch (error) {
       toast.error('Đặt hàng thất bại!')
     }
@@ -94,8 +108,8 @@ const Order = () => {
   const [cartUser, setCartUser] = useState([])
   const [city, setCity] = useState<ICity[] | null>(null)
   const [district, setDistrict] = useState<IDistrict[] | null>(null)
-  const [commune, setCommune] = useState<ICommune[] | null >(null)
-  const [paymentMethod, setPaymentMethod] = useState('Thanh toán khi nhận hàng')
+  const [commune, setCommune] = useState<ICommune[] | null>(null)
+  const [paymentMethod, setPaymentMethod] = useState(1)
   let priceSale: any
   useEffect(() => {
     ;(async () => {
@@ -204,7 +218,7 @@ const Order = () => {
                               setDistrict(null)
                               setCommune(null)
                               form.setValue('district', null as any)
-                              form.setValue('commune',( null as any))
+                              form.setValue('commune', null as any)
                               handleOnChangeCity(e)
 
                               field.onChange(e)
@@ -361,13 +375,13 @@ const Order = () => {
                       >
                         <input
                           className='peer'
-                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          onChange={(e) => setPaymentMethod(1)}
                           type='radio'
                           hidden
                           name='choose-size'
                           id='paymentMethod1'
                           value='paymentMethod1'
-                          checked={paymentMethod === 'Thanh toán khi nhận hàng'}
+                          checked={paymentMethod === 1}
                         />
                         <span className='capitalize'>Thanh toán khi nhận hàng</span>
                       </Label>
@@ -384,8 +398,8 @@ const Order = () => {
                           name='paymentMethod'
                           id='paymentMethod2'
                           value='paymentMethod2'
-                          checked={paymentMethod === 'VNPAY'}
-                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          checked={paymentMethod === 2}
+                          onChange={(e) => setPaymentMethod(2)}
                         />
                         <span className='capitalize'>Thanh toán VNPAY</span>
                       </Label>
