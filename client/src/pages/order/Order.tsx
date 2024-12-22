@@ -375,7 +375,7 @@ const Order = () => {
                       >
                         <input
                           className='peer'
-                          onChange={(e) => setPaymentMethod(1)}
+                          onChange={() => setPaymentMethod(1)}
                           type='radio'
                           hidden
                           name='choose-size'
@@ -399,7 +399,7 @@ const Order = () => {
                           id='paymentMethod2'
                           value='paymentMethod2'
                           checked={paymentMethod === 2}
-                          onChange={(e) => setPaymentMethod(2)}
+                          onChange={() => setPaymentMethod(2)}
                         />
                         <span className='capitalize'>Thanh toán VNPAY</span>
                       </Label>

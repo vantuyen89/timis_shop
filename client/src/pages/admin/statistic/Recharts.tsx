@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { AreaChart, XAxis, CartesianGrid, YAxis, Tooltip, Area } from 'recharts'
 const Recharts = () => {
   const data = [
