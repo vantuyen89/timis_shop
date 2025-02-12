@@ -1,21 +1,19 @@
+import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { IProductComing } from '@/interfaces/IProduct'
+import { cn } from '@/lib/utils'
 import { getAllComing } from '@/services/productcomings'
 import { useQuery } from '@tanstack/react-query'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { format } from 'date-fns'
-import { Link } from 'react-router-dom'
-import { IProductComing } from '@/interfaces/IProduct'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
-import { HiOutlineDotsVertical } from 'react-icons/hi'
-import { Button } from '@/components/ui/button'
 import { useState } from 'react'
+import { HiOutlineDotsVertical } from 'react-icons/hi'
 import AddProductComing from './AddProductComing'
 
 const ProductComing = () => {
   const [open, setOpen] = useState<string | boolean>(false)
   const {
     data: productComing,
-    isLoading,
     isError
   } = useQuery({
     queryKey: ['productComing'],
