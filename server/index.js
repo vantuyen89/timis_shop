@@ -16,6 +16,7 @@ import routerStatistic from './routes/statistic.route.js';
 import { app, server } from './socket/socket.js';
 import dotenv from 'dotenv'
 import routerComment from './routes/comment.route.js';
+import routerProductComing from './routes/productComing.js';
 dotenv.config()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -53,6 +54,7 @@ app.use("/api/v1/order", routerOrder)
 app.use("/api/v1/message", routerMessage)
 app.use("/api/v1/comment", routerComment)
 app.use("/api/v1/statistic", routerStatistic)
+app.use("/api/v1/productComing",routerProductComing)
 server.listen(process.env.PORT, () => {
     console.log("listen on port " + process.env.PORT);
 })

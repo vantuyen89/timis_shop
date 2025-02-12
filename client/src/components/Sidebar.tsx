@@ -1,13 +1,16 @@
-
 import { Link } from 'react-router-dom'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
-
+import { useAuth } from '@/common/hooks/useAuth'
 
 const Sidebar = () => {
+  const { userAuth } = useAuth()
   return (
     <div className='bg-gray-800 text-white w-64 min-h-screen h-auto overflow-y-auto'>
       <div className='p-4'>
-        <h2 className='text-2xl font-bold'>Dashboard</h2>
+        <div className='flex justify-start items-center gap-3'>
+          <img src={userAuth?.avatar} alt='' className='border-2 border-white rounded-full size-9' />
+          <h2>{userAuth?.username}</h2>
+        </div>
         <ul className='mt-4'>
           <li className='p-2 hover:bg-gray-700 cursor-pointer'>
             <Link to={'/admin'}>Dashboard</Link>
@@ -19,6 +22,7 @@ const Sidebar = () => {
                 <AccordionContent className='flex flex-col gap-4'>
                   <Link to={'/admin/product'}>Danh sách sản phẩm</Link>
                   <Link to={'/admin/productAdd'}>Thêm sản phẩm</Link>
+                  <Link to={'/admin/productComing'}>Sản phẩm Sales</Link>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

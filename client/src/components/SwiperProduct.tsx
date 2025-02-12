@@ -63,7 +63,7 @@ const SwiperProduct = ({ products, title }: any) => {
                       />
                       <img
                         className='absolute top-0 left-0 w-full h-full object-cover transition duration-300 opacity-0 group-hover:opacity-100'
-                        src={product.images[0]}
+                        src={product.images[0]?.url}
                         alt='Image 2'
                       />
                     </div>

@@ -17,12 +17,15 @@ import { Input } from '@/components/ui/input'
 import { useEffect, useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
-import { uploadFileCloudinary } from '@/lib/utils'
+import { cn, uploadFileCloudinary } from '@/lib/utils'
 import { toast } from 'sonner'
 import { Textarea } from '@/components/ui/textarea'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getAllCategory } from '@/services/category'
 import { getAllColor, getALlSize, getProductById, updateProduct } from '@/services/product'
+import { AiFillCloseCircle, AiOutlineCloudUpload, AiOutlineLoading3Quarters } from 'react-icons/ai'
+import ImageUploading from 'react-images-uploading'
+import instance from '@/config/instance'
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -43,44 +46,74 @@ const formSchema = z.object({
       priceVar: z.number().min(1, 'Phải lớn hơn 0')
     })
   ),
+  thumbnail: z.string().refine(
+    (data) => {
+      return !!data
+    },
+    { message: 'Nhập ảnh sản phẩm' }
+  ),
+  images: z
+    .array(
+      z.object({
+        url: z.string(),
+        file: z.instanceof(File).optional()
+      })
+    )
+    .refine(
+      (data) => {
+        return data.length !== 0
+      },
+      { message: 'Nhập ảnh khác' }
+    ),
   featured: z.boolean()
 })
 
 const ProductUpdate = () => {
-  const [category, setCategory] = useState([])
+  const [previewUrl, setPreviewUrl] = useState({
+    isLoading: false,
+    url: ''
+  })
+  const [images, setImages] = useState([])
+  const maxNumber = 69
   const { id } = useParams()
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const { data } = await getAllCategory()
-        setCategory(data)
-      } catch (error) {
-        console.log(error)
-      }
-    })()
-  }, [])
+
+  const [category, setCategory] = useState([])
   const [size, setSize] = useState([])
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const { data } = await getALlSize()
-        setSize(data)
-      } catch (error) {
-        console.log(error)
-      }
-    })()
-  }, [])
   const [color, setColor] = useState([])
   useEffect(() => {
     ;(async () => {
       try {
-        const { data } = await getAllColor()
-        setColor(data)
+        const { data } = await instance.get('category/getAll')
+        setCategory(data)
+        console.log(data)
       } catch (error) {
         console.log(error)
       }
     })()
   }, [])
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const { data } = await instance.get('size/getAllSize')
+        setSize(data)
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [])
+  useEffect(() => {
+    ;(async () => {
+      try {
+        const { data } = await instance.get('color/getAllColor')
+        setColor(data)
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [])
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,7 +125,9 @@ const ProductUpdate = () => {
       featured: false,
       countInstock: 0,
       description: '',
-      quantity: 0
+      quantity: 0,
+      thumbnail: '',
+      images: []
     }
   })
   const control = form.control
@@ -109,67 +144,38 @@ const ProductUpdate = () => {
         color: variant.color._id,
         priceVar: variant.price
       }))
-      console.log({ ...data, category: data.category._id, variants: formattedData })
-      
-      form.reset({ ...data, category: data.category._id, variants: formattedData })
-      setImagePreviewArray(data.images)
-      setImagePreview(data.thumbnail)
+      form.reset({ ...data, category: data.category._id, variants: formattedData, images: data.images })
+      setPreviewUrl({
+        isLoading: false,
+        url: data.thumbnail
+      })
+      setImages(data.images)
     })()
   }, [id])
-  
-  const [img, setImg] = useState<any>()
-  const [thumbnail, setThumbnail] = useState<any>('')
-  const [imagePreview, setImagePreview] = useState(null)
-  const [imagePreviewArray, setImagePreviewArray] = useState([])
-  const handleFileChange = (event: any) => {
-    const file = event.target.files[0]
-    setThumbnail(file)
-    const reader: any = new FileReader()
-    reader.onloadend = () => {
-      setImagePreview(reader.result)
-    }
-    reader.readAsDataURL(file)
-  }
-  const handleFileChangeArray = (event: any) => {
-    const files = Array.from(event.target.files)
-    setImg(files)
-    const previews: any[] = files.map((file: any) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      return new Promise((resolve) => {
-        reader.onloadend = () => {
-          resolve(reader.result)
-        }
-      })
-    })
-    Promise.all(previews).then((previews: any) => {
-      setImagePreviewArray(previews)
-    })
-  }
-  // console.log(img)
   const navigate = useNavigate()
   const onSubmit = async (data: any) => {
-    console.log(data)
-    let dataThumbnail
-    if (imagePreview === '') {
-      dataThumbnail = await uploadFileCloudinary(thumbnail)
-    } else dataThumbnail = imagePreview
-
+    const listNotFile = data.images.filter((image: any) => !image.file)
+    const listFile = data.images.filter((image: any) => image.file)
     let arr: any = []
-    if (imagePreviewArray.length === 0) {
-      for (let i = 0; i < img.length; i++) {
-        const dataImg = await uploadFileCloudinary(img[i])
+    if (listFile.length > 0) {
+      for (let i = 0; i < listFile.length; i++) {
+        const dataImg = await uploadFileCloudinary(listFile[i]?.url)
         arr.push(dataImg)
       }
-    } else arr = imagePreviewArray
+    }
+    const arrImg = arr.map((arr: any) => ({
+      url: arr
+    }))
+
+    const imgArr = [...listNotFile, ...arrImg]
     const dataProduct = {
       name: data.name,
       price: data.price,
       countInstock: data.countInstock,
       discount: data.discount,
       featured: data.featured,
-      images: arr,
-      thumbnail: dataThumbnail,
+      images: imgArr,
+      thumbnail: data.thumbnail,
       category: data.category,
       variants: data.variants,
       description: data.description,
@@ -312,7 +318,7 @@ const ProductUpdate = () => {
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Lựa chọn danh mục</SelectLabel>
-                            {category.map((category: any) => (
+                            {category?.map((category: any) => (
                               <SelectItem key={category._id} value={category._id}>
                                 {category.name}
                               </SelectItem>
@@ -325,24 +331,156 @@ const ProductUpdate = () => {
                   </FormItem>
                 )}
               />
-              <FormLabel>Array Ảnh sản phẩm</FormLabel>
-              <Input
-                placeholder='Ảnh'
-                type='file'
-                className=''
-                multiple={true}
-                onChange={(e) => handleFileChangeArray(e)}
+              <FormField
+                control={form.control}
+                name='thumbnail'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ảnh sản phẩm</FormLabel>
+                    <FormControl>
+                      <div className='w-full bg-white border rounded-sm'>
+                        <label htmlFor='file-upload' className={cn('w-full relative ')}>
+                          <div className='relative w-full bg-white '>
+                            <div
+                              className={cn(
+                                'w-full h-[160px] flex justify-center items-center flex-col',
+                                previewUrl?.url && 'hidden'
+                              )}
+                            >
+                              <AiOutlineCloudUpload size={50} strokeWidth={1} />
+                              <h3 className='mt-2 text-sm font-medium text-gray-900'>
+                                <span>Chọn ảnh</span>
+                              </h3>
+                              <p className='mt-1 text-xs text-gray-500'>PNG, JPG, GIF.</p>
+                            </div>
+
+                            <div
+                              className={cn(
+                                ' relative flex justify-center items-center h-[160px]',
+                                previewUrl?.url ? '' : 'hidden'
+                              )}
+                            >
+                              <img
+                                src={previewUrl?.url}
+                                className={cn('size-[140px] object-cover border border-slate-100')}
+                                id='preview'
+                              />
+                              {previewUrl?.isLoading && (
+                                <div className='absolute inset-0 flex items-center justify-center w-full bg-slate-50/50'>
+                                  <AiOutlineLoading3Quarters
+                                    size={20}
+                                    strokeWidth='4px'
+                                    className='w-full animate-spin '
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </label>
+
+                        <input
+                          type='file'
+                          name=''
+                          id='file-upload'
+                          accept='image/jpeg, image/png,image/svg,image/jpg,image/webp'
+                          onChange={(event) =>
+                            field.onChange(async () => {
+                              setPreviewUrl({
+                                url: URL.createObjectURL((event?.target as HTMLInputElement)?.files?.[0] as File),
+                                isLoading: true
+                              })
+                              form.clearErrors('thumbnail')
+                              const url = await uploadFileCloudinary(
+                                (event?.target as HTMLInputElement)?.files?.[0] as File
+                              )
+                              field.onChange(url)
+                              setPreviewUrl({
+                                url: url,
+                                isLoading: false
+                              })
+                            })
+                          }
+                          hidden
+                          className='hidden outline-none focus-visible:ring-0 '
+                        />
+                      </div>
+                    </FormControl>
+
+                    <FormMessage className='text-xs' />
+                  </FormItem>
+                )}
               />
-              {imagePreviewArray && (
-                <div className='flex flex-wrap gap-4'>
-                  {imagePreviewArray.map((image: any) => (
-                    <img key={image} src={image} alt='Image Preview' style={{ width: '80px', height: '80px' }} />
-                  ))}
-                </div>
-              )}
-              <FormLabel>Ảnh sản phẩm</FormLabel>
-              <Input placeholder='Ảnh' type='file' className='' multiple={true} onChange={(e) => handleFileChange(e)} />
-              {imagePreview && <img src={imagePreview} alt='Image Preview' style={{ width: '80px', height: '80px' }} />}
+              <FormField
+                control={form.control}
+                name='images'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ảnh khác</FormLabel>
+                    <FormControl>
+                      <ImageUploading
+                        multiple
+                        value={images}
+                        onChange={async (imageList: any) => {
+                          setImages(imageList)
+                          field.onChange(imageList)
+                          if (imageList.length > 0) form.clearErrors('images')
+                        }}
+                        maxNumber={maxNumber}
+                        dataURLKey='url'
+                      >
+                        {({
+                          imageList,
+                          onImageUpload,
+
+                          onImageUpdate,
+                          onImageRemove,
+
+                          dragProps
+                        }) => (
+                          // write your building UI
+                          <div className={cn('w-full relative h-[160px]   grid grid-cols-4 grid-rows-2 gap-1 p-1 ')}>
+                            {imageList?.map((image: any, index: number) => {
+                              console.log(image)
+
+                              return (
+                                <div className='col-span-1 row-span-1' key={index}>
+                                  <div
+                                    // key={index}
+                                    className='relative flex items-center justify-center w-full h-full border rounded '
+                                  >
+                                    <img
+                                      src={image?.url}
+                                      alt=''
+                                      onClick={() => onImageUpdate(index)}
+                                      className='cursor-pointer h-[90%] object-cover 	'
+                                    />
+                                    <AiFillCloseCircle
+                                      className='absolute right-0 cursor-pointer top-2 right'
+                                      size={20}
+                                      onClick={() => onImageRemove(index)}
+                                    />
+                                  </div>
+                                </div>
+                              )
+                            })}
+                            <button
+                              type='button'
+                              onClick={onImageUpload}
+                              {...dragProps}
+                              className={cn(
+                                'col-span-1 row-span-1 relative w-full h-full border rounded flex justify-center items-center',
+                                images.length === maxNumber && 'hidden'
+                              )}
+                            >
+                              <AiOutlineCloudUpload size={50} strokeWidth={1} />
+                            </button>
+                          </div>
+                        )}
+                      </ImageUploading>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
           <FormField
@@ -361,7 +499,7 @@ const ProductUpdate = () => {
           <h3 className='text-[14px]'>Thêm Variant</h3>
           <div className='flex flex-col w-full border p-9 gap-5 rounded-lg items-center'>
             <ul className='flex w-full flex-col justify-between gap-4'>
-              {fields.map((item, index) => (
+              {fields?.map((item, index) => (
                 <li key={item.id} className='flex  w-full justify-between gap-4'>
                   <FormField
                     control={control}
@@ -377,7 +515,7 @@ const ProductUpdate = () => {
                             <SelectContent>
                               <SelectGroup>
                                 <SelectLabel>Lựa chọn Size</SelectLabel>
-                                {size.map((category: any) => (
+                                {size?.map((category: any) => (
                                   <SelectItem key={category._id} value={category._id}>
                                     {category.name}
                                   </SelectItem>
@@ -405,7 +543,7 @@ const ProductUpdate = () => {
                               <SelectContent>
                                 <SelectGroup>
                                   <SelectLabel>Lựa chọn Color</SelectLabel>
-                                  {color.map((category: any) => (
+                                  {color?.map((category: any) => (
                                     <SelectItem key={category._id} value={category._id}>
                                       {category.name}
                                     </SelectItem>

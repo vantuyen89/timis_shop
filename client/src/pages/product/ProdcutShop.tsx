@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const ProdcutShop = (products: any) => {
   return (
     <>
-      <div className='w-full grid lg:grid-cols-3 grid-cols-2 gap-7'>
+      <div className='w-full grid lg:grid-cols-4 grid-cols-2 gap-7'>
         <>
           {products?.products?.data?.content?.map((product: IProduct) => {
             return (
@@ -21,7 +21,7 @@ const ProdcutShop = (products: any) => {
                       />
                       <img
                         className='absolute top-0 left-0 w-full h-full object-cover transition duration-300 opacity-0 group-hover:opacity-100'
-                        src={product.images[0]}
+                        src={product.images[0]?.url}
                         alt='Image 2'
                       />
                     </div>

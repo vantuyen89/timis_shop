@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom"
 
 const HeaderAdmin = () => {
   return (
@@ -12,9 +12,11 @@ const HeaderAdmin = () => {
           </button>
         </div>
         <div>
-          <button className='bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none'>
-            Profile
-          </button>
+          <Link to={`/`}>
+            <button className='bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none'>
+              Quay lại trang chủ
+            </button>
+          </Link>
         </div>
       </div>
     </div>

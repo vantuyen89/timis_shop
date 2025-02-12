@@ -25,7 +25,12 @@ export const productValidate = Joi.object({
     price: Joi.number().required().messages(),
     description: Joi.string().required().messages(),
     thumbnail: Joi.string().required().messages(),
-    images: Joi.array().items(Joi.string().required().messages()).required().messages(),
+    images: Joi.array().items(
+        Joi.object({
+            url: Joi.string().required().messages({}),
+            _id: Joi.string().optional(),
+        })
+    ),
     featured: Joi.boolean().messages(),
     variants: Joi.array().items(Joi.object().required().messages()).required().messages(),
     discount: Joi.number().required().messages(),

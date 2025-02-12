@@ -163,6 +163,8 @@ export const updateProduct = async (req, res) => {
         res.status(StatusCodes.OK).json({ message: "Product update successfully", data: productUpdate })
 
     } catch (error) {
+        console.log(error);
+        
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message })
 
     }
@@ -199,7 +201,7 @@ export const updateProduct = async (req, res) => {
 export const pagingProduct = async (req, res) => {
     try {
         const { pageIndex = 1, pageSize, color, size, price } = req.body;
-        let limit = pageSize || 9;
+        let limit = pageSize || 8;
         let skip = (pageIndex - 1) * limit || 0;
         if (color) {
 
@@ -332,7 +334,7 @@ export const sortPagingProduct = async (req, res) => {
             data.category = category
         }
 
-        let limit = pageSize || 9
+        let limit = pageSize || 8
         let skip = (pageIndex - 1) * limit || 0
         const product = await Product.find(data).sort({ price: sort }).skip(skip).limit(limit).populate("variants.color").populate("category").populate("variants.size")
         const productLength = await Product.countDocuments(data);
@@ -370,3 +372,5 @@ export const getProductPriceMax = async (req, res) => {
     }
 
 }
+
+

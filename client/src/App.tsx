@@ -34,6 +34,8 @@ import AuthAdmin from './pages/admin/auth/AuthAdmin'
 import ProtectedRouter from './routes/ProtectedRouter'
 import MainMessage from './pages/admin/messageAdmin/MainMessage'
 import OrderProcessing from './pages/order/OrderProcessing'
+import ProductComing from './pages/admin/product/productComing/ProductComing'
+import AddProductComing from './pages/admin/product/productComing/AddProductComing'
 
 function App() {
   return (
@@ -112,6 +114,8 @@ function App() {
           <Route path='order' element={<OrderPending />} />
           <Route path='auth' element={<AuthAdmin />} />
           <Route path='message' element={<MainMessage />} />
+          <Route path='productComing' element={<ProductComing />} />
+          <Route path='productComing/add' element={<AddProductComing />} />
         </Route>
       </Routes>
     </>

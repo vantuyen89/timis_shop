@@ -143,9 +143,9 @@ const ProductDetail = () => {
               // }}
               onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
             >
-              {product.images.map((img: string, index: number) => (
+              {product.images.map((img: any, index: number) => (
                 <SwiperSlide key={index} className='w-full'>
-                  <img src={img} alt={`Slide ${index + 1}`} className='w-full object-cover' />
+                  <img src={img?.url} alt={`Slide ${index + 1}`} className='w-full h-[600px] object-cover' />
                 </SwiperSlide>
               ))}
               <button className='swiper-button-next after:hidden text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300 '>
@@ -157,10 +157,10 @@ const ProductDetail = () => {
             </Swiper>
 
             <div className='flex justify-center mt-4 space-x-2 w-full'>
-              {product?.images?.map((img: string, index: number) => (
+              {product?.images?.map((img: any, index: number) => (
                 <img
                   key={index}
-                  src={img}
+                  src={img?.url}
                   alt={`Thumbnail ${index + 1}`}
                   className={`w-[80px] h-[80px] cursor-pointer opacity-60 transition-opacity duration-300 ${
                     activeIndex === index ? 'opacity-100 border-2 border-black' : ''
@@ -219,11 +219,7 @@ const ProductDetail = () => {
                 <button className='flex-1 bg-red-600 text-white py-2 rounded'>MUA NGAY</button>
               </div>
 
-              <div className='mt-4 flex flex-col gap-3 bg-[#efdbdb] bg-opacity-30 py-5 px-2 rounded-md'>
-                <p className='text-sm'>Phí vận chuyển (Tìm hiểu thêm)</p>
-                <p className='text-sm'>Thanh toán ngay hoặc COD (Tìm hiểu thêm)</p>
-                <p className='text-sm'>Chính sách đổi sản phẩm (Tìm hiểu thêm)</p>
-              </div>
+             
               <div className='flex gap-0 flex-col'>
                 <div className='flex flex-col border-y-2 py-4'>
                   <div className='flex justify-between'>

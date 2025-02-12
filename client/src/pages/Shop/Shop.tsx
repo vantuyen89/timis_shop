@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import ReactSlider from 'react-slider'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import Paginations from '@/components/Pagination'
 import CartEmpty from '../cart/CartEmpty'
@@ -21,15 +13,17 @@ import ProdcutShop from '../product/ProdcutShop'
 import ProductLoading from '../product/ProductLoading'
 import { getAllColor, getALlSize, getProductShop, productMax } from '@/services/product'
 import CategorySearch from './CategorySearch'
+import { IoFilterOutline } from 'react-icons/io5'
+import ShopV2Dialog from './ShopV2Dialog'
+import SelectSort from './SelectSort'
 
 const Shop = () => {
-  const [pageIndex, setPageIndex] = useState(1)
-  console.log(pageIndex)
-
+  // const [pageIndex, setPageIndex] = useState(1)
   const [products, setProduct] = useState<any>({})
   const [isLoading, setIsLoading] = useState(false)
   const [color, setColor] = useState([])
   const [size, setSize] = useState([])
+  const [open, setOpen] = useState<boolean>(false)
   const [searchParams, setSearchParams] = useSearchParams()
   const paramsObject = Object.fromEntries(searchParams.entries())
   const location = useLocation()
@@ -75,7 +69,7 @@ const Shop = () => {
       }
     })()
   }, [])
-  const [maxPrice, setMaxPrice] = useState<number>(0)
+  const [maxPrice, setMaxPrice] = useState<number>(5000)
   useEffect(() => {
     ;(async () => {
       try {
@@ -121,9 +115,23 @@ const Shop = () => {
           chính mình!
         </p>
       </div>
+      <div className='w-full lg:hidden flex justify-between pt-6'>
+        <div
+          onClick={() => {
+            setOpen(true)
+          }}
+          className='cursor-pointer'
+        >
+          <IoFilterOutline size={25} />
+        </div>
+        <div className='cursor-pointer'>
+          <SelectSort handleOnChangeSelect={handleOnChangeSelect} />
+        </div>
+      </div>
       <div className='grid lg:grid-cols-12  '>
         {/* <Button onClick={() => handleParamsSearch()}>CLick</Button> */}
-        <div className='col-span-3 pr-5 '>
+
+        <div className='lg:grid lg:col-span-3 hidden  pr-5 '>
           <div className='pt-9 lg:flex-col flex lg:gap-1 gap-4 '>
             <CategorySearch />
             <Accordion type='single' collapsible className='w-full lg:flex-col flex gap-3'>
@@ -232,6 +240,7 @@ const Shop = () => {
             </div>
           </div>
         </div>
+
         <div className='col-span-9 flex flex-col'>
           <div className='flex lg:flex-row flex-col justify-between lg:pr-4 py-6 lg:gap-0 gap-4 '>
             {paramsObject?.search ? (
@@ -240,26 +249,8 @@ const Shop = () => {
               <div></div>
             )}
 
-            <div>
-              <Select onValueChange={handleOnChangeSelect}>
-                <SelectTrigger className='lg:w-[180px] w-full'>
-                  <SelectValue placeholder='Sắp xếp theo' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Lựa chọn</SelectLabel>
-                    <SelectItem value='reset' className='cursor-pointer'>
-                      Mặc định
-                    </SelectItem>
-                    <SelectItem value='1' className='cursor-pointer'>
-                      Giá : thấp đến cao
-                    </SelectItem>
-                    <SelectItem value='-1' className='cursor-pointer'>
-                      Giá : cao đến thấp
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <div className='lg:block hidden'>
+              <SelectSort handleOnChangeSelect={handleOnChangeSelect} />
             </div>
           </div>
           <div>
@@ -275,9 +266,7 @@ const Shop = () => {
             <Paginations
               pageCount={products?.data?.totalPage}
               handlePageClick={(event: any) => {
-                console.log(event)
-
-                setPageIndex(event.selected + 1)
+                // setPageIndex(event.selected + 1)
                 searchParams.set('pageIndex', event.selected + 1)
                 setSearchParams(searchParams)
               }}
@@ -285,6 +274,17 @@ const Shop = () => {
           </div>
         </div>
       </div>
+      {open && (
+        <ShopV2Dialog
+          color={color}
+          size={size}
+          values={values}
+          setValues={setValues}
+          maxPrice={maxPrice}
+          open={open}
+          onClose={() => setOpen(false)}
+        />
+      )}
     </div>
   )
 }

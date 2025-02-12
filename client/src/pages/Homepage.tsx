@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 
-
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -14,6 +13,7 @@ import Sales from './Sales'
 import UserShare from './UserShare'
 import SwiperProduct from '@/components/SwiperProduct'
 import { getProductPrice, productFeature } from '@/services/product'
+import PageFramer from '@/components/PageFramer'
 
 // init Swiper:
 
@@ -22,13 +22,13 @@ const Homepage = () => {
   const [productPrice, setProductPrice] = useState([])
   const pageSize = 6
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const { data } = await productFeature(pageSize)
       setProducts(data.data)
     })()
   }, [])
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const { data } = await getProductPrice(pageSize)
       setProductPrice(data.data)
     })()
@@ -40,8 +40,8 @@ const Homepage = () => {
       <div className='container'>
         <SwiperProduct products={products} title={'Sản phẩm mới'} />
         <Sales />
+        <PageFramer />
         <SwiperProduct products={productPrice} title={'Sản phẩm giá tốt'} />
-        <UserShare />
       </div>
     </section>
   )
