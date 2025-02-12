@@ -1,14 +1,11 @@
-import React from 'react'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
-import CategorySearch from './CategorySearch'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
-import { useSearchParams } from 'react-router-dom'
-import { debounce } from 'lodash'
-import ReactSlider from 'react-slider'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { cn } from '@/lib/utils'
+import { debounce } from 'lodash'
+import { useSearchParams } from 'react-router-dom'
+import ReactSlider from 'react-slider'
+import CategorySearch from './CategorySearch'
 interface Props {
   color: any[]
   size: any[]

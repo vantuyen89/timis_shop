@@ -10,10 +10,9 @@ import Banner from './Banner'
 import Category from './Category'
 import Sales from './Sales'
 
-import UserShare from './UserShare'
+import PageFramer from '@/components/PageFramer'
 import SwiperProduct from '@/components/SwiperProduct'
 import { getProductPrice, productFeature } from '@/services/product'
-import PageFramer from '@/components/PageFramer'
 
 // init Swiper:
 

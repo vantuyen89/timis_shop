@@ -1,6 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useFieldArray, useForm } from 'react-hook-form'
-import { z } from 'zod'
 import {
   Select,
   SelectContent,
@@ -10,22 +7,24 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useEffect, useState } from 'react'
-import { Checkbox } from '@/components/ui/checkbox'
-import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
-import { cn, uploadFileCloudinary } from '@/lib/utils'
-import { toast } from 'sonner'
 import { Textarea } from '@/components/ui/textarea'
-import { useNavigate, useParams } from 'react-router-dom'
-import { getAllCategory } from '@/services/category'
-import { getAllColor, getALlSize, getProductById, updateProduct } from '@/services/product'
-import { AiFillCloseCircle, AiOutlineCloudUpload, AiOutlineLoading3Quarters } from 'react-icons/ai'
-import ImageUploading from 'react-images-uploading'
 import instance from '@/config/instance'
+import { cn, uploadFileCloudinary } from '@/lib/utils'
+import { getProductById, updateProduct } from '@/services/product'
+import { useEffect, useState } from 'react'
+import { AiFillCloseCircle, AiOutlineCloudUpload, AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { CiCircleMinus, CiCirclePlus } from 'react-icons/ci'
+import ImageUploading from 'react-images-uploading'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const formSchema = z.object({
   name: z.string().min(1, {

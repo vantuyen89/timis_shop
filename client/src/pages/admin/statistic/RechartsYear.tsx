@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { get1year } from '@/services/statistic'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { toast } from 'sonner'
 

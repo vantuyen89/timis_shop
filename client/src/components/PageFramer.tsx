@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { getProductComing } from '@/services/productcomings'
 import { IProductComing } from '@/interfaces/IProduct'
+import { getProductComing } from '@/services/productcomings'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 const PageFramer = () => {
   // const blobPath =
@@ -13,6 +13,8 @@ const PageFramer = () => {
     seconds: 0
   })
   const [isExpired, setIsExpired] = useState(false)
+  console.log(isExpired)
+
   //   'M85.5,11.5Q96,23,94.5,37.5Q93,52,83.5,62Q74,72,60,74.5Q46,77,33,70.5Q20,64,13,50Q6,36,11.5,23Q17,10,33,5.5Q49,1,63.5,7Q78,13,85.5,11.5Z'
   useEffect(() => {
     const fetchProductComing = async () => {
