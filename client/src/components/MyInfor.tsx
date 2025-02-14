@@ -1,4 +1,3 @@
-
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
 import { useAuth } from '@/common/hooks/useAuth'
@@ -8,6 +7,7 @@ import { MdEventNote, MdFavoriteBorder } from 'react-icons/md'
 const MyInfor = () => {
   const location = useLocation()
   const { userAuth } = useAuth()
+  console.log(userAuth)
 
   const crumbs = generateBreadcrumbs(location.pathname)
   return (

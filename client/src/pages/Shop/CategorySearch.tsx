@@ -12,7 +12,6 @@ const CategorySearch = () => {
     ;(async () => {
       try {
         const { data } = await getAllCategory()
-        console.log(data);
         
         setCategory(data)
       } catch (error) {

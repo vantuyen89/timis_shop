@@ -1,12 +1,12 @@
-
-import {  createSlice } from '@reduxjs/toolkit'
-
+import { createSlice } from '@reduxjs/toolkit'
 
 export interface CounterState {
   cart: any
+  totalCart: number
 }
 const initialState: CounterState = {
   cart: [],
+  totalCart: 0
 }
 
 export const cartSlice = createSlice({
@@ -14,25 +14,23 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     fetApiCArt: (state, action) => {
+      console.log(1)
+
       state.cart = action.payload
+      console.log(state)
     },
-    addItem: (state, action) => {
-      const item = action.payload
-      state.cart.content.push(item)
-      console.log(state.cart);
+    setTotalCart: (state, action) => {
+      state.totalCart = action.payload
     },
-    removeItem: (state, action) => {
-      const itemId = action.payload
-      state.cart = state.cart.filter((item:any) => item.id !== itemId)
-    },
-    resetCart: (state, action) => {
-      console.log(action.payload);
-      state.cart = action.payload
+    resetCart: (state) => {
+      console.log('abc')
+
+      state.cart = []
+      state.totalCart = 0
     }
   }
 })
 
-// Action creators are generated for each case reducer function
-export const { addItem, removeItem, fetApiCArt,resetCart } = cartSlice.actions
+export const { fetApiCArt, resetCart, setTotalCart } = cartSlice.actions
 
 export default cartSlice.reducer

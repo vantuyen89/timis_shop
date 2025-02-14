@@ -1,5 +1,5 @@
 import Auth from "../models/auth.model.js";
-import { LoginValidate, authValidate } from "../validation/auth.validation.js";
+import { LoginValidate, authValidate, socialUserValidation } from "../validation/auth.validation.js";
 import { StatusCodes } from "http-status-codes"
 import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"
@@ -109,8 +109,108 @@ export const signin = async (req, res) => {
             }
         })
     } catch (error) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message )
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message)
     }
+}
+
+export const signinWithGoogle = async (req, res) => {
+    try {
+        const { error } = socialUserValidation.validate(req.body)
+        if (error) {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                message: error.details[0].message,
+            });
+        }
+        const {
+            email,
+            first_name,
+            last_name,
+            full_name,
+            picture,
+            uid,
+            provider,
+        } = req.body;
+
+        const existingEmail = await Auth.findOne({
+            email
+        })
+        if (existingEmail) {
+            if (existingEmail.uid !== uid) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    message: "Email đã tồn tại với tài khoản khác",
+                })
+            }
+            const accessToken = await generateAccessToken({
+                _id: existingEmail._id,
+                username: existingEmail.username,
+                email: existingEmail.email,
+                is_admin: existingEmail.isAdmin
+            })
+            const refreshToken = await generateRefereshToken({
+                _id: existingEmail._id,
+                username: existingEmail.username,
+                email: existingEmail.email,
+                is_admin: existingEmail.isAdmin
+            })
+            res.cookie("token", refreshToken, {
+                maxAge: 1000 * 60 * 24 * 60,
+                path: "/",
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+            });
+
+            return res.status(StatusCodes.OK).json({
+                message: "Đăng nhập thành công",
+                data: {
+                    user: existingEmail,
+                    accessToken: accessToken
+                }
+            })
+        }
+
+        const newUser = await Auth.create({
+            username: full_name,
+            email: email,
+            avatar: picture,
+            uid: uid,
+            provider: provider,
+        })
+        const accessToken = await generateAccessToken({
+            _id: newUser._id,
+            username: newUser.username,
+            email: newUser.email,
+            is_admin: newUser.isAdmin
+        })
+        const refreshToken = await generateRefereshToken({
+            _id: newUser._id,
+            username: newUser.username,
+            email: newUser.email,
+            is_admin: newUser.isAdmin
+        })
+        res.cookie("token", refreshToken, {
+            maxAge: 1000 * 60 * 24 * 60,
+            path: "/",
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+        });
+
+        return res.status(StatusCodes.OK).json({
+            message: "Đăng nhập thành công",
+            data: {
+                user: newUser,
+                accessToken: accessToken
+            }
+        })
+
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: error.message,
+        });
+
+    }
+
 }
 
 export const refreshToken = async (req, res) => {
@@ -167,7 +267,7 @@ export const refreshToken = async (req, res) => {
 export const logout = async (req, res) => {
     try {
         const refreshToken = req.cookies.token;
-        console.log(refreshToken);
+        // console.log(refreshToken);
         if (!refreshToken) {
             return res.status(403).json({ message: "Bạn chưa đăng nhập" });
         }
@@ -176,22 +276,22 @@ export const logout = async (req, res) => {
                 if (err) {
                     res.cookie("token", "", {
                         maxAge: 0,
-                        httpOnly: true,
-                        path: "/",
-                        sameSite: "none",
-                        secure: true,
+                        // httpOnly: true,
+                        // path: "/",
+                        // sameSite: "none",
+                        // secure: true,
                     })
                     return res.status(StatusCodes.OK).json({ message: "Đăng xuất thành công" });
                 }
-                await RefreshToken.findOneAndDelete({
-                    user: data._id
-                })
+                // await RefreshToken.findOneAndDelete({
+                //     user: data._id
+                // })
                 res.cookie("token", "", {
                     maxAge: 0,
-                    httpOnly: true,
-                    path: "/",
-                    sameSite: "none",
-                    secure: true,
+                    // httpOnly: true,
+                    // path: "/",
+                    // sameSite: "none",
+                    // secure: true,
                 });
                 return res.status(StatusCodes.OK).json({
                     message: "Đăng xuất thành công"
@@ -315,8 +415,8 @@ export const getUserAdmin = async (req, res) => {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Không tìm thấy người quản trị" });
         }
         res.status(StatusCodes.OK).json({ message: "Lấy thông tin người quản trị", data: user });
-        
-    } catch (error) { 
+
+    } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
     }
 }

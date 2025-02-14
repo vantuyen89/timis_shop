@@ -44,3 +44,28 @@ export const LoginValidate = Joi.object({
 })
 
 
+export const socialUserValidation = Joi.object({
+    email: Joi.string().email().required().messages({
+        "any.required": "Bạn chưa nhập email",
+        "string.email": "Email không đúng định dạng",
+    }),
+    first_name: Joi.string().required().messages({
+        "any.required": "Bạn chưa nhập họ ",
+    }),
+    last_name: Joi.string().required().messages({
+        "any.required": "Bạn chưa nhập tên",
+    }),
+    full_name: Joi.string().required().messages({
+        "any.required": "Bạn chưa nhập họ tên",
+    }),
+    picture: Joi.string().required().messages({
+        "any.required": "Bạn chưa nhập ảnh",
+    }),
+    uid: Joi.string().required().messages({
+        "any.required": "Bạn chưa nhập uuid",
+    }),
+    provider: Joi.string().required().messages({
+        "any.required": "Bạn chưa nhập loại đăng nhập",
+    }),
+});
+

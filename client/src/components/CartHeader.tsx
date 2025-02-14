@@ -9,14 +9,11 @@ import { getCartByUserId } from '@/services/cart'
 import { fetApiCArt } from '@/store/slice/cartSlice'
 const CartHeader = () => {
   const { isLoggedIn } = useAuth()
-
-  const [dataCart, setDataCart] = useState()
   useEffect(() => {
     ;(async () => {
       try {
         const data = await getCartByUserId()
-        setDataCart(data)
-        return data.content
+        dispatch(fetApiCArt(data?.allProducts || []))
       } catch (error) {
         console.log(error)
       }
@@ -24,12 +21,6 @@ const CartHeader = () => {
   }, [])
   const { cart } = useSelector((state: any) => state.cart)
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    if (dataCart) {
-      dispatch(fetApiCArt(dataCart))
-    }
-  }, [dataCart])
 
   return (
     <>
@@ -41,7 +32,7 @@ const CartHeader = () => {
               <AiOutlineShoppingCart className='text-[25px] text-[#353535]' />
             </Link>
             <span className='text-[12px] absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white'>
-              {cart !== undefined ? cart?.totalAllOptions : 0}
+              {cart?.length}
             </span>
           </button>
         ) : (

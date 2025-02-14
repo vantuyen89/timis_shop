@@ -1,19 +1,24 @@
+import { getCartByUserId } from '@/services/cart'
 import { returnUrlVnPay } from '@/services/order'
+import { fetApiCArt } from '@/store/slice/cartSlice'
 import { useEffect } from 'react'
 import { FaSpinner } from 'react-icons/fa'
+import { useDispatch } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const OrderProcessing = () => {
   const [searchParams] = useSearchParams()
   const paramsObject = Object.fromEntries(searchParams.entries())
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await returnUrlVnPay(searchParams.toString())
-        console.log(data)
 
         if (data?.data?.type === 3) {
+          const data = await getCartByUserId()
+          dispatch(fetApiCArt(data?.allProducts))
           navigate('/order/success')
           return data
         }

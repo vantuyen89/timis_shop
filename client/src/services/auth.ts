@@ -1,12 +1,12 @@
-import instance from "@/config/instance"
-import { typeSearch } from "@/pages/admin/auth/AuthAdmin"
+import instance from '@/config/instance'
+import { typeSearch } from '@/pages/admin/auth/AuthAdmin'
 
-export const registerAuth = async (value : any) => {
+export const registerAuth = async (value: any) => {
   const data = await instance.post(`/auth/signup`, value)
   return data
 }
 
-export const signinAuth = (dataForm:Object) => {
+export const signinAuth = (dataForm: Object) => {
   const data = instance.post(`/auth/signin`, dataForm)
   return data
 }
@@ -21,7 +21,7 @@ export const authCurrent = () => {
   return data
 }
 
-export const updateInformation = (dataCate:Object) => {
+export const updateInformation = (dataCate: Object) => {
   const data = instance.post(`auth/updateUser`, dataCate)
   return data
 }
@@ -36,17 +36,22 @@ export const userChat = () => {
   return data
 }
 
-export const authPaging = (searchObject:typeSearch) => {
+export const authPaging = (searchObject: typeSearch) => {
   const data = instance.post(`auth/paging`, searchObject)
   return data
 }
 
-export const banUser = (id:string) => {
+export const banUser = (id: string) => {
   const data = instance.post(`/auth/banUser`, { userId: id })
   return data
 }
 
 export const unbanUser = (id: string) => {
   const data = instance.post(`/auth/unBanUser`, { userId: id })
+  return data
+}
+
+export const loginWithGoogle = (payload: any) => {
+  const data = instance.post(`/auth/loginGG`, payload)
   return data
 }

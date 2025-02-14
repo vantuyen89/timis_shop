@@ -21,7 +21,7 @@ dotenv.config()
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(morgan("tiny"))
-console.log(process.env.HOST_CLIENT);
+// console.log(process.env.HOST_CLIENT);
 const corsOptions = {
     origin: process.env.HOST_CLIENT,
     credentials: true,

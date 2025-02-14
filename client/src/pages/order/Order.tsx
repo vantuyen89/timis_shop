@@ -8,8 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { getCartAllUser, getCartByUserId } from '@/services/cart'
-import { reduce } from 'lodash'
+import { getCartByUserId } from '@/services/cart'
 import { ICity, ICommune, IDistrict } from '@/interfaces/Address'
 import { callCity, callCommune, callDistrict } from '@/services/address'
 import { toast } from 'sonner'
@@ -17,7 +16,7 @@ import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
 import { createOrder, createOrderPaymentVNPAY } from '@/services/order'
 import { useQueryClient } from '@tanstack/react-query'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { fetApiCArt } from '@/store/slice/cartSlice'
 import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
 const Order = () => {
@@ -48,12 +47,12 @@ const Order = () => {
   const dispatch = useDispatch()
   const query = useQueryClient()
   const onSubmit = async (data: any) => {
-    const orderItem = cartUser.map((order: any) => {
+    const orderItem = cart.map((order: any) => {
       return {
-        productName: order?.productId?.name,
-        price: order?.productId?.price,
+        productName: order?.name,
+        price: order?.price,
         quantity: order?.quantity,
-        image: order?.productId?.thumbnail,
+        image: order?.image,
         color: order?.color?._id,
         size: order?.size?._id
       }
@@ -76,7 +75,7 @@ const Order = () => {
     const dataOrder = {
       items: orderItem,
       customInfor: customInfor,
-      totalPrice: Number(priceSale) + caculatorTotal(),
+      totalPrice: Number(priceSale) + totalCart,
       paymentMethod: paymentMethod
     }
     try {
@@ -84,10 +83,7 @@ const Order = () => {
         await createOrder(dataOrder)
         toast.success('Đặt hàng thành công!')
         const data = await getCartByUserId()
-        dispatch(fetApiCArt(data))
-        query.invalidateQueries({
-          queryKey: ['productCart', 1]
-        })
+        dispatch(fetApiCArt(data?.allProducts))
         navigate('/order/success')
         return
       } else {
@@ -95,8 +91,7 @@ const Order = () => {
           ...dataOrder,
           returnUrl: `${window.location.origin}/order/processing`
         })
-        console.log(data);
-        
+
         window.location.href = data.paymentUrl
         return data
       }
@@ -104,43 +99,27 @@ const Order = () => {
       toast.error('Đặt hàng thất bại!')
     }
   }
-
-  const [cartUser, setCartUser] = useState([])
   const [city, setCity] = useState<ICity[] | null>(null)
   const [district, setDistrict] = useState<IDistrict[] | null>(null)
   const [commune, setCommune] = useState<ICommune[] | null>(null)
   const [paymentMethod, setPaymentMethod] = useState(1)
-  let priceSale: any
-  useEffect(() => {
-    ;(async () => {
-      try {
-        const data = await getCartAllUser()
-        setCartUser(data?.items)
-        priceSale
-        return data.items
-      } catch (error) {
-        console.log(error)
-      }
-    })()
-  }, [])
+  const { cart, totalCart } = useSelector((state: any) => state.cart)
   useEffect(() => {
     ;(async () => {
       const { data } = await callCity()
       setCity(data)
     })()
   }, [])
-  if (cartUser.length > 0 && cartUser.length < 3) {
-    priceSale = (30000).toLocaleString('vi-VN')
-  } else if (cartUser.length >= 3 && cartUser.length <= 8) {
-    priceSale = (15000).toLocaleString('vi-VN')
-  } else if (cartUser.length > 8) {
-    priceSale = (0).toLocaleString('vi-VN')
+
+  const calculatePriceSale = (productsCount: number) => {
+    if (productsCount === 0) return 0
+    if (productsCount < 3) return 30000
+    if (productsCount <= 8) return 15000
+    return 0
   }
-  const caculatorTotal = () => {
-    if (!cartUser) return 0
-    return reduce(cartUser, (total, product: any) => total + product?.productId?.price * product.quantity, 0)
-  }
-  let totalPrice: any = ((Number(priceSale) + caculatorTotal()) * 1000).toLocaleString('vi-VN')
+
+  let priceSale = calculatePriceSale(cart?.length).toLocaleString('vi-VN')
+  let totalPrice: any = ((Number(priceSale) + totalCart) * 1000).toLocaleString('vi-VN')
 
   const handleOnChangeCity = async (idProvince: string) => {
     try {
@@ -336,29 +315,23 @@ const Order = () => {
                     </thead>
 
                     <tbody>
-                      {cartUser.map((item: any, index) => (
+                      {cart.map((item: any, index: number) => (
                         <tr key={index}>
                           <td className='py-3'>
                             <div className='flex lg:flex-row flex-col gap-3 items-center'>
-                              <img
-                                src={item.productId.thumbnail}
-                                alt=''
-                                className='lg:w-[55px] lg:h-[80px] w-[40px] h-[65px]'
-                              />
+                              <img src={item?.image} alt='' className='lg:w-[55px] lg:h-[80px] w-[40px] h-[65px]' />
                               <div className='flex flex-col'>
-                                <span className='lg:text-sm text-xs'>{item.productId?.name}</span>
+                                <span className='lg:text-sm text-xs'>{item?.name}</span>
                                 <span className='lg:text-sm text-xs'>
                                   {item.color.name},{item.size.name}
                                 </span>
                               </div>
                             </div>
                           </td>
-                          <td className='lg:text-sm text-xs'>
-                            {(item.productId?.price * 1000).toLocaleString('vi-VN')}đ
-                          </td>
+                          <td className='lg:text-sm text-xs'>{(item?.price * 1000).toLocaleString('vi-VN')}đ</td>
                           <td className='lg:text-sm text-xs'>{item.quantity}</td>
                           <td className='lg:text-sm text-xs'>
-                            {(item.productId?.price * item.quantity * 1000).toLocaleString('vi-VN')}đ
+                            {(item?.price * item.quantity * 1000).toLocaleString('vi-VN')}đ
                           </td>
                         </tr>
                       ))}
@@ -412,9 +385,7 @@ const Order = () => {
                     <h3 className='text-[20px] font-medium'>Thông tin chi tiết</h3>
                     <div className='flex justify-between'>
                       <span className='text-[#9D9EA2] text-[14px]'>Tổng tiền</span>
-                      <span className='text-[14px]'>
-                        {((caculatorTotal() as number) * 1000).toLocaleString('vi-VN')}đ
-                      </span>
+                      <span className='text-[14px]'>{(totalCart * 1000).toLocaleString('vi-VN')}đ</span>
                     </div>
                     <div className='flex justify-between'>
                       <span className='text-[#9D9EA2] text-[14px]'>Phí vận chuyển</span>

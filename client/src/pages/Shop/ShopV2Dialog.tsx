@@ -18,7 +18,6 @@ interface Props {
 const ShopV2Dialog = ({ color, size, values, setValues, maxPrice, open, onClose }: Props) => {
   // const matches = useMediaQuery('(min-width: 768px)')
   const [searchParams, setSearchParams] = useSearchParams()
-  console.log(color)
 
   return (
     <Sheet open={open} onOpenChange={onClose}>

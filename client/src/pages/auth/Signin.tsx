@@ -1,4 +1,3 @@
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -12,12 +11,20 @@ import { useAuth } from '@/common/hooks/useAuth'
 import { toast } from 'sonner'
 // import { useDispatch } from 'react-redux'
 import { signinAuth } from '@/services/auth'
+import SigninWithGG from './SigninWithGG'
+import { getCartByUserId } from '@/services/cart'
+import { useDispatch } from 'react-redux'
+import { fetApiCArt } from '@/store/slice/cartSlice'
+import instance from '@/config/instance'
 const formSchema = z.object({
-  email: z.string().min(1, {
-    message: 'Bắt buộc phải nhập email'
-  }).email({
-    message: 'Email không đúng đinh dạng'
-  }),
+  email: z
+    .string()
+    .min(1, {
+      message: 'Bắt buộc phải nhập email'
+    })
+    .email({
+      message: 'Email không đúng đinh dạng'
+    }),
   password: z.string().min(6, {
     message: 'Mật khẩu phải có ít nhất 6 ký tự'
   })
@@ -25,8 +32,8 @@ const formSchema = z.object({
 
 export function Signin() {
   const [checkPass, setCheckPass] = useState(false)
+  const dispatch = useDispatch()
   const { setIsLoggedIn, setUserAuth } = useAuth()
-  // const dispatch = useDispatch()
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,23 +41,25 @@ export function Signin() {
       password: ''
     }
   })
-const navigate = useNavigate()
-  const onSubmit =async (dataForm: any) => {
+  const navigate = useNavigate()
+  const onSubmit = async (dataForm: any) => {
     try {
       const { data } = await signinAuth(dataForm)
-
+      instance.defaults.headers.common['Authorization'] = data.data.accessToken
       if (data?.data?.user?.block === true) {
         toast.error('Tài khoản đã bị khóa. Vui lòng liên hệ admin để mở khóa.')
         return
       }
+      const cart = await getCartByUserId()
+
+      console.log('cartSignin', cart)
+      dispatch(fetApiCArt(cart?.allProducts))
       setIsLoggedIn?.(true)
       setUserAuth?.(data?.data?.user)
-      toast.success("Bạn đăng nhập thành công")
+      toast.success('Bạn đăng nhập thành công')
       navigate('/')
-      
     } catch (error) {
-      toast.error("Bạn đăng nhập thất bại")
-      
+      toast.error('Bạn đăng nhập thất bại')
     }
   }
   return (
@@ -61,6 +70,7 @@ const navigate = useNavigate()
       </Button>
       <div className='flex flex-col justify-center border rounded-2xl w-[400px] h-[500px] items-center mx-auto  bg-white bg-opacity-10 border-opacity-5'>
         <h5 className='font-bold text-[30px]'>Đăng nhập</h5>
+        <SigninWithGG />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='w-full px-5'>
             <FormField
@@ -120,4 +130,3 @@ const navigate = useNavigate()
     </div>
   )
 }
-

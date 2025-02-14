@@ -1,20 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { TiDeleteOutline } from 'react-icons/ti'
-
 import { FiMinus, FiPlus } from 'react-icons/fi'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-  decrementItemCart,
-  getCartAllUser,
-  getCartByUserId,
-  incrementItemCart,
-  removeItemFromCart
-} from '@/services/cart'
-import Paginations from '@/components/Pagination'
-import { useDispatch } from 'react-redux'
-import { fetApiCArt } from '@/store/slice/cartSlice'
-import { reduce } from 'lodash'
+import { decrementItemCart, getCartByUserId, incrementItemCart, removeItemFromCart } from '@/services/cart'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetApiCArt, setTotalCart } from '@/store/slice/cartSlice'
 import CartEmpty from './CartEmpty'
 import Breadcrumb, { generateBreadcrumbs } from '@/components/BreadCrumb'
 import { Button } from '@/components/ui/button'
@@ -22,59 +12,30 @@ import { Button } from '@/components/ui/button'
 const Cart = () => {
   const location = useLocation()
   const crumbs = generateBreadcrumbs(location.pathname)
-  
-  const [pageIndex, setPageIndex] = useState(1)
-  const [cartUser, setCartUser] = useState([])
-  let priceSale: any
   const dispatch = useDispatch<any>()
-  const query = useQueryClient()
-  // const [isDeleted, setIsDeleted] = useState<string | boolean>(false)
-
-  const caculatorTotal = () => {
-    if (!cartUser) return 0
-    return reduce(cartUser, (total, product: any) => total + product?.productId?.price * product.quantity, 0)
-  }
-  const {
-    data: productCart,
-    // isLoading,
-    isError
-  } = useQuery({
-    queryKey: ['productCart', pageIndex],
-    queryFn: async () => getCartByUserId(pageIndex)
-  })
   useEffect(() => {
     ;(async () => {
       try {
-        const data = await getCartAllUser()
-        setCartUser(data?.items)
-        priceSale
-        return data.items
+        const data = await getCartByUserId()
+        console.log(data)
+        dispatch(fetApiCArt(data?.allProducts))
+        dispatch(setTotalCart(data?.cartTotal))
       } catch (error) {
         console.log(error)
       }
     })()
-  }, [productCart])
+  }, [])
+  const { cart, totalCart } = useSelector((state: any) => state.cart)
+  const calculatePriceSale = (productsCount: number) => {
 
-  // if (isLoading)
-  //   return (
-  //     <div className='flex justify-center items-center mt-[200px]'>
-  //       <ClipLoader
-  //         color={'#000000'}
-  //         loading={isLoading}
-  //         size={150}
-  //         aria-label='Loading Spinner'
-  //         data-testid='loader'
-  //       />
-  //     </div>
-  //   )
-  if (isError) return (
-    <div className='flex flex-col justify-center items-center'>
-      <CartEmpty title={'Bạn chưa có sản phẩm nào trong giỏ hàng'} />
-      <Button className='mb-4'>
-        <Link to={'/'}>Mua hàng</Link>
-      </Button>
-    </div>
-  )
+    if (productsCount === 0) return 0
+    if (productsCount < 3) return 30000
+    if (productsCount <= 8) return 15000
+    return 0
+  }
+
+  let priceSale = calculatePriceSale(cart?.length).toLocaleString('vi-VN')
+  let totalPrice: any = ((Number(priceSale) + totalCart) * 1000).toLocaleString('vi-VN')
 
   const handleRemoveCart = async (productIdCart: string, colorCart: string, sizeCart: string) => {
     await removeItemFromCart({
@@ -83,26 +44,16 @@ const Cart = () => {
       size: sizeCart
     })
     const data = await getCartByUserId()
-    dispatch(fetApiCArt(data))
-    query.invalidateQueries({
-      queryKey: ['productCart', pageIndex]
-    })
-    caculatorTotal()
+    dispatch(fetApiCArt(data?.allProducts))
+    dispatch(setTotalCart(data?.cartTotal))
   }
-  if (cartUser.length > 0 && cartUser.length < 3) {
-    priceSale = (30000).toLocaleString('vi-VN')
-  } else if (cartUser.length >= 3 && cartUser.length <= 8) {
-    priceSale = (15000).toLocaleString('vi-VN')
-  } else if (cartUser.length > 8) {
-    priceSale = (0).toLocaleString('vi-VN')
-  }
-  let totalPrice: any = ((Number(priceSale) + caculatorTotal()) * 1000).toLocaleString('vi-VN')
+
   return (
     <div className='container'>
       <div className='flex py-4 gap-2'>
         <Breadcrumb crumbs={crumbs} />
       </div>
-      {productCart?.content.length === 0 ? (
+      {cart?.length === 0 ? (
         <div className='flex flex-col justify-center items-center'>
           <CartEmpty title={'Bạn chưa có sản phẩm nào trong giỏ hàng'} />
           <Button className='mb-4'>
@@ -136,7 +87,7 @@ const Cart = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {productCart?.content.map((product: any, index: number) => {
+                    {cart?.map((product: any, index: number) => {
                       return (
                         <tr className='text-center border-b' key={index}>
                           <td className='py-6'>
@@ -176,11 +127,8 @@ const Cart = () => {
                                   })
 
                                   const data = await getCartByUserId()
-                                  dispatch(fetApiCArt(data))
-                                  query.invalidateQueries({
-                                    queryKey: ['productCart', pageIndex]
-                                  })
-                                  caculatorTotal()
+                                  dispatch(fetApiCArt(data?.allProducts))
+                                  dispatch(setTotalCart(data?.cartTotal))
                                 }}
                                 className='cursor-pointer'
                               />
@@ -195,11 +143,8 @@ const Cart = () => {
                                   })
 
                                   const data = await getCartByUserId()
-                                  dispatch(fetApiCArt(data))
-                                  query.invalidateQueries({
-                                    queryKey: ['productCart', pageIndex]
-                                  })
-                                  caculatorTotal()
+                                  dispatch(fetApiCArt(data?.allProducts))
+                                  dispatch(setTotalCart(data?.cartTotal))
                                 }}
                                 className='cursor-pointer'
                               />
@@ -220,23 +165,13 @@ const Cart = () => {
                 </table>
               </div>
             </div>
-
-            <div className='flex justify-center items-center py-3'>
-              <Paginations
-                pageCount={productCart?.totalPage}
-                handlePageClick={(event: any) => {
-                  console.log(event.selected)
-                  setPageIndex(event.selected + 1)
-                }}
-              />
-            </div>
           </div>
           <div className='grid col-span-1 h-[600px] sticky top-[150px]'>
             <div className='border rounded-3xl flex flex-col p-5 gap-7'>
               <h3 className='text-[20px] font-medium'>Thông tin khách hàng</h3>
               <div className='flex justify-between'>
                 <span className='text-[#9D9EA2] text-[14px]'>Tổng tiền</span>
-                <span className='text-[14px]'>{((caculatorTotal() as number) * 1000).toLocaleString('vi-VN')}đ</span>
+                <span className='text-[14px]'>{(totalCart * 1000).toLocaleString('vi-VN')}đ</span>
               </div>
               <div className='flex justify-between'>
                 <span className='text-[#9D9EA2] text-[14px]'>Phí vận chuyển</span>

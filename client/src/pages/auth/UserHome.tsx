@@ -1,4 +1,3 @@
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +15,9 @@ import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import { fetApiCArt, resetCart } from '@/store/slice/cartSlice'
 import { logout } from '@/services/auth'
+import { getAuth, signOut } from 'firebase/auth'
+import app from '@/config/initializeFirebase'
+import instance from '@/config/instance'
 const UserHome = () => {
   const { isLoggedIn, userAuth, setUserAuth, setIsLoggedIn } = useAuth()
   const navigate = useNavigate()
@@ -23,19 +25,17 @@ const UserHome = () => {
   const onHandleLogout = async () => {
     try {
       const data = await logout()
-      console.log(data);
       setIsLoggedIn?.(false)
       setUserAuth?.(undefined)
       navigate('/')
-      dispatch(resetCart([]))
-      console.log(userAuth);
-      
-      dispatch(fetApiCArt([]))
-      toast.success("Bạn đăng xuất thành công")
+      dispatch(resetCart())
+      signOut(getAuth(app))
+      instance.defaults.headers.common['Authorization'] = null
+      toast.success('Bạn đăng xuất thành công')
       return data
     } catch (error) {
-      console.log(error);
-      toast.error("Bạn đăng xuất thất bại")
+      console.log(error)
+      toast.error('Bạn đăng xuất thất bại')
     }
   }
   return (

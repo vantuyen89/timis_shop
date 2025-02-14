@@ -15,11 +15,11 @@ const authSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        // required: true
     },
     confirmPassword: {
         type: String,
-        required: true,
+        // required: true,
     },
     isAdmin: {
         type: Boolean,
@@ -32,6 +32,12 @@ const authSchema = new mongoose.Schema({
     block: {
         type: Boolean,
         default: false
+    }, uid: {
+        type: String,
+        default: null
+    }, provider: {
+        type: String,
+        default: "credential"
     }
 }, {
     timestamps: true,

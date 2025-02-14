@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { Form, FormControl,  FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
@@ -83,7 +83,7 @@ const Information = () => {
               <FormItem>
                 <FormLabel>Họ tên</FormLabel>
                 <FormControl>
-                  <Input placeholder='name' {...field} />
+                  <Input placeholder='name' {...field} disabled={userAuth?.uid !== null} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -96,7 +96,7 @@ const Information = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='email' {...field} type='email' />
+                  <Input placeholder='email' {...field} type='email' disabled={userAuth?.uid !== null} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -116,13 +116,21 @@ const Information = () => {
                     className=''
                     multiple={true}
                     onChange={(e) => handleFileChange(e)}
+                    disabled={userAuth?.uid !== null}
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          {imagePreview && <img src={imagePreview} alt='Image Preview' style={{ width: '80px', height: '80px' }} className='rounded-full' />}
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt='Image Preview'
+              style={{ width: '80px', height: '80px' }}
+              className='rounded-full'
+            />
+          )}
 
           <Button type='submit'>Lưu</Button>
         </form>

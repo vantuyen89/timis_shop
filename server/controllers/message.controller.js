@@ -33,7 +33,7 @@ export const sendMessage = async (req, res) => {
         const receiveSocketId = getReceived(receiveId)
         if (receiveSocketId) {
             // Send message to the receiver
-            console.log(receiveSocketId);
+            // console.log(receiveSocketId);
             io.to(receiveSocketId).emit('newMessage', newMessage);
         }
         return res.status(StatusCodes.OK).json(newMessage);
@@ -49,7 +49,7 @@ export const getMessage = async (req, res) => {
         //     return res.status(StatusCodes.FORBIDDEN).json({ message: 'You are not admin' });
         // }
         const usertoChat = req.params.id
-        console.log(usertoChat);
+        // console.log(usertoChat);
         const senderId = req.user._id
         if (usertoChat === senderId) {
             return res.status(StatusCodes.FORBIDDEN).json({ message: 'Tài khoản admin' });  

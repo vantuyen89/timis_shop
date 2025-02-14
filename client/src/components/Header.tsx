@@ -4,29 +4,26 @@ import logo from '../images/timis1.png'
 import { CiSearch } from 'react-icons/ci'
 
 import { HiBars3 } from 'react-icons/hi2'
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger
-} from '@/components/ui/sheet'
-
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 import CartHeader from './CartHeader'
+import { useSelector } from 'react-redux'
 const Header = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('')
   const navigate = useNavigate()
   const handSearch = (e: any) => {
-    e.preventDefault();
+    e.preventDefault()
     navigate(`/shop?search=${searchTerm}`)
   }
+  const { cart } = useSelector((state: any) => state.cart)
+  console.log(cart)
 
   return (
     <header className='lg:sticky sticky lg:top-0 lg:left-0 lg:right-0 top-0 left-0 right-0 bg-white z-[10]'>
       <div className='bg-black'>
         <div className='container text-center py-2'>
           <p className='text-[12px] lg:text-sm text-white'>
-            TIMIS luôn đồng hành cùng các bạn -
-            <span className=''> Thời trang nâng tầm sắc đẹp</span>
+            TIMIS luôn đồng hành cùng các bạn -<span className=''> Thời trang nâng tầm sắc đẹp</span>
           </p>
         </div>
       </div>

@@ -4,26 +4,38 @@ import Product from "../models/product.model.js";
 
 
 export const getCartByUser = async (req, res) => {
-    const { pageIndex = 1, pageSize } = req.body;
-    // console.log(req.user);
-    let limit = pageSize || 5;
-    let skip = (pageIndex - 1) * limit || 0;
     try {
-        const cart = await Cart.findOne({ user: req.user._id }).populate("items.productId").populate("items.color").populate("items.size")
+        const pageIndex = parseInt(req.body.pageIndex) || 1;
+        const pageSize = parseInt(req.body.pageSize) || 5;
+        const skip = (pageIndex - 1) * pageSize;
 
-        // console.log(cart);
-        const paginatedItems = cart.items.slice(skip, skip + limit);
-        const cartLength = await Cart.findOne({ user: req.user._id })
-        
+        let cart = await Cart.findOne({ user: req.user._id })
+            .populate("items.productId")
+            .populate("items.color")
+            .populate("items.size");
 
-        const totalPage = cartLength.items.length === 0 ? 0 : Math.ceil(cartLength.items.length / limit);
-        
-        const totalOptionPage = cart.length;
+        if (!cart) {
+            cart = await Cart.create({ user: req.user._id });
+        }
 
-        const totalAllOptions = cartLength.items.length;
+        const totalItems = cart.items.length;
+        const paginatedItems = cart.items.slice(skip, skip + pageSize);
 
+        // Format tất cả sản phẩm
+        const allProducts = cart.items.map(item => ({
+            productId: item.productId._id,
+            image: item.productId.thumbnail,
+            name: item.productId.name,
+            price: item.productId.price,
+            quantity: item.quantity,
+            color: item.color,
+            size: item.size,
+            totalPrice: item.productId.price * item.quantity,
+        }));
+
+        // Format sản phẩm đã phân trang
         const cartData = {
-            products: paginatedItems.map((item) => ({
+            products: paginatedItems.map(item => ({
                 productId: item.productId._id,
                 image: item.productId.thumbnail,
                 name: item.productId.name,
@@ -32,24 +44,29 @@ export const getCartByUser = async (req, res) => {
                 color: item.color,
                 size: item.size,
                 totalPrice: item.productId.price * item.quantity,
-
             }))
-        }
-        
-        const result = {
-            pageIndex: pageIndex,
-            pageSize: limit,
-            totalPage,
-            totalOptionPage,
-            totalAllOptions,
-            content: cartData.products,
         };
-        // console.log(result);
-        return res.status(StatusCodes.OK).json(result)
+
+        // Tính tổng giá của toàn bộ giỏ hàng
+        const cartTotal = allProducts.reduce((sum, item) => sum + item.totalPrice, 0);
+
+        return res.status(StatusCodes.OK).json({
+            pageIndex,
+            pageSize,
+            totalPage: totalItems === 0 ? 0 : Math.ceil(totalItems / pageSize),
+            totalItems,
+            content: cartData.products,
+            allProducts, // Thêm trường chứa tất cả sản phẩm
+            cartTotal, // Thêm tổng giá của giỏ hàng
+        });
+
     } catch (error) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message)
+        console.error('Error in getCartByUser:', error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: 'An error occurred while fetching cart data'
+        });
     }
-}
+};
 
 
 export const addItemCart = async (req, res) => {
@@ -58,7 +75,7 @@ export const addItemCart = async (req, res) => {
         // console.log(req.body);
         // console.log(req.user);
         // Kiểm tra giỏ hàng đã có sản phẩm hay chưa ? theo userId
-        let cart = await Cart.findOne({ user : req.user._id })
+        let cart = await Cart.findOne({ user: req.user._id })
         // Nếu chưa có thì tạo mới giỏ hàng
         if (!cart) {
             cart = new Cart({ user: req.user._id, items: [] })
@@ -71,7 +88,7 @@ export const addItemCart = async (req, res) => {
         if (existProduct !== -1) {
             cart.items[existProduct].quantity += quantity
         } else {
-            cart.items.push({ productId: productId, quantity: quantity , color: color, size: size})
+            cart.items.push({ productId: productId, quantity: quantity, color: color, size: size })
         }
         await cart.save()
         return res.status(StatusCodes.OK).json({ cart })
@@ -102,13 +119,13 @@ export const removeCart = async (req, res) => {
 }
 
 export const updateProductCart = async (req, res) => {
-    const { productId, quantity,size,color } = req.body;
+    const { productId, quantity, size, color } = req.body;
     try {
         let cart = await Cart.findOne({ user: req.user._id });
         if (!cart) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Cart not found' });
         }
-        const existProduct = cart.items.find((item) => item.productId.toString() == productId && item.color.toString() !== color.toString && item.size.toString() !== size.toString )
+        const existProduct = cart.items.find((item) => item.productId.toString() == productId && item.color.toString() !== color.toString && item.size.toString() !== size.toString)
         if (!existProduct) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Product not found' });
         }
@@ -123,9 +140,9 @@ export const updateProductCart = async (req, res) => {
 
 
 export const increaseQuantity = async (req, res) => {
-    const { productId,color,size } = req.body;
+    const { productId, color, size } = req.body;
     try {
-        let cart = await Cart.findOne({ user: req.user._id});
+        let cart = await Cart.findOne({ user: req.user._id });
         if (!cart) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Cart not found' });
         }
@@ -143,9 +160,9 @@ export const increaseQuantity = async (req, res) => {
 
 
 export const decreaseQuantity = async (req, res) => {
-    const {productId,color,size } = req.body;
+    const { productId, color, size } = req.body;
     try {
-        let cart = await Cart.findOne({ user:req.user._id });
+        let cart = await Cart.findOne({ user: req.user._id });
         if (!cart) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Cart not found' });
         }
@@ -153,7 +170,7 @@ export const decreaseQuantity = async (req, res) => {
         if (!product) {
             return res.status(StatusCodes.NOT_FOUND).json({ message: 'Product not found' });
         }
-        console.log('ahihihihihihihihihihiproduct',product);
+        console.log('ahihihihihihihihihihiproduct', product);
         if (product.quantity > 1) {
             product.quantity--
         }
@@ -174,6 +191,6 @@ export const getAllCartUser = async (req, res) => {
         return res.status(StatusCodes.OK).json(cart)
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message)
-        
+
     }
- }
+}

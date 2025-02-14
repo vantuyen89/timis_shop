@@ -118,7 +118,7 @@ const ProductDetail = () => {
     }
     await addtoCartById({ productId: id, color: colorCart, size: sizeCart, quantity: quantity })
     const data = await getCartByUserId()
-    dispatch(fetApiCArt(data))
+    dispatch(fetApiCArt(data?.allProducts))
     toast.success('Bạn đã thêm sản phẩm vào giỏ hàng')
   }
 
@@ -219,7 +219,6 @@ const ProductDetail = () => {
                 <button className='flex-1 bg-red-600 text-white py-2 rounded'>MUA NGAY</button>
               </div>
 
-             
               <div className='flex gap-0 flex-col'>
                 <div className='flex flex-col border-y-2 py-4'>
                   <div className='flex justify-between'>
