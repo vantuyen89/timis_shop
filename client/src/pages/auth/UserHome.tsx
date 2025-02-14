@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
-import { fetApiCArt, resetCart } from '@/store/slice/cartSlice'
+import { resetCart } from '@/store/slice/cartSlice'
 import { logout } from '@/services/auth'
 import { getAuth, signOut } from 'firebase/auth'
 import app from '@/config/initializeFirebase'

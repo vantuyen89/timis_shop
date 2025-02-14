@@ -45,7 +45,6 @@ const Order = () => {
   })
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const query = useQueryClient()
   const onSubmit = async (data: any) => {
     const orderItem = cart.map((order: any) => {
       return {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import UserHome from '@/pages/auth/UserHome'
 import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlineShoppingCart } from 'react-icons/ai'
