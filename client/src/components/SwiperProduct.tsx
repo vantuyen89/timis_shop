@@ -118,10 +118,10 @@ const SwiperProduct = ({ products, title }: any) => {
             ))} */}
         </Swiper>
 
-        <button className={`btn-next ${!isBlock && 'hidden'} absolute z-20 top-[39%] right-4 text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300`}>
+        <button className={`btn-next ${!isBlock && 'hidden'} absolute z-10 top-[39%] right-4 text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300`}>
           <GrLinkNext />
         </button>
-        <button className={`btn-prev ${!isBlock && 'hidden'} absolute z-20 top-[39%] left-4 text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300`}>
+        <button className={`btn-prev ${!isBlock && 'hidden'} absolute z-10 top-[39%] left-4 text-black w-[50px] h-[50px] border flex justify-center items-center rounded-full p-3 hover:text-white hover:bg-[#585858] duration-300`}>
           <GrLinkPrevious />
         </button>
       </div>

@@ -54,47 +54,57 @@ const PageFramer = () => {
     fetchProductComing()
   }, [])
   return (
-    <div className='flex items-center justify-between h-[500px] bg-white w-full p-0 m-0 '>
-      <div className='flex flex-col gap-4'>
-        <h3 className='uppercase'>Sản phẩm nổi bật</h3>
-        <p className='font-semibold tracking-wider text-red-600 text-4xl'>{dataComing?.productId?.name}</p>
-        <div className='flex items-center gap-5'>
-          <p className='text-red-600 text-4xl'>
+    <div className='flex flex-col lg:flex-row items-center justify-between min-h-[500px] bg-white w-full p-4 md:p-8 m-0 gap-8'>
+      {/* Left Content */}
+      <div className='flex flex-col gap-4 w-full lg:w-1/2'>
+        <h3 className='uppercase text-base md:text-lg font-medium'>Sản phẩm nổi bật</h3>
+        <p className='font-semibold tracking-wider text-red-600 text-2xl md:text-4xl'>{dataComing?.productId?.name}</p>
+
+        {/* Price Section */}
+        <div className='flex flex-wrap items-center gap-3 md:gap-5'>
+          <p className='text-red-600 text-2xl md:text-4xl'>
             {dataComing?.productId?.price * (dataComing?.productId?.discount / 100) * 1000}₫
           </p>
-          <p className='text-gray-200 line-through text-xl'>{dataComing?.productId?.price * 1000}₫</p>
-          <Button className='bg-red-600 hover:bg-red-500 p-[23px] '>Mua ngay</Button>
+          <p className='text-gray-200 line-through text-lg md:text-xl'>{dataComing?.productId?.price * 1000}₫</p>
+          <Button className='bg-red-600 hover:bg-red-500 p-4 md:p-[23px] text-sm md:text-base'>Mua ngay</Button>
         </div>
-        <p>Kết thúc vào</p>
-        <div className='flex gap-9 gap-x-6'>
+
+        {/* Countdown Section */}
+        <p className='text-sm md:text-base'>Kết thúc vào</p>
+        <div className='flex gap-2 md:gap-6 lg:gap-9'>
+          {/* Days */}
           <div className='flex flex-col items-center'>
-            <p className='rounded-full bg-[#fee] w-20 h-20 text-center flex flex-col justify-center items-center text-2xl'>
+            <p className='rounded-full bg-[#fee] w-14 h-14 md:w-20 md:h-20 text-center flex flex-col justify-center items-center text-lg md:text-2xl'>
               {time?.days}
             </p>
-            <p>Ngày</p>
+            <p className='text-sm md:text-base'>Ngày</p>
           </div>
+          {/* Hours */}
           <div className='flex flex-col items-center'>
-            <p className='rounded-full bg-[#fee] w-20 h-20 text-center flex flex-col justify-center items-center text-2xl'>
+            <p className='rounded-full bg-[#fee] w-14 h-14 md:w-20 md:h-20 text-center flex flex-col justify-center items-center text-lg md:text-2xl'>
               {time?.hours}
             </p>
-            <p>Giờ</p>
+            <p className='text-sm md:text-base'>Giờ</p>
           </div>
+          {/* Minutes */}
           <div className='flex flex-col items-center'>
-            <p className='rounded-full bg-[#fee] w-20 h-20 text-center flex flex-col justify-center items-center text-2xl'>
+            <p className='rounded-full bg-[#fee] w-14 h-14 md:w-20 md:h-20 text-center flex flex-col justify-center items-center text-lg md:text-2xl'>
               {time?.minutes}
             </p>
-            <p>Phút</p>
+            <p className='text-sm md:text-base'>Phút</p>
           </div>
+          {/* Seconds */}
           <div className='flex flex-col items-center'>
-            <p className='rounded-full bg-[#fee] w-20 h-20 text-center flex flex-col justify-center items-center text-2xl'>
+            <p className='rounded-full bg-[#fee] w-14 h-14 md:w-20 md:h-20 text-center flex flex-col justify-center items-center text-lg md:text-2xl'>
               {time?.seconds}
             </p>
-            <p>Giây</p>
+            <p className='text-sm md:text-base'>Giây</p>
           </div>
         </div>
-        {/* <p>{dataComing?.productId}</p> */}
       </div>
-      <div className='relative w-[600px] h-[400px]'>
+
+      {/* Right Content - Image */}
+      <div className='relative w-full lg:w-[600px] h-[300px] md:h-[400px]'>
         <motion.div
           className='absolute inset-0'
           animate={{
@@ -115,7 +125,11 @@ const PageFramer = () => {
           />
         </motion.div>
         <div className='absolute inset-0 flex items-center justify-center z-0'>
-          <img src={`${dataComing?.productId?.images[0].url}`} alt='Shirt' className='w-72 h-auto bg-transparent' />
+          <img
+            src={`${dataComing?.productId?.images[0].url}`}
+            alt='Shirt'
+            className='w-48 md:w-72 h-auto bg-transparent'
+          />
         </div>
       </div>
     </div>
